@@ -1,6 +1,6 @@
 "use client";
 
-export default function Stepper({ currentStep, onStepClick }) {
+export default function Stepper({ currentStep, onStepClick, onReset }) {
   const steps = [
     { num: 1, label: "Data Pasien" },
     { num: 2, label: "Unggah Citra" },
@@ -15,6 +15,23 @@ export default function Stepper({ currentStep, onStepClick }) {
           Langkah {currentStep} dari 3
         </span>
       </div>
+
+      {/* Right Action: Pemeriksaan Baru (on step 3) */}
+      {currentStep === 3 && onReset && (
+        <div className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 flex items-center">
+          <button
+            type="button"
+            id="btn-pemeriksaan-baru"
+            onClick={onReset}
+            className="h-8 px-3.5 bg-white rounded-[10px] border border-cyan-700 text-cyan-700 hover:bg-cyan-50 flex items-center gap-2 text-sm font-bold font-atkinson transition-colors cursor-pointer shadow-xs"
+          >
+            <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Pemeriksaan baru</span>
+          </button>
+        </div>
+      )}
 
       {/* Stepper items */}
       <div className="flex items-center gap-2.5 sm:gap-3.5">
