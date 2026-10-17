@@ -4,6 +4,10 @@ import { useState, useRef, useEffect } from "react";
 import { useSync } from "./context/SyncContext";
 import Stepper from "./components/Stepper";
 import QualityModal from "./components/QualityModal";
+import Button from "./components/Button";
+import CategoryBadge from "./components/CategoryBadge";
+import TriageRibbon from "./components/TriageRibbon";
+import CheckboxCard from "./components/CheckboxCard";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -491,49 +495,15 @@ export default function Home() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                  {GEJALA.map(({ key, label }) => {
-                    const isChecked = gejala.includes(key);
-                    return (
-                      <label
-                        key={key}
-                        className={`h-12 px-3.5 rounded-[10px] border flex items-center gap-3 cursor-pointer transition-all ${
-                          isChecked
-                            ? "bg-status-info-bg border-primary shadow-xs"
-                            : "bg-white border-line hover:border-line-strong"
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() => toggleGejala(key)}
-                          className="sr-only"
-                        />
-                        {/* Checkbox box */}
-                        <div
-                          className={`size-5 rounded-[5px] flex items-center justify-center transition-colors shrink-0 ${
-                            isChecked
-                              ? "bg-primary border border-primary text-white"
-                              : "bg-white border border-line-strong"
-                          }`}
-                        >
-                          {isChecked && (
-                            <svg className="size-3.5" viewBox="0 0 20 20" fill="currentColor">
-                              <path
-                                fillRule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          )}
-                        </div>
-                        <span className={`text-base font-atkinson select-none ${
-                          isChecked ? "text-primary font-semibold" : "text-ink font-normal"
-                        }`}>
-                          {label}
-                        </span>
-                      </label>
-                    );
-                  })}
+                  {GEJALA.map(({ key, label }) => (
+                    <CheckboxCard
+                      key={key}
+                      id={`gejala-${key}`}
+                      label={label}
+                      checked={gejala.includes(key)}
+                      onChange={() => toggleGejala(key)}
+                    />
+                  ))}
                 </div>
               </div>
             </section>
@@ -946,51 +916,21 @@ export default function Home() {
             {/* Kolom Kanan: Banner Triase, Anjuran, Pernyataan Wajib, Skor AI & Alasan, Tinjauan Dokter */}
             <div className="flex-1 w-full flex flex-col items-start gap-3.5">
               {/* Banner Kategori Triase */}
-              <div
-                id="banner-triase-hasil"
-                className={`w-full h-16 px-4 rounded-[10px] flex items-center gap-3 shadow-xs ${
-                  hasil.triage.category === "MERAH"
-                    ? "bg-triage-merah text-white"
-                    : hasil.triage.category === "KUNING"
-                    ? "bg-triage-kuning text-on-triage-kuning"
-                    : "bg-triage-hijau text-white"
-                }`}
-              >
-                {/* Ikon Kategori */}
-                {hasil.triage.category === "MERAH" ? (
-                  <svg className="size-7 shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <circle cx="12" cy="12" r="9" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                ) : hasil.triage.category === "KUNING" ? (
-                  <svg className="size-7 shrink-0 text-on-triage-kuning" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                ) : (
-                  <svg className="size-7 shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                )}
-
-                {/* Teks Kategori + Status */}
-                <div className="flex items-baseline gap-2 flex-wrap font-atkinson">
-                  <span className="text-xl font-extrabold tracking-wide">
-                    {hasil.triage.category}
-                  </span>
-                  <span className="text-xl font-bold">
-                    ·{" "}
-                    {hasil.triage.atypical
-                      ? "Periksa citra: pastikan rontgen dada"
-                      : hasil.triage.title ||
-                        (hasil.triage.category === "MERAH"
-                          ? "Rujuk segera"
-                          : hasil.triage.category === "KUNING"
-                          ? "Perlu pemeriksaan lanjutan"
-                          : "Tidak ditemukan tanda TBC")}
-                  </span>
-                </div>
-              </div>
+              <TriageRibbon
+                id="banner-hasil-triase"
+                category={hasil.triage.category}
+                title={
+                  hasil.triage.atypical
+                    ? "Periksa citra: pastikan rontgen dada"
+                    : hasil.triage.title ||
+                      (hasil.triage.category === "MERAH"
+                        ? "Rujuk segera"
+                        : hasil.triage.category === "KUNING"
+                        ? "Perlu pemeriksaan lanjutan"
+                        : "Tidak ditemukan tanda TBC")
+                }
+                isAtypical={hasil.triage.atypical}
+              />
 
               {/* Anjuran */}
               <div className="w-full flex flex-col">

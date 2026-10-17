@@ -106,3 +106,25 @@ body {
 .shadow-glass {
   box-shadow: var(--shadow-glass);
 }
+
+/* Glassmorphism Styles (DESIGN.md S7 & TUGAS P2) */
+.glass-surface {
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+@supports not (backdrop-filter: blur(12px)) {
+  .glass-surface {
+    background-color: var(--color-surface);
+    border-color: var(--color-line);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-surface {
+    background-color: var(--color-surface);
+    border-color: var(--color-line);
+  }
+}
