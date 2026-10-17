@@ -245,6 +245,9 @@ export default function Home() {
     setSavingTinjauan(false);
     setTabFoto("heatmap");
     setServerError(false);
+    if (typeof window !== "undefined" && window.location.search) {
+      window.history.replaceState(null, "", "/");
+    }
     setStep(1);
   }
 
@@ -264,6 +267,77 @@ export default function Home() {
     const mnt = String(d.getMinutes()).padStart(2, "0");
     return `${tanggal}, ${jam}:${mnt}`;
   }
+
+  // Load examination detail if ?id= is present in URL query
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const queryId = params.get("id");
+      if (queryId) {
+        fetch(`${API}/pemeriksaan/${queryId}`)
+          .then((r) => {
+            if (!r.ok) throw new Error("Pemeriksaan tidak ditemukan");
+            return r.json();
+          })
+          .then((data) => {
+            if (data && data.id) {
+              const mappedHasil = {
+                id: data.id,
+                uid: data.uid,
+                status: "ok",
+                dibuat_pada: data.dibuat_pada,
+                prob_tb: data.prob_tb,
+                model_version: data.model_version,
+                heatmap_png: data.heatmap_png,
+                triage: {
+                  category: data.kategori,
+                  ai_level: data.ai_level,
+                  atypical: Boolean(data.atipikal),
+                  title:
+                    data.kategori === "MERAH"
+                      ? "Rujuk segera"
+                      : data.kategori === "KUNING"
+                      ? "Evaluasi klinis & rontgen ulang"
+                      : "Risiko TBC rendah",
+                  recommendation:
+                    data.kategori === "MERAH"
+                      ? "Rujuk segera ke fasilitas rujukan TCM / RSUD terdekat."
+                      : data.kategori === "KUNING"
+                      ? "Lakukan evaluasi klinis lanjutan atau pemeriksaan dahak jika bergejala."
+                      : "Edukasi kesehatan umum, tidak memerlukan rujukan rontgen lanjutan saat ini.",
+                  reasons: data.gejala
+                    ? data.gejala
+                        .split(",")
+                        .filter(Boolean)
+                        .map((k) => GEJALA.find((g) => g.key === k)?.label || k)
+                    : [],
+                },
+              };
+              setHasil(mappedHasil);
+              setNama(data.nama ? data.nama.replace(/\s*\(fiktif\)$/, "") : "");
+              setUmur(data.umur != null ? String(data.umur) : "");
+              setJk(data.jenis_kelamin || "");
+              setGejala(data.gejala ? data.gejala.split(",").filter(Boolean) : []);
+              if (data.keputusan_dokter) {
+                setPilihanTinjauan(data.keputusan_dokter);
+                setCatatanDokter(data.catatan_dokter || "");
+                setTinjauanTersimpan({
+                  keputusan: data.keputusan_dokter,
+                  catatan: data.catatan_dokter || "",
+                  tanggal: data.ditinjau_pada,
+                });
+              } else {
+                setPilihanTinjauan(null);
+                setCatatanDokter("");
+                setTinjauanTersimpan(null);
+              }
+              setStep(3);
+            }
+          })
+          .catch((err) => console.error("Gagal memuat detail pemeriksaan:", err));
+      }
+    }
+  }, []);
 
   return (
     <div className="w-full flex flex-col items-center">

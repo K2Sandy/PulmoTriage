@@ -34,3 +34,21 @@ Pengujian dilakukan menggunakan Puppeteer (Microsoft Edge Headless) terintegrasi
 | 4 | **State Error (Cloud Offline)**: Saat koneksi cloud terputus/gagal, dasbor menampilkan banner error fuchsia-800 dengan latar pink-50 (`#F7EEF8` / `#7A2E8A`) dilengkapi tombol "Coba lagi" untuk memuat ulang data. | **LULUS** | `docs/screenshots/f4_dasbor_error.png` |
 | 5 | **State Loading**: Menampilkan komponen skeleton loader pada 4 kartu, grafik, sebaran, dan tabel Puskesmas saat data sedang dimuat dari cloud. | **LULUS** | Terverifikasi dalam alur otomatis |
 
+---
+
+## Hasil Uji Tugas F5: Layar Riwayat Pemeriksaan
+
+Tanggal: 17 Oktober 2026  
+Branch: `frontend-desain`
+
+Pengujian dilakukan menggunakan Puppeteer (Microsoft Edge Headless) terintegrasi dengan backend PulmoTriage lokal (`http://localhost:8000`) dan frontend (`http://localhost:3000/riwayat`).
+
+| No | Skenario Uji | Status | Tangkapan Layar |
+|---|---|---|---|
+| 1 | **Tampilan Riwayat Lengkap (Tab Semua)**: Judul "Riwayat pemeriksaan", catatan privasi luring, filter tab interaktif ("Semua 21", "Belum ditinjau 11", "Menunggu sinkron 0"), tabel riwayat lengkap 8 kolom (`No.`, `Waktu`, `Pasien (fiktif)`, `Kategori` badge dengan ikon, `Skor AI`, `Tinjauan dokter`, `Sinkron`, `Aksi Buka`), serta catatan data anonim dan peringatan medis di bagian bawah. | **LULUS** | `docs/screenshots/f5_riwayat_semua.png` |
+| 2 | **Filter Tabs (Belum ditinjau & Menunggu sinkron)**: Mengklik tab "Belum ditinjau" menyaring daftar pasien secara presisi hanya menampilkan 11 baris yang belum ditinjau dokter (badge status abu-abu). Mengklik "Menunggu sinkron" menyaring baris berdasarkan status `tersinkron === 0`. | **LULUS** | `docs/screenshots/f5_riwayat_filter.png` |
+| 3 | **Pencarian Nama atau Nomor**: Input pencarian real-time dengan query nama (misal `"Siti"`) menyaring 5 pasien yang cocok secara akurat. Pencarian juga mendukung pencarian berdasarkan nomor pemeriksaan (`id` atau format 4 digit `0020`). | **LULUS** | `docs/screenshots/f5_riwayat_cari.png` |
+| 4 | **Buka Baris Pemeriksaan (Layar Hasil)**: Mengklik tombol "Buka" pada baris riwayat berhasil mengarahkan ke Layar Hasil (Langkah 3) dengan data pemeriksaan tersebut secara utuh (ringkasan pasien, foto heatmap Grad-CAM, banner triase, anjuran klinis, status tinjauan dokter tersimpan, dan tombol buka surat rujukan PDF). | **LULUS** | `docs/screenshots/f5_riwayat_buka.png` |
+| 5 | **State Kosong (Tanpa Riwayat)**: Saat tidak ada data pemeriksaan tersimpan di database (`data.length === 0`), sistem menampilkan tampilan state kosong informatif ("Belum Ada Riwayat Pemeriksaan") tanpa angka palsu, dilengkapi tombol aksi "Mulai pemeriksaan baru". | **LULUS** | `docs/screenshots/f5_riwayat_kosong.png` |
+
+
