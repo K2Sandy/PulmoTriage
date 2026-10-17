@@ -88,3 +88,24 @@ def tinjau(id_, keputusan, catatan):
             (keputusan, catatan, sekarang(), id_),
         )
         return cur.rowcount > 0
+
+def belum_sinkron(limit=200):
+    with koneksi() as c:
+        rows = c.execute(
+            """
+            SELECT id, uid, dibuat_pada, umur, jenis_kelamin, gejala, ai_level, kategori, atipikal, model_version
+            FROM pemeriksaan WHERE tersinkron = 0 ORDER BY id LIMIT ?
+            """,
+            (limit,),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def jumlah_belum_sinkron():
+    with koneksi() as c:
+        return c.execute("SELECT COUNT(*) FROM pemeriksaan WHERE tersinkron = 0").fetchone()[0]
+
+
+def tandai_sinkron(ids):
+    with koneksi() as c:
+        c.executemany("UPDATE pemeriksaan SET tersinkron = 1 WHERE id = ?", [(i,) for i in ids])

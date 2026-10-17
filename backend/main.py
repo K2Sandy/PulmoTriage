@@ -1,5 +1,8 @@
 import base64
 import io
+import asyncio
+import os
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,9 +10,30 @@ from fastapi.responses import Response
 from pdf import buat_pdf
 
 import db
+import sinkron
 from pulmotriage_infer import SYMPTOMS, PulmoTriage, load_image, overlay_heatmap
 
-app = FastAPI(title="PulmoTriage API", version="0.2")
+SINKRON_DETIK = int(os.environ.get("SINKRON_DETIK", "60"))  # 0 = matikan sinkron otomatis
+
+
+async def sinkron_berkala():
+    while True:
+        await asyncio.sleep(SINKRON_DETIK)
+        try:
+            await asyncio.to_thread(sinkron.jalankan)
+        except Exception as e:  # jangan biarkan sinkron otomatis mati diam-diam
+            print("Sinkron otomatis gagal:", e)
+
+
+@asynccontextmanager
+async def lifespan(app):
+    tugas = asyncio.create_task(sinkron_berkala()) if SINKRON_DETIK > 0 else None
+    yield
+    if tugas:
+        tugas.cancel()
+
+
+app = FastAPI(title="PulmoTriage API", version="0.4", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -92,3 +116,12 @@ def rujukan_pdf(id_: int):
         media_type="application/pdf",
         headers={"Content-Disposition": f'inline; filename="rujukan-{id_}.pdf"'},
     )
+
+@app.get("/sinkron/status")
+def status_sinkron():
+    return {"menunggu": db.jumlah_belum_sinkron()}
+
+
+@app.post("/sinkron")
+def sinkron_sekarang():
+    return sinkron.jalankan()
