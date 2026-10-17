@@ -35,9 +35,11 @@ async def lifespan(app):
 
 app = FastAPI(title="PulmoTriage API", version="0.4", lifespan=lifespan)
 
+CORS_ORIGINS = os.environ.get("CORS_ORIGINS", "http://localhost:3000").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=CORS_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
 )
