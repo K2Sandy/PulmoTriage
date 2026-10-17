@@ -349,20 +349,6 @@ export default function Home() {
       />
 
       <main className="w-full max-w-[1200px] px-4 sm:px-6 py-6 flex flex-col items-start gap-5">
-        {/* Pernyataan Wajib Disclaimer */}
-        <aside
-          role="note"
-          aria-label="Pernyataan hukum dan batas tanggung jawab AI"
-          className="w-full rounded-xl border border-line bg-status-neutral px-4 py-3 text-xs sm:text-sm text-ink flex items-center gap-3 shadow-xs"
-        >
-          <svg className="size-4 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <p className="leading-snug">
-            <strong>Pernyataan:</strong> Hasil AI adalah alat bantu triase, bukan diagnosis. Keputusan klinis tetap di tangan dokter.
-          </p>
-        </aside>
-
         {/* ------------------------------------------------------------- */}
         {/* LANGKAH 1: DATA PASIEN & GEJALA KLINIS                        */}
         {/* ------------------------------------------------------------- */}
@@ -391,7 +377,6 @@ export default function Home() {
                       type="text"
                       value={nama}
                       onChange={(e) => setNama(e.target.value)}
-                      placeholder="Siti Rahma (fiktif)"
                       className="w-full h-11 px-3.5 bg-white rounded-md border border-line-strong text-ink text-base font-normal font-atkinson focus:border-primary focus:outline-none transition-colors"
                     />
                   </div>
@@ -409,7 +394,6 @@ export default function Home() {
                         max="120"
                         value={umur}
                         onChange={(e) => handleUmurChange(e.target.value)}
-                        placeholder="45"
                         className={`w-28 h-11 px-3 bg-white rounded-md text-ink text-base font-medium font-mono focus:outline-none transition-all ${
                           umurError
                             ? "outline outline-2 outline-offset-[-2px] outline-status-error border-transparent"
@@ -423,11 +407,11 @@ export default function Home() {
 
                     {/* Inline Error for Age */}
                     {umurError && (
-                      <div id="error-umur-pesan" className="pt-1 flex items-center gap-1.5 text-status-error animate-in fade-in">
-                        <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
-                          <circle cx="12" cy="12" r="9" />
-                          <line x1="12" y1="8" x2="12" y2="12" />
-                          <line x1="12" y1="16" x2="12.01" y2="16" />
+                      <div id="error-umur-pesan" className="pt-1 flex items-start gap-1.5 text-status-error max-w-[210px] animate-in fade-in">
+                        <svg className="size-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10" />
+                          <line x1="12" y1="16" x2="12" y2="12" />
+                          <line x1="12" y1="8" x2="12.01" y2="8" />
                         </svg>
                         <span className="text-sm font-bold font-atkinson leading-tight">
                           {umurError}
@@ -543,17 +527,21 @@ export default function Home() {
               <div
                 id="banner-server-error"
                 role="alert"
-                className="w-full px-4 py-3.5 bg-status-error-bg rounded-[10px] border border-status-error flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs"
+                className="w-full px-4 py-3 bg-status-error-bg rounded-[10px] border border-status-error flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs"
               >
-                <div className="flex items-start gap-3">
-                  <div className="size-5 text-status-error shrink-0 mt-0.5">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
-                      <circle cx="12" cy="12" r="9" />
-                      <line x1="12" y1="8" x2="12" y2="12" />
-                      <line x1="12" y1="16" x2="12.01" y2="16" />
+                <div className="flex items-center gap-3">
+                  <div className="size-5 text-status-error shrink-0">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="1" y1="1" x2="23" y2="23" />
+                      <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55" />
+                      <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39" />
+                      <path d="M10.71 5.05A16 16 0 0 1 22.58 9" />
+                      <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88" />
+                      <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                      <line x1="12" y1="20" x2="12.01" y2="20" strokeWidth="2.5" />
                     </svg>
                   </div>
-                  <div className="text-ink text-base font-atkinson leading-snug">
+                  <div className="text-ink text-sm sm:text-base font-atkinson leading-snug">
                     <strong className="font-bold">Tidak terhubung ke server PulmoTriage di komputer ini.</strong>{" "}
                     Pastikan aplikasi server sudah dijalankan, lalu coba lagi. Isian Anda tidak hilang.
                   </div>
@@ -563,9 +551,12 @@ export default function Home() {
                   id="btn-coba-lagi"
                   onClick={jalankanAnalisis}
                   disabled={loading}
-                  className="h-8 px-3.5 bg-white rounded-[10px] border border-primary text-primary hover:bg-status-info-bg text-sm font-bold font-atkinson shrink-0 self-end sm:self-center cursor-pointer transition-colors"
+                  className="h-9 px-4 bg-white rounded-[10px] border border-primary text-primary hover:bg-status-info-bg text-sm font-bold font-atkinson shrink-0 self-end sm:self-center cursor-pointer transition-colors flex items-center gap-1.5"
                 >
-                  Coba lagi
+                  <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  <span>Coba lagi</span>
                 </button>
               </div>
             )}
@@ -600,10 +591,13 @@ export default function Home() {
 
                 {/* State A: File Bukan Gambar */}
                 {invalidFileError ? (
-                  <div className="w-full h-96 bg-white rounded-2xl border-2 border-status-error flex flex-col justify-center items-center p-6 text-center gap-3">
+                  <div className="w-full h-96 bg-white rounded-2xl border-2 border-dashed border-status-error flex flex-col justify-center items-center p-6 text-center gap-3">
                     <div className="size-16 bg-status-error-bg rounded-full flex justify-center items-center text-status-error">
-                      <svg className="size-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      <svg className="size-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="9.5" y1="12.5" x2="14.5" y2="17.5" />
+                        <line x1="14.5" y1="12.5" x2="9.5" y2="17.5" />
                       </svg>
                     </div>
                     <div id="file-error-nama" className="text-ink text-lg font-bold font-atkinson">
@@ -946,14 +940,18 @@ export default function Home() {
               </div>
 
               {/* Pernyataan Wajib Alat Bantu */}
-              <div className="w-full px-3.5 py-2.5 bg-status-neutral rounded-[10px] border border-line flex items-center gap-2.5">
+              <aside
+                role="note"
+                aria-label="Pernyataan hukum dan batas tanggung jawab AI"
+                className="w-full px-3.5 py-2.5 bg-status-neutral rounded-[10px] border border-line flex items-center gap-2.5"
+              >
                 <svg className="size-4 shrink-0 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-muted text-xs font-normal font-atkinson leading-5">
                   Hasil AI adalah alat bantu triase, bukan diagnosis. Keputusan klinis tetap di tangan dokter.
                 </p>
-              </div>
+              </aside>
 
               {/* Bagian Grid: Skor AI & Alasan (Kiri) vs Tinjauan Dokter (Kanan) */}
               <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-5 items-start pt-1">

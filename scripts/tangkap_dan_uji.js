@@ -84,9 +84,9 @@ async function run() {
 
   // 2. a2-pasien_terisi.png (2732 x 1536)
   console.log('[2/19] Mengambil a2-pasien_terisi...');
-  await page.type('#input-nama', 'RM-000123');
+  await page.type('#input-nama', 'Siti Rahma (fiktif)');
   await page.type('#input-umur', '45');
-  await page.click('#btn-jk-l');
+  await page.click('#btn-jk-p');
   // Check symptoms: batuk_2minggu, demam, keringat_malam
   await page.evaluate(() => {
     const labels = Array.from(document.querySelectorAll('label'));
@@ -103,10 +103,10 @@ async function run() {
 
   // 3. a3-pasien_error-validasi.png (2732 x 1536)
   console.log('[3/19] Mengambil a3-pasien_error-validasi...');
-  // Set usia to 150
+  // Pemicu nyata: ketik umur 250
   await page.evaluate(() => {
     const input = document.querySelector('#input-umur');
-    input.value = '150';
+    input.value = '250';
     input.dispatchEvent(new Event('input', { bubbles: true }));
     input.dispatchEvent(new Event('blur', { bubbles: true }));
   });
@@ -131,7 +131,7 @@ async function run() {
 
   // 5. b2-unggah_citra-terpilih.png (2732 x 1536)
   console.log('[5/19] Mengambil b2-unggah_citra-terpilih...');
-  const sampleImagePath = path.resolve(__dirname, 'sample_xray.png');
+  const sampleImagePath = path.resolve(__dirname, 'rontgen_siti.png');
   const fileInput = await page.$('input[type="file"]');
   await fileInput.uploadFile(sampleImagePath);
   await sleep(1000);
@@ -163,19 +163,29 @@ async function run() {
 
   // 7. b4-unggah_popup-ditolak.png (2732 x 1536)
   console.log('[7/19] Mengambil b4-unggah_popup-ditolak...');
-  // Open QualityModal directly by rendering the modal or setting React state
   await page.goto('http://localhost:3000', { waitUntil: 'networkidle2' });
-  // Move to step 2 with sample image
-  await page.type('#input-nama', 'RM-000123');
+  await page.type('#input-nama', 'Siti Rahma (fiktif)');
   await page.type('#input-umur', '45');
+  await page.click('#btn-jk-p');
+  await page.evaluate(() => {
+    const labels = Array.from(document.querySelectorAll('label'));
+    labels.forEach(l => {
+      const text = l.innerText || '';
+      if (text.includes('Batuk') || text.includes('Demam') || text.includes('Keringat')) {
+        l.click();
+      }
+    });
+  });
+  await sleep(300);
   await page.click('#btn-lanjut-step1');
-  await sleep(400);
+  await sleep(600);
   const fileInput2 = await page.$('input[type="file"]');
   await fileInput2.uploadFile(sampleImagePath);
-  await sleep(600);
+  await sleep(800);
+
   // Trigger QualityModal open via intercepted /analyze returning rejected status
   await page.setRequestInterception(true);
-  page.once('request', req => {
+  const handleReject = req => {
     if (req.url().includes('/analyze')) {
       req.respond({
         status: 200,
@@ -183,54 +193,57 @@ async function run() {
         body: JSON.stringify({
           status: 'rejected',
           quality: {
-            issues: ['BURAM', 'PENCAHAYAAN'],
+            issues: ['SALAH_POSISI', 'PENCAHAYAAN', 'BERDERAU'],
           },
         }),
       });
     } else {
       req.continue().catch(() => {});
     }
-  });
+  };
+  page.on('request', handleReject);
   await page.click('#btn-mulai-analisis');
-  await sleep(1000);
+  await sleep(1500);
+  page.off('request', handleReject);
   await page.setRequestInterception(false);
   await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'b4-unggah_popup-ditolak.png') });
   testResults.screenshots.push('b4-unggah_popup-ditolak.png');
 
   // Close modal to reset
   await page.evaluate(() => {
-    const btnBatal = document.querySelector('#modal-btn-batal') || document.querySelector('#modal-btn-tutup') || document.querySelector('button');
-    if (btnBatal) btnBatal.click();
+    const btn = document.querySelector('#modal-btn-tutup') || document.querySelector('#modal-btn-tutup-x');
+    if (btn) btn.click();
   });
-  await sleep(500);
+  await sleep(600);
 
   // 8. b5-unggah_error-server.png (2732 x 1536)
   console.log('[8/19] Mengambil b5-unggah_error-server...');
   await page.setRequestInterception(true);
-  page.once('request', req => {
+  const handleServerError = req => {
     if (req.url().includes('/analyze')) {
       req.respond({
         status: 500,
         contentType: 'application/json',
-        body: JSON.stringify({ detail: 'Gagal terhubung ke layanan server analisis AI' }),
+        body: JSON.stringify({ detail: 'Gagal terhubung ke server' }),
       });
     } else {
       req.continue().catch(() => {});
     }
-  });
+  };
+  page.on('request', handleServerError);
   await page.click('#btn-mulai-analisis');
-  await sleep(1000);
+  await sleep(1500);
+  page.off('request', handleServerError);
   await page.setRequestInterception(false);
   await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'b5-unggah_error-server.png') });
   testResults.screenshots.push('b5-unggah_error-server.png');
 
   // 9. b6-unggah_error-bukan-gambar.png (2732 x 1536)
   console.log('[9/19] Mengambil b6-unggah_error-bukan-gambar...');
-  const dummyTxtPath = path.resolve(__dirname, 'dummy.txt');
-  fs.writeFileSync(dummyTxtPath, 'ini bukan gambar');
-  // Upload non-image
+  const docxPath = path.resolve(__dirname, 'laporan_lab.docx');
+  fs.writeFileSync(docxPath, 'ini dokumen bukan gambar');
   const fileInput3 = await page.$('input[type="file"]');
-  await fileInput3.uploadFile(dummyTxtPath);
+  await fileInput3.uploadFile(docxPath);
   await sleep(800);
   await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'b6-unggah_error-bukan-gambar.png') });
   testResults.screenshots.push('b6-unggah_error-bukan-gambar.png');
