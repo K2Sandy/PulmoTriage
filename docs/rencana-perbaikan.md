@@ -138,3 +138,42 @@ Perbaikan tampilan akan dilakukan secara terfokus per grup layar dengan siklus i
 5. **Dasbor Dinkes & Riwayat (`d1`, `d2`, `d3`, `e1`)**:
    - Sesuaikan spasi tabel riwayat, badge status sinkron, dan layout kartu grafik dasbor.
    - Target deviasi: turun ke bawah 10%.
+
+---
+
+## 5. Hasil Verifikasi Tugas P1: Token dan Font (Global)
+
+Pada tahap P1, dilakukan standardisasi token warna DESIGN.md sebagai CSS variables di `globals.css`, pemetaan ke Tailwind `@theme inline`, penghapusan seluruh kelas palet Tailwind bawaan dan hex non-token di `frontend/`, serta aktivasi `@font-face` lokal dengan rentang bobot variabel (`weight: "100 900"` untuk Fraunces, `"200 800"` untuk Atkinson Next dan Mono).
+
+### Audit Kepatuhan Token (`scripts/audit-warna.py`)
+- **Kelas Palet Bawaan Tailwind Terdeteksi**: **0 kemunculan** (Nol temuan, target terpenuhi).
+- **Hex Literal Non-Token Terdeteksi**: **0 kemunculan** (Nol temuan, target terpenuhi).
+
+### Verifikasi Tipografi Computed Style
+- **Judul `<h1>`**: Font Fraunces semibold (`fontFamily: "fraunces, Georgia, serif"`, `fontWeight: "600"`).
+- **Badge & Label Kategori**: Atkinson Next extrabold (`fontFamily: "atkinsonNext, sans-serif"`, `fontWeight: "800"`).
+- **Angka & Skor**: Atkinson Mono (`fontFamily: "atkinsonMono, monospace"`, `fontFeatureSettings: "\"lnum\", \"tnum\""` / tabular-nums).
+
+### Evaluasi Perbandingan Piksel Sebelum vs Sesudah P1 (`scripts/bandingkan.py`)
+
+| No. | Layar Referensi | % Sebelum (Raw) | % Sebelum (Masked) | % Sesudah P1 (Raw) | % Sesudah P1 (Masked) | Selisih | Catatan P1 |
+|:---:|:---|:---:|:---:|:---:|:---:|:---:|:---|
+| 1 | `a1-pasien_kosong.png` | 23.08% | 23.08% | **23.07%** | 23.07% | -0.01% | Token warna latar, border line, dan font Fraunces aktif |
+| 2 | `a2-pasien_terisi.png` | 31.45% | 31.45% | **35.97%** | 35.97% | +4.52% | Perubahan metrik rendering font variabel vs teks fallback |
+| 3 | `a3-pasien_error-validasi.png` | 31.36% | 31.36% | **34.08%** | 34.08% | +2.72% | Banner error kini memakai token `status-error` / `status-error-bg` |
+| 4 | `b1-unggah_kosong.png` | 9.43% | 9.43% | **9.66%** | 9.66% | +0.23% | Dropzone border line-strong & token primary |
+| 5 | `b2-unggah_citra-terpilih.png` | 19.78% | 8.44% | **20.17%** | **8.51%** | +0.07% | Masked area rontgen stabil |
+| 6 | `b3-unggah_menganalisis.png` | 21.49% | 8.82% | **21.88%** | **8.91%** | +0.09% | Overlay status ink/80 & token primary |
+| 7 | `b4-unggah_popup-ditolak.png` | 78.38% | 78.38% | **78.45%** | 78.45% | +0.07% | Modal quality gate menggunakan token ink/40 & SVG bebas hex |
+| 8 | `b5-unggah_error-server.png` | 21.24% | 21.24% | **21.34%** | 21.34% | +0.10% | Banner server error memakai token status-error & status-error-bg |
+| 9 | `b6-unggah_error-bukan-gambar.png` | 10.91% | 10.91% | **11.05%** | 11.05% | +0.14% | Border status-error & background status-error-bg |
+| 10 | `c1-hasil_merah.png` | 34.36% | 18.43% | **36.96%** | **20.46%** | +2.03% | Banner triage-merah & on-triage-merah |
+| 11 | `c2-hasil_kuning.png` | 34.71% | 18.71% | **37.33%** | **20.73%** | +2.02% | Banner triage-kuning & on-triage-kuning |
+| 12 | `c3-hasil_hijau.png` | 34.30% | 18.31% | **36.89%** | **20.31%** | +2.00% | Banner triage-hijau & on-triage-hijau |
+| 13 | `c4-hasil_citra-janggal.png` | 35.17% | 19.12% | **37.22%** | **20.76%** | +1.64% | Skor atipikal mono dengan tanda `(?)` dan bilah line-strong |
+| 14 | `c5-hasil_tinjauan-tersimpan.png` | 36.09% | 20.16% | **39.56%** | **23.06%** | +2.90% | Kartu tinjauan tersimpan border primary |
+| 15 | `d1-dasbor_terisi.png` | 25.94% | 25.94% | **25.92%** | 25.92% | -0.02% | Kartu dasbor dan grafik batang bertumpuk token triase |
+| 16 | `d2-dasbor_kosong.png` | 8.75% | 8.75% | **8.99%** | 8.99% | +0.24% | State kosong token surface, ink, dan line |
+| 17 | `d3-dasbor_gagal-memuat.png` | 15.39% | 15.39% | **15.52%** | 15.52% | +0.13% | Banner gagal memuat dasbor token status-error |
+| 18 | `e1-riwayat_pemeriksaan.png` | 14.04% | 14.04% | **14.78%** | 14.78% | +0.74% | Tabel riwayat token border line, ink, dan badge triase |
+| 19 | `e2-riwayat_komponen-token.png` | 8.48% | 8.48% | **8.48%** | 8.48% | +0.00% | Audit komponen token stabil |

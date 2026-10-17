@@ -23,6 +23,11 @@ colors:
   text-merah: "#B3261E"
   text-kuning: "#7A5300"
   text-hijau: "#24692A"
+  # Status non-triase
+  status-error: "#7A2E8A"
+  status-error-bg: "#F7EEF8"
+  status-info-bg: "#E7F3F4"
+  status-neutral: "#EEF2F2"
   # Gelap (night mode)
   dark-bg: "#0D1719"
   dark-surface: "#142225"

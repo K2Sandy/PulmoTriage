@@ -12,12 +12,12 @@ export default function Toast() {
       id="toast-notification"
       role="status"
       aria-live="polite"
-      className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] px-4 py-3.5 bg-white/95 backdrop-blur-md rounded-xl shadow-[0px_12px_32px_0px_rgba(16,41,44,0.16)] border border-zinc-200 flex items-center gap-3 transition-all duration-300 animate-in fade-in slide-in-from-bottom-3"
+      className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] px-4 py-3.5 bg-surface/95 backdrop-blur-md rounded-xl shadow-[0px_12px_32px_0px_rgba(16,41,44,0.16)] border border-line flex items-center gap-3 transition-all duration-300 animate-in fade-in slide-in-from-bottom-3"
     >
       {/* Icon based on type */}
       <div className="shrink-0 flex items-center justify-center">
         {toast.tipe === "success" && (
-          <div className="size-6 rounded-full bg-cyan-50 flex items-center justify-center text-cyan-700">
+          <div className="size-6 rounded-full bg-status-info-bg flex items-center justify-center text-primary">
             <svg className="size-4" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fillRule="evenodd"
@@ -29,7 +29,7 @@ export default function Toast() {
         )}
 
         {toast.tipe === "offline" && (
-          <div className="size-6 rounded-full bg-amber-50 flex items-center justify-center text-amber-700">
+          <div className="size-6 rounded-full bg-status-neutral flex items-center justify-center text-text-kuning">
             <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path
                 strokeLinecap="round"
@@ -42,7 +42,7 @@ export default function Toast() {
         )}
 
         {toast.tipe === "rejected" && (
-          <div className="size-6 rounded-full bg-[var(--color-status-error-bg)] flex items-center justify-center text-[var(--color-status-error)]">
+          <div className="size-6 rounded-full bg-status-error-bg flex items-center justify-center text-status-error">
             <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path
                 strokeLinecap="round"
@@ -55,7 +55,7 @@ export default function Toast() {
       </div>
 
       {/* Message content */}
-      <div id="toast-message" className="flex-1 text-teal-950 text-sm font-normal leading-tight font-atkinson">
+      <div id="toast-message" className="flex-1 text-ink text-sm font-normal leading-tight font-atkinson">
         {toast.pesan}
       </div>
 
@@ -64,7 +64,7 @@ export default function Toast() {
         type="button"
         onClick={tutupToast}
         aria-label="Tutup notifikasi"
-        className="shrink-0 size-6 flex items-center justify-center text-gray-400 hover:text-gray-700 rounded-md transition-colors cursor-pointer"
+        className="shrink-0 size-6 flex items-center justify-center text-muted hover:text-ink rounded-md transition-colors cursor-pointer"
       >
         <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

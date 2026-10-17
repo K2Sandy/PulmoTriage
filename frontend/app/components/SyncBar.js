@@ -13,12 +13,12 @@ export default function SyncBar() {
     <div
       role="region"
       aria-label="Status sinkronisasi cloud"
-      className="h-12 pl-3.5 pr-2 bg-white rounded-full border border-zinc-200 shadow-sm inline-flex items-center gap-3 shrink-0"
+      className="h-12 pl-3.5 pr-2 bg-surface rounded-full border border-line shadow-xs inline-flex items-center gap-3 shrink-0"
     >
       {/* Icon */}
-      <div className="size-5 shrink-0 flex items-center justify-center text-gray-500">
+      <div className="size-5 shrink-0 flex items-center justify-center text-muted">
         {isSyncing ? (
-          <svg className="size-4 animate-spin text-cyan-700" fill="none" viewBox="0 0 24 24">
+          <svg className="size-4 animate-spin text-primary" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path
               className="opacity-75"
@@ -27,11 +27,11 @@ export default function SyncBar() {
             ></path>
           </svg>
         ) : isSemuaTersinkron ? (
-          <svg className="size-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <svg className="size-4 text-triage-hijau" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         ) : (
-          <svg className="size-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <svg className="size-4 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -43,14 +43,14 @@ export default function SyncBar() {
 
       {/* Label and Last Sync info */}
       <div className="flex flex-col justify-center">
-        <div className="text-teal-950 text-xs sm:text-sm font-bold leading-tight font-atkinson">
+        <div className="text-ink text-xs sm:text-sm font-bold leading-tight font-atkinson">
           {isSyncing
             ? "Menyinkronkan ke cloud..."
             : isSemuaTersinkron
             ? "Semua data tersinkron"
             : `Menunggu sinkron ke cloud: ${jumlahMenunggu}`}
         </div>
-        <div className="text-gray-500 text-[11px] leading-tight font-atkinson">
+        <div className="text-muted text-[11px] leading-tight font-atkinson">
           {isSyncing ? "Mohon tunggu sejenak..." : `Sinkron terakhir: ${sinkronTerakhir}`}
         </div>
       </div>
@@ -63,8 +63,8 @@ export default function SyncBar() {
         disabled={isSyncing}
         className={`h-8 px-3 rounded-[10px] text-xs sm:text-sm font-bold font-atkinson transition-all flex items-center gap-1.5 ${
           isSyncing
-            ? "bg-gray-100 border border-gray-300 text-gray-400 cursor-not-allowed"
-            : "bg-white border border-cyan-700 text-cyan-700 hover:bg-cyan-50 cursor-pointer shadow-xs active:scale-[0.98]"
+            ? "bg-bg border border-line text-muted/60 cursor-not-allowed"
+            : "bg-surface border border-primary text-primary hover:bg-status-info-bg cursor-pointer shadow-xs active:scale-[0.98]"
         }`}
       >
         {isSyncing ? (

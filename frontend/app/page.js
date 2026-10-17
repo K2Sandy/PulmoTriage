@@ -16,12 +16,6 @@ const GEJALA = [
   { key: "riwayat_pengobatan", label: "Pernah berobat TBC" },
 ];
 
-const WARNA = {
-  MERAH: "border-red-600 bg-red-50 text-red-900",
-  KUNING: "border-yellow-500 bg-yellow-50 text-yellow-900",
-  HIJAU: "border-green-600 bg-green-50 text-green-900",
-};
-
 export default function Home() {
   const { cekSinkron } = useSync();
 
@@ -355,9 +349,9 @@ export default function Home() {
         <aside
           role="note"
           aria-label="Pernyataan hukum dan batas tanggung jawab AI"
-          className="w-full rounded-xl border border-zinc-200 bg-[var(--color-status-neutral)] px-4 py-3 text-xs sm:text-sm text-teal-950 flex items-center gap-3 shadow-xs"
+          className="w-full rounded-xl border border-line bg-status-neutral px-4 py-3 text-xs sm:text-sm text-ink flex items-center gap-3 shadow-xs"
         >
-          <svg className="size-4 shrink-0 text-cyan-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <svg className="size-4 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <p className="leading-snug">
@@ -370,14 +364,14 @@ export default function Home() {
         {/* ------------------------------------------------------------- */}
         {step === 1 && (
           <div className="w-full flex flex-col gap-5 animate-in fade-in duration-200">
-            <section className="w-full p-6 bg-white rounded-2xl border border-zinc-200 shadow-xs flex flex-col gap-7">
+            <section className="w-full p-6 bg-white rounded-2xl border border-line shadow-xs flex flex-col gap-7">
               {/* Patient Fields */}
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-teal-950 text-2xl font-semibold font-fraunces leading-7">
+                  <h1 className="text-ink text-2xl font-semibold font-fraunces leading-7">
                     Data Pasien
                   </h1>
-                  <span className="px-2.5 py-0.5 bg-gray-100 rounded-full border border-zinc-200 text-gray-500 text-xs font-bold font-atkinson tracking-wide">
+                  <span className="px-2.5 py-0.5 bg-status-neutral rounded-full border border-line text-muted text-xs font-bold font-atkinson tracking-wide">
                     Opsional
                   </span>
                 </div>
@@ -385,7 +379,7 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
                   {/* Nama Pasien */}
                   <div className="md:col-span-6 flex flex-col gap-1.5">
-                    <label htmlFor="input-nama" className="text-teal-950 text-base font-bold font-atkinson">
+                    <label htmlFor="input-nama" className="text-ink text-base font-bold font-atkinson">
                       Nama pasien
                     </label>
                     <input
@@ -394,13 +388,13 @@ export default function Home() {
                       value={nama}
                       onChange={(e) => setNama(e.target.value)}
                       placeholder="Siti Rahma (fiktif)"
-                      className="w-full h-11 px-3.5 bg-white rounded-md border border-slate-400 text-teal-950 text-base font-normal font-atkinson focus:border-cyan-700 focus:outline-none transition-colors"
+                      className="w-full h-11 px-3.5 bg-white rounded-md border border-line-strong text-ink text-base font-normal font-atkinson focus:border-primary focus:outline-none transition-colors"
                     />
                   </div>
 
                   {/* Umur */}
                   <div className="md:col-span-3 flex flex-col gap-1.5">
-                    <label htmlFor="input-umur" className="text-teal-950 text-base font-bold font-atkinson">
+                    <label htmlFor="input-umur" className="text-ink text-base font-bold font-atkinson">
                       Umur
                     </label>
                     <div className="flex items-center gap-2.5">
@@ -412,20 +406,20 @@ export default function Home() {
                         value={umur}
                         onChange={(e) => handleUmurChange(e.target.value)}
                         placeholder="45"
-                        className={`w-28 h-11 px-3 bg-white rounded-md text-teal-950 text-base font-medium font-mono focus:outline-none transition-all ${
+                        className={`w-28 h-11 px-3 bg-white rounded-md text-ink text-base font-medium font-mono focus:outline-none transition-all ${
                           umurError
-                            ? "outline outline-2 outline-offset-[-2px] outline-[var(--color-status-error)] border-transparent"
-                            : "border border-slate-400 focus:border-cyan-700"
+                            ? "outline outline-2 outline-offset-[-2px] outline-status-error border-transparent"
+                            : "border border-line-strong focus:border-primary"
                         }`}
                       />
-                      <span className="text-teal-950 text-base font-normal font-atkinson">
+                      <span className="text-ink text-base font-normal font-atkinson">
                         tahun
                       </span>
                     </div>
 
                     {/* Inline Error for Age */}
                     {umurError && (
-                      <div id="error-umur-pesan" className="pt-1 flex items-center gap-1.5 text-[var(--color-status-error)] animate-in fade-in">
+                      <div id="error-umur-pesan" className="pt-1 flex items-center gap-1.5 text-status-error animate-in fade-in">
                         <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
                           <circle cx="12" cy="12" r="9" />
                           <line x1="12" y1="8" x2="12" y2="12" />
@@ -440,18 +434,18 @@ export default function Home() {
 
                   {/* Jenis Kelamin Segmented Control */}
                   <div className="md:col-span-3 flex flex-col gap-1.5">
-                    <span className="text-teal-950 text-base font-bold font-atkinson">
+                    <span className="text-ink text-base font-bold font-atkinson">
                       Jenis kelamin
                     </span>
-                    <div className="w-full sm:w-64 h-11 rounded-[10px] border border-slate-400 flex overflow-hidden bg-white">
+                    <div className="w-full sm:w-64 h-11 rounded-[10px] border border-line-strong flex overflow-hidden bg-white">
                       <button
                         type="button"
                         id="btn-jk-l"
                         onClick={() => setJk(jk === "L" ? "" : "L")}
-                        className={`flex-1 h-full flex items-center justify-center font-atkinson text-base transition-colors border-r border-slate-400 cursor-pointer ${
+                        className={`flex-1 h-full flex items-center justify-center font-atkinson text-base transition-colors border-r border-line-strong cursor-pointer ${
                           jk === "L"
-                            ? "bg-cyan-700 text-white font-bold"
-                            : "text-teal-950 font-normal hover:bg-gray-50"
+                            ? "bg-primary text-white font-bold"
+                            : "text-ink font-normal hover:bg-bg"
                         }`}
                       >
                         Laki-laki
@@ -462,8 +456,8 @@ export default function Home() {
                         onClick={() => setJk(jk === "P" ? "" : "P")}
                         className={`flex-1 h-full flex items-center justify-center font-atkinson text-base transition-colors cursor-pointer ${
                           jk === "P"
-                            ? "bg-cyan-700 text-white font-bold"
-                            : "text-teal-950 font-normal hover:bg-gray-50"
+                            ? "bg-primary text-white font-bold"
+                            : "text-ink font-normal hover:bg-bg"
                         }`}
                       >
                         Perempuan
@@ -473,25 +467,25 @@ export default function Home() {
                 </div>
 
                 {/* Privacy Notice */}
-                <div className="px-3.5 py-3 bg-emerald-50 rounded-[10px] flex items-center gap-2.5 border border-emerald-200/60 mt-1">
-                  <svg className="size-4 shrink-0 text-cyan-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <div className="px-3.5 py-3 bg-status-info-bg rounded-[10px] flex items-center gap-2.5 border border-line mt-1">
+                  <svg className="size-4 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
-                  <p className="text-teal-950 text-sm font-normal font-atkinson leading-tight">
+                  <p className="text-ink text-sm font-normal font-atkinson leading-tight">
                     Nama dan umur hanya tersimpan di komputer Puskesmas ini. Yang dikirim ke dasbor Dinas Kesehatan hanya data tanpa nama.
                   </p>
                 </div>
               </div>
 
-              <div className="w-full h-px bg-zinc-200" />
+              <div className="w-full h-px bg-line" />
 
               {/* Gejala TBC Cards */}
               <div className="flex flex-col gap-3.5">
                 <div className="flex items-baseline gap-3">
-                  <h2 className="text-teal-950 text-2xl font-semibold font-fraunces leading-7">
+                  <h2 className="text-ink text-2xl font-semibold font-fraunces leading-7">
                     Gejala TBC
                   </h2>
-                  <span className="text-gray-500 text-sm font-normal font-atkinson">
+                  <span className="text-muted text-sm font-normal font-atkinson">
                     Centang semua yang dialami pasien
                   </span>
                 </div>
@@ -504,8 +498,8 @@ export default function Home() {
                         key={key}
                         className={`h-12 px-3.5 rounded-[10px] border flex items-center gap-3 cursor-pointer transition-all ${
                           isChecked
-                            ? "bg-cyan-50/60 border-cyan-700 shadow-xs"
-                            : "bg-white border-zinc-200 hover:border-zinc-300"
+                            ? "bg-status-info-bg border-primary shadow-xs"
+                            : "bg-white border-line hover:border-line-strong"
                         }`}
                       >
                         <input
@@ -518,8 +512,8 @@ export default function Home() {
                         <div
                           className={`size-5 rounded-[5px] flex items-center justify-center transition-colors shrink-0 ${
                             isChecked
-                              ? "bg-cyan-700 border border-cyan-700 text-white"
-                              : "bg-white border border-slate-400"
+                              ? "bg-primary border border-primary text-white"
+                              : "bg-white border border-line-strong"
                           }`}
                         >
                           {isChecked && (
@@ -533,7 +527,7 @@ export default function Home() {
                           )}
                         </div>
                         <span className={`text-base font-atkinson select-none ${
-                          isChecked ? "text-cyan-900 font-semibold" : "text-teal-950 font-normal"
+                          isChecked ? "text-primary font-semibold" : "text-ink font-normal"
                         }`}>
                           {label}
                         </span>
@@ -550,7 +544,7 @@ export default function Home() {
                 type="button"
                 id="btn-kosongkan-form"
                 onClick={kosongkanForm}
-                className="h-11 px-5 bg-white rounded-[10px] border border-cyan-700 text-cyan-700 hover:bg-cyan-50 text-base font-bold font-atkinson transition-colors cursor-pointer"
+                className="h-11 px-5 bg-white rounded-[10px] border border-primary text-primary hover:bg-status-info-bg text-base font-bold font-atkinson transition-colors cursor-pointer"
               >
                 Kosongkan form
               </button>
@@ -558,7 +552,7 @@ export default function Home() {
                 type="button"
                 id="btn-lanjut-step1"
                 onClick={lanjutKeStep2}
-                className="h-11 px-6 bg-cyan-700 hover:bg-cyan-800 text-white rounded-[10px] text-base font-bold font-atkinson flex items-center gap-2 transition-colors shadow-xs cursor-pointer"
+                className="h-11 px-6 bg-primary hover:bg-primary/90 text-white rounded-[10px] text-base font-bold font-atkinson flex items-center gap-2 transition-colors shadow-xs cursor-pointer"
               >
                 <span>Lanjut</span>
                 <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -579,17 +573,17 @@ export default function Home() {
               <div
                 id="banner-server-error"
                 role="alert"
-                className="w-full px-4 py-3.5 bg-[var(--color-status-error-bg)] rounded-[10px] border border-[var(--color-status-error)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs"
+                className="w-full px-4 py-3.5 bg-status-error-bg rounded-[10px] border border-status-error flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs"
               >
                 <div className="flex items-start gap-3">
-                  <div className="size-5 text-[var(--color-status-error)] shrink-0 mt-0.5">
+                  <div className="size-5 text-status-error shrink-0 mt-0.5">
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
                       <circle cx="12" cy="12" r="9" />
                       <line x1="12" y1="8" x2="12" y2="12" />
                       <line x1="12" y1="16" x2="12.01" y2="16" />
                     </svg>
                   </div>
-                  <div className="text-teal-950 text-base font-atkinson leading-snug">
+                  <div className="text-ink text-base font-atkinson leading-snug">
                     <strong className="font-bold">Tidak terhubung ke server PulmoTriage di komputer ini.</strong>{" "}
                     Pastikan aplikasi server sudah dijalankan, lalu coba lagi. Isian Anda tidak hilang.
                   </div>
@@ -599,7 +593,7 @@ export default function Home() {
                   id="btn-coba-lagi"
                   onClick={jalankanAnalisis}
                   disabled={loading}
-                  className="h-8 px-3.5 bg-white rounded-[10px] border border-cyan-700 text-cyan-700 hover:bg-cyan-50 text-sm font-bold font-atkinson shrink-0 self-end sm:self-center cursor-pointer transition-colors"
+                  className="h-8 px-3.5 bg-white rounded-[10px] border border-primary text-primary hover:bg-status-info-bg text-sm font-bold font-atkinson shrink-0 self-end sm:self-center cursor-pointer transition-colors"
                 >
                   Coba lagi
                 </button>
@@ -608,10 +602,10 @@ export default function Home() {
 
             {/* Title */}
             <div className="flex items-baseline gap-3">
-              <h1 className="text-teal-950 text-2xl font-semibold font-fraunces leading-7">
+              <h1 className="text-ink text-2xl font-semibold font-fraunces leading-7">
                 Unggah rontgen dada
               </h1>
-              <span className="text-gray-500 text-sm font-normal font-atkinson">
+              <span className="text-muted text-sm font-normal font-atkinson">
                 Satu foto posisi depan (PA/AP)
               </span>
             </div>
@@ -636,16 +630,16 @@ export default function Home() {
 
                 {/* State A: File Bukan Gambar */}
                 {invalidFileError ? (
-                  <div className="w-full h-96 bg-white rounded-2xl border-2 border-[var(--color-status-error)] flex flex-col justify-center items-center p-6 text-center gap-3">
-                    <div className="size-16 bg-pink-50 rounded-full flex justify-center items-center text-[var(--color-status-error)]">
+                  <div className="w-full h-96 bg-white rounded-2xl border-2 border-status-error flex flex-col justify-center items-center p-6 text-center gap-3">
+                    <div className="size-16 bg-status-error-bg rounded-full flex justify-center items-center text-status-error">
                       <svg className="size-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
-                    <div id="file-error-nama" className="text-teal-950 text-lg font-bold font-atkinson">
+                    <div id="file-error-nama" className="text-ink text-lg font-bold font-atkinson">
                       {invalidFileError.name} bukan gambar
                     </div>
-                    <div className="text-gray-500 text-base font-normal font-atkinson">
+                    <div className="text-muted text-base font-normal font-atkinson">
                       Pilih file JPG atau PNG berisi rontgen dada.
                     </div>
                     <div className="pt-2">
@@ -653,7 +647,7 @@ export default function Home() {
                         type="button"
                         id="btn-pilih-file-lain"
                         onClick={() => fileInputRef.current?.click()}
-                        className="h-11 px-5 bg-white rounded-[10px] border border-cyan-700 text-cyan-700 hover:bg-cyan-50 text-base font-bold font-atkinson flex items-center gap-2 cursor-pointer transition-colors"
+                        className="h-11 px-5 bg-white rounded-[10px] border border-primary text-primary hover:bg-status-info-bg text-base font-bold font-atkinson flex items-center gap-2 cursor-pointer transition-colors"
                       >
                         <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -664,9 +658,9 @@ export default function Home() {
                   </div>
                 ) : file && filePreview ? (
                   /* State B: Foto Terpilih (Preview + Details) */
-                  <div className="w-full min-h-96 p-5 bg-white rounded-2xl border border-zinc-200 flex flex-col sm:flex-row items-center sm:items-start gap-5 shadow-xs">
+                  <div className="w-full min-h-96 p-5 bg-white rounded-2xl border border-line flex flex-col sm:flex-row items-center sm:items-start gap-5 shadow-xs">
                     {/* Thumbnail Box */}
-                    <div className="w-full sm:w-72 h-80 sm:h-96 relative bg-neutral-950 rounded-[10px] flex items-center justify-center overflow-hidden shrink-0 border border-zinc-800">
+                    <div className="w-full sm:w-72 h-80 sm:h-96 relative bg-black rounded-[10px] flex items-center justify-center overflow-hidden shrink-0 border border-line/20">
                       <img
                         id="preview-foto-rontgen"
                         src={filePreview}
@@ -678,9 +672,9 @@ export default function Home() {
                       {loading && (
                         <div
                           id="overlay-menganalisis"
-                          className="absolute inset-x-0 bottom-0 py-3 px-4 bg-teal-950/80 backdrop-blur-xs flex items-center gap-2.5 text-white animate-in fade-in"
+                          className="absolute inset-x-0 bottom-0 py-3 px-4 bg-ink/80 backdrop-blur-xs flex items-center gap-2.5 text-white animate-in fade-in"
                         >
-                          <svg className="size-4 animate-spin text-cyan-400 shrink-0" fill="none" viewBox="0 0 24 24">
+                          <svg className="size-4 animate-spin text-primary shrink-0" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
@@ -693,13 +687,13 @@ export default function Home() {
 
                     {/* Metadata & Change Button */}
                     <div className="flex-1 flex flex-col items-start gap-2 pt-1 w-full">
-                      <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                      <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
                         Foto terpilih
                       </span>
-                      <span id="preview-nama-file" className="text-teal-950 text-base font-bold font-mono break-all">
+                      <span id="preview-nama-file" className="text-ink text-base font-bold font-mono break-all">
                         {file.name}
                       </span>
-                      <span id="preview-meta-file" className="text-gray-500 text-sm font-normal font-atkinson">
+                      <span id="preview-meta-file" className="text-muted text-sm font-normal font-atkinson">
                         {fileMeta.size} {fileMeta.dimensions && `· ${fileMeta.dimensions}`}
                       </span>
 
@@ -711,8 +705,8 @@ export default function Home() {
                           onClick={() => fileInputRef.current?.click()}
                           className={`h-11 px-5 rounded-[10px] text-base font-bold font-atkinson flex items-center gap-2 transition-colors ${
                             loading
-                              ? "bg-zinc-200 text-gray-400 cursor-not-allowed"
-                              : "bg-white border border-cyan-700 text-cyan-700 hover:bg-cyan-50 cursor-pointer shadow-xs"
+                              ? "bg-line text-muted cursor-not-allowed"
+                              : "bg-white border border-primary text-primary hover:bg-status-info-bg cursor-pointer shadow-xs"
                           }`}
                         >
                           <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -733,29 +727,29 @@ export default function Home() {
                     onClick={() => fileInputRef.current?.click()}
                     className={`w-full h-96 bg-white rounded-2xl border-2 border-dashed flex flex-col justify-center items-center gap-3 p-6 cursor-pointer transition-all ${
                       isDragging
-                        ? "border-cyan-700 bg-cyan-50/40 scale-[0.99]"
-                        : "border-slate-400 hover:border-cyan-700 hover:bg-slate-50/50"
+                        ? "border-primary bg-status-info-bg scale-[0.99]"
+                        : "border-line-strong hover:border-primary hover:bg-bg/50"
                     }`}
                   >
-                    <div className="size-16 bg-emerald-50 rounded-full flex justify-center items-center text-cyan-700">
+                    <div className="size-16 bg-status-info-bg rounded-full flex justify-center items-center text-primary">
                       <svg className="size-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                       </svg>
                     </div>
-                    <div className="text-center text-teal-950 text-lg font-bold font-atkinson">
+                    <div className="text-center text-ink text-lg font-bold font-atkinson">
                       Seret foto rontgen dada ke sini
                     </div>
-                    <div className="text-center text-gray-500 text-base font-normal font-atkinson">
+                    <div className="text-center text-muted text-base font-normal font-atkinson">
                       atau
                     </div>
                     <button
                       type="button"
                       id="btn-pilih-file"
-                      className="h-11 px-5 bg-white rounded-[10px] border border-cyan-700 text-cyan-700 font-bold text-base font-atkinson shadow-xs pointer-events-none"
+                      className="h-11 px-5 bg-white rounded-[10px] border border-primary text-primary font-bold text-base font-atkinson shadow-xs pointer-events-none"
                     >
                       Pilih file
                     </button>
-                    <div className="text-center text-gray-500 text-sm font-normal font-atkinson pt-1">
+                    <div className="text-center text-muted text-sm font-normal font-atkinson pt-1">
                       JPG atau PNG · file digital atau foto film di viewer box
                     </div>
                   </div>
@@ -765,26 +759,26 @@ export default function Home() {
               {/* Right Column: Ringkasan Langkah 1 & Tips Foto */}
               <div className="lg:col-span-4 flex flex-col gap-4">
                 {/* Ringkasan Langkah 1 Card */}
-                <div className="w-full p-5 bg-white rounded-2xl border border-zinc-200 flex flex-col gap-3 shadow-xs">
+                <div className="w-full p-5 bg-white rounded-2xl border border-line flex flex-col gap-3 shadow-xs">
                   <div className="w-full flex items-center justify-between">
-                    <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                    <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
                       Ringkasan langkah 1
                     </span>
                     <button
                       type="button"
                       id="btn-ubah-langkah-1"
                       onClick={() => setStep(1)}
-                      className="text-cyan-700 text-sm font-bold font-atkinson hover:underline cursor-pointer"
+                      className="text-primary text-sm font-bold font-atkinson hover:underline cursor-pointer"
                     >
                       Ubah
                     </button>
                   </div>
 
                   <div className="text-base font-atkinson leading-snug">
-                    <strong className="text-teal-950 font-bold">
+                    <strong className="text-ink font-bold">
                       {nama.trim() || "Tanpa nama"}
                     </strong>{" "}
-                    <span className="text-gray-500 font-normal">
+                    <span className="text-muted font-normal">
                       · {umur ? `${umur} tahun` : "-"} · {jk === "L" ? "Laki-laki" : jk === "P" ? "Perempuan" : "-"}
                     </span>
                   </div>
@@ -795,8 +789,8 @@ export default function Home() {
                       gejala.map((gKey) => {
                         const item = GEJALA.find((g) => g.key === gKey);
                         return (
-                          <div key={gKey} className="flex items-center gap-2 text-teal-950 text-base font-normal font-atkinson">
-                            <svg className="size-4 text-cyan-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <div key={gKey} className="flex items-center gap-2 text-ink text-base font-normal font-atkinson">
+                            <svg className="size-4 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
                             <span>{item?.label || gKey}</span>
@@ -804,7 +798,7 @@ export default function Home() {
                         );
                       })
                     ) : (
-                      <span className="text-gray-400 text-sm italic font-atkinson">
+                      <span className="text-muted text-sm italic font-atkinson">
                         Tidak ada gejala yang dipilih
                       </span>
                     )}
@@ -812,11 +806,11 @@ export default function Home() {
                 </div>
 
                 {/* Tips Foto Card */}
-                <div className="w-full p-5 bg-white rounded-2xl border border-zinc-200 flex flex-col gap-2.5 shadow-xs">
-                  <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                <div className="w-full p-5 bg-white rounded-2xl border border-line flex flex-col gap-2.5 shadow-xs">
+                  <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
                     Agar foto bisa dianalisis
                   </span>
-                  <ul className="flex flex-col gap-2 pl-4 list-disc text-teal-950 text-base font-normal font-atkinson leading-snug marker:text-teal-950">
+                  <ul className="flex flex-col gap-2 pl-4 list-disc text-ink text-base font-normal font-atkinson leading-snug marker:text-ink">
                     <li>File digital asli lebih baik daripada foto layar atau film.</li>
                     <li>Bila memotret film: letakkan di viewer box, kamera tegak lurus, tanpa pantulan.</li>
                     <li>Seluruh area paru masuk bingkai, tidak terbalik atau miring.</li>
@@ -831,7 +825,7 @@ export default function Home() {
                 type="button"
                 id="btn-kembali-step1"
                 onClick={() => setStep(1)}
-                className="h-11 px-5 rounded-[10px] text-cyan-700 hover:bg-cyan-50 text-base font-bold font-atkinson flex items-center gap-2 transition-colors cursor-pointer"
+                className="h-11 px-5 rounded-[10px] text-primary hover:bg-status-info-bg text-base font-bold font-atkinson flex items-center gap-2 transition-colors cursor-pointer"
               >
                 <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -846,8 +840,8 @@ export default function Home() {
                 onClick={jalankanAnalisis}
                 className={`h-11 px-6 rounded-[10px] text-base font-bold font-atkinson flex items-center gap-2 transition-all ${
                   !file || loading
-                    ? "bg-zinc-200 text-gray-400 cursor-not-allowed"
-                    : "bg-cyan-700 hover:bg-cyan-800 text-white shadow-xs cursor-pointer"
+                    ? "bg-line text-muted cursor-not-allowed"
+                    : "bg-primary hover:bg-primary/90 text-white shadow-xs cursor-pointer"
                 }`}
               >
                 {loading ? (
@@ -875,12 +869,12 @@ export default function Home() {
             <div className="w-full lg:w-80 flex flex-col items-start gap-2.5 shrink-0">
               {/* Ringkasan Pasien */}
               <div id="ringkasan-pasien-hasil" className="w-full text-sm font-atkinson leading-5 break-words">
-                <span className="text-teal-950 font-bold">
+                <span className="text-ink font-bold">
                   {nama.trim() || "Tanpa nama"}
                 </span>{" "}
-                <span className="text-gray-500 font-normal">
+                <span className="text-muted font-normal">
                   · {umur ? `${umur} th` : "-"} · {jk === "L" ? "L" : jk === "P" ? "P" : "-"} · No.{" "}
-                  <span className="font-mono font-medium text-gray-500">
+                  <span className="font-mono font-medium text-muted">
                     {String(hasil.id || 1).padStart(4, "0")}
                   </span>{" "}
                   · {formatTanggalIndo(hasil.dibuat_pada)}
@@ -888,7 +882,7 @@ export default function Home() {
               </div>
 
               {/* Wadah Citra */}
-              <div className="w-full h-96 bg-neutral-950 rounded-[10px] flex items-center justify-center overflow-hidden border border-zinc-800 shadow-xs relative">
+              <div className="w-full h-96 bg-black rounded-[10px] flex items-center justify-center overflow-hidden border border-line/20 shadow-xs relative">
                 {tabFoto === "heatmap" && hasil.heatmap_png ? (
                   <img
                     id="img-hasil-rontgen"
@@ -908,15 +902,15 @@ export default function Home() {
 
               {/* Toggle Segmented: Peta panas / Asli + Keterangan */}
               <div className="w-full flex items-center justify-between gap-2.5">
-                <div className="w-44 h-9 rounded-[10px] border border-slate-500 flex overflow-hidden bg-white shrink-0">
+                <div className="w-44 h-9 rounded-[10px] border border-line-strong flex overflow-hidden bg-white shrink-0">
                   <button
                     type="button"
                     id="btn-toggle-peta-panas"
                     onClick={() => setTabFoto("heatmap")}
-                    className={`flex-1 h-full flex items-center justify-center gap-1.5 font-atkinson text-sm transition-colors border-r border-slate-500 cursor-pointer ${
+                    className={`flex-1 h-full flex items-center justify-center gap-1.5 font-atkinson text-sm transition-colors border-r border-line-strong cursor-pointer ${
                       tabFoto === "heatmap"
-                        ? "bg-cyan-700 text-white font-bold"
-                        : "text-teal-950 font-normal hover:bg-gray-50"
+                        ? "bg-primary text-white font-bold"
+                        : "text-ink font-normal hover:bg-bg"
                     }`}
                   >
                     <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -930,8 +924,8 @@ export default function Home() {
                     onClick={() => setTabFoto("asli")}
                     className={`flex-1 h-full flex items-center justify-center font-atkinson text-sm transition-colors cursor-pointer ${
                       tabFoto === "asli"
-                        ? "bg-cyan-700 text-white font-bold"
-                        : "text-teal-950 font-normal hover:bg-gray-50"
+                        ? "bg-primary text-white font-bold"
+                        : "text-ink font-normal hover:bg-bg"
                     }`}
                   >
                     <span>Asli</span>
@@ -940,7 +934,7 @@ export default function Home() {
 
                 <div
                   id="keterangan-peta-panas"
-                  className="flex-1 text-right text-gray-500 text-xs font-normal font-atkinson leading-4"
+                  className="flex-1 text-right text-muted text-xs font-normal font-atkinson leading-4"
                 >
                   {hasil.triage.atypical
                     ? "Peta panas kurang bisa dipercaya"
@@ -956,10 +950,10 @@ export default function Home() {
                 id="banner-triase-hasil"
                 className={`w-full h-16 px-4 rounded-[10px] flex items-center gap-3 shadow-xs ${
                   hasil.triage.category === "MERAH"
-                    ? "bg-red-700 text-white"
+                    ? "bg-triage-merah text-white"
                     : hasil.triage.category === "KUNING"
-                    ? "bg-yellow-500 text-stone-900"
-                    : "bg-emerald-700 text-white"
+                    ? "bg-triage-kuning text-on-triage-kuning"
+                    : "bg-triage-hijau text-white"
                 }`}
               >
                 {/* Ikon Kategori */}
@@ -970,7 +964,7 @@ export default function Home() {
                     <line x1="12" y1="16" x2="12.01" y2="16" />
                   </svg>
                 ) : hasil.triage.category === "KUNING" ? (
-                  <svg className="size-7 shrink-0 text-stone-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <svg className="size-7 shrink-0 text-on-triage-kuning" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
                 ) : (
@@ -1000,23 +994,23 @@ export default function Home() {
 
               {/* Anjuran */}
               <div className="w-full flex flex-col">
-                <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
                   Anjuran
                 </span>
                 <div
                   id="teks-anjuran-triase"
-                  className="pt-1 text-teal-950 text-lg font-bold font-atkinson leading-6"
+                  className="pt-1 text-ink text-lg font-bold font-atkinson leading-6"
                 >
                   {hasil.triage.action}
                 </div>
               </div>
 
               {/* Pernyataan Wajib Alat Bantu */}
-              <div className="w-full px-3.5 py-2.5 bg-gray-100 rounded-[10px] border border-zinc-200 flex items-center gap-2.5">
-                <svg className="size-4 shrink-0 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <div className="w-full px-3.5 py-2.5 bg-status-neutral rounded-[10px] border border-line flex items-center gap-2.5">
+                <svg className="size-4 shrink-0 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-gray-500 text-xs font-normal font-atkinson leading-5">
+                <p className="text-muted text-xs font-normal font-atkinson leading-5">
                   Hasil AI adalah alat bantu triase, bukan diagnosis. Keputusan klinis tetap di tangan dokter.
                 </p>
               </div>
@@ -1026,13 +1020,13 @@ export default function Home() {
                 {/* Subkolom Kiri: Kartu Skor AI, Alasan, Peringatan */}
                 <div className="md:col-span-7 flex flex-col gap-3">
                   {/* Kartu Skor AI */}
-                  <div className="w-full p-4 bg-white rounded-2xl border border-zinc-200 flex flex-col shadow-xs">
+                  <div className="w-full p-4 bg-white rounded-2xl border border-line flex flex-col shadow-xs">
                     <div className="w-full flex justify-between items-center">
-                      <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                      <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
                         Skor AI
                       </span>
-                      <div className="h-6 px-2.5 bg-gray-100 rounded-full border border-zinc-200 flex items-center">
-                        <span className="text-gray-500 text-xs font-bold font-atkinson tracking-wide">
+                      <div className="h-6 px-2.5 bg-status-neutral rounded-full border border-line flex items-center">
+                        <span className="text-muted text-xs font-bold font-atkinson tracking-wide">
                           Tingkat skor:{" "}
                           {(() => {
                             const lvl = String(hasil.triage.ai_level || "").toLowerCase();
@@ -1051,20 +1045,20 @@ export default function Home() {
                           <div className="flex items-baseline gap-2">
                             <span
                               id="nilai-skor-ai"
-                              className="text-teal-950 text-4xl font-semibold font-mono leading-10"
+                              className="text-ink text-4xl font-semibold font-mono leading-10"
                             >
                               {hasil.prob_tb.toFixed(2).replace(".", ",")}
                             </span>
                             <span
                               id="tanda-skor-atipikal"
-                              className="text-gray-500 text-3xl font-normal font-mono leading-none"
+                              className="text-muted text-3xl font-normal font-mono leading-none"
                             >
                               (?)
                             </span>
                           </div>
                           <span
                             id="keterangan-skor-atipikal"
-                            className="text-gray-500 text-sm font-normal font-atkinson pt-0.5"
+                            className="text-muted text-sm font-normal font-atkinson pt-0.5"
                           >
                             Skor kurang bisa dipercaya untuk citra ini
                           </span>
@@ -1072,7 +1066,7 @@ export default function Home() {
                       ) : (
                         <span
                           id="nilai-skor-ai"
-                          className="text-teal-950 text-4xl font-semibold font-mono leading-10"
+                          className="text-ink text-4xl font-semibold font-mono leading-10"
                         >
                           {hasil.prob_tb.toFixed(2).replace(".", ",")}
                         </span>
@@ -1081,11 +1075,11 @@ export default function Home() {
 
                     {/* Bilah 0 - 1 */}
                     <div className="w-full pt-2.5">
-                      <div className="w-full h-2 bg-zinc-200 rounded-full overflow-hidden relative">
+                      <div className="w-full h-2 bg-line rounded-full overflow-hidden relative">
                         <div
                           id="bilah-skor-ai"
                           className={`h-full rounded-full transition-all duration-300 ${
-                            hasil.triage.atypical ? "bg-slate-500" : "bg-teal-950"
+                            hasil.triage.atypical ? "bg-line-strong" : "bg-ink"
                           }`}
                           style={{
                             width: `${Math.min(Math.max(hasil.prob_tb * 100, 0), 100)}%`,
@@ -1093,7 +1087,7 @@ export default function Home() {
                         />
                       </div>
                     </div>
-                    <div className="w-full pt-1 flex justify-between items-center text-gray-500 text-xs font-medium font-mono">
+                    <div className="w-full pt-1 flex justify-between items-center text-muted text-xs font-medium font-mono">
                       <span>0</span>
                       <span>0,5</span>
                       <span>1</span>
@@ -1102,7 +1096,7 @@ export default function Home() {
 
                   {/* Daftar Alasan */}
                   <div className="w-full flex flex-col">
-                    <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                    <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
                       Alasan
                     </span>
                     <div id="daftar-alasan-triase" className="pt-1.5 flex flex-col gap-1">
@@ -1110,9 +1104,9 @@ export default function Home() {
                         hasil.triage.reasons.map((r, i) => (
                           <div
                             key={i}
-                            className="flex items-start gap-2 text-teal-950 text-base font-normal font-atkinson leading-5"
+                            className="flex items-start gap-2 text-ink text-base font-normal font-atkinson leading-5"
                           >
-                            <span className="text-teal-950 shrink-0 leading-5 select-none">•</span>
+                            <span className="text-ink shrink-0 leading-5 select-none">•</span>
                             <span>{r}</span>
                           </div>
                         ))}
@@ -1122,21 +1116,21 @@ export default function Home() {
                   {/* Peringatan (Jika Ada) */}
                   {hasil.warnings && hasil.warnings.length > 0 && (
                     <div className="w-full flex flex-col gap-1.5">
-                      <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                      <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
                         Peringatan
                       </span>
                       <div id="daftar-peringatan-triase" className="flex flex-col gap-2">
                         {hasil.warnings.map((w, i) => (
                           <div
                             key={i}
-                            className="w-full px-3 py-2 bg-gray-100 rounded-[10px] border border-zinc-200 flex items-start gap-2.5"
+                            className="w-full px-3 py-2 bg-status-neutral rounded-[10px] border border-line flex items-start gap-2.5"
                           >
-                            <svg className="size-4 text-teal-950 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <svg className="size-4 text-ink shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                               <circle cx="12" cy="12" r="9" />
                               <line x1="12" y1="8" x2="12" y2="12" />
                               <line x1="12" y1="16" x2="12.01" y2="16" />
                             </svg>
-                            <span className="text-teal-950 text-sm font-normal font-atkinson leading-5">
+                            <span className="text-ink text-sm font-normal font-atkinson leading-5">
                               {w}
                             </span>
                           </div>
@@ -1150,24 +1144,24 @@ export default function Home() {
                 <div className="md:col-span-5 flex flex-col">
                   {!tinjauanTersimpan ? (
                     /* State A: Tinjauan Belum Disimpan */
-                    <div className="w-full p-5 bg-white rounded-2xl border border-zinc-200 flex flex-col gap-3 shadow-xs">
-                      <h3 className="text-teal-950 text-xl font-bold font-atkinson leading-6">
+                    <div className="w-full p-5 bg-white rounded-2xl border border-line flex flex-col gap-3 shadow-xs">
+                      <h3 className="text-ink text-xl font-bold font-atkinson leading-6">
                         Tinjauan dokter
                       </h3>
-                      <p className="text-gray-500 text-base font-normal font-atkinson leading-5">
+                      <p className="text-muted text-base font-normal font-atkinson leading-5">
                         Apakah dokter setuju dengan hasil AI?
                       </p>
 
                       {/* Segmented Control Setuju / Tidak Setuju */}
-                      <div className="w-full h-11 rounded-[10px] border border-slate-500 flex overflow-hidden bg-white">
+                      <div className="w-full h-11 rounded-[10px] border border-line-strong flex overflow-hidden bg-white">
                         <button
                           type="button"
                           id="btn-tinjau-setuju"
                           onClick={() => setPilihanTinjauan("setuju")}
-                          className={`flex-1 h-full border-r border-slate-500 flex items-center justify-center gap-2 font-atkinson text-base transition-colors cursor-pointer ${
+                          className={`flex-1 h-full border-r border-line-strong flex items-center justify-center gap-2 font-atkinson text-base transition-colors cursor-pointer ${
                             pilihanTinjauan === "setuju"
-                              ? "bg-cyan-700 text-white font-bold"
-                              : "text-teal-950 font-normal hover:bg-gray-50"
+                              ? "bg-primary text-white font-bold"
+                              : "text-ink font-normal hover:bg-bg"
                           }`}
                         >
                           <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -1181,8 +1175,8 @@ export default function Home() {
                           onClick={() => setPilihanTinjauan("tidak_setuju")}
                           className={`flex-1 h-full flex items-center justify-center gap-2 font-atkinson text-base transition-colors cursor-pointer ${
                             pilihanTinjauan === "tidak_setuju"
-                              ? "bg-cyan-700 text-white font-bold"
-                              : "text-teal-950 font-normal hover:bg-gray-50"
+                              ? "bg-primary text-white font-bold"
+                              : "text-ink font-normal hover:bg-bg"
                           }`}
                         >
                           <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -1195,15 +1189,15 @@ export default function Home() {
                       {/* Catatan Dokter (Opsional) */}
                       <div className="flex flex-col gap-1.5 pt-1">
                         <label htmlFor="input-catatan-dokter" className="text-sm font-atkinson">
-                          <span className="text-teal-950 font-bold">Catatan dokter </span>
-                          <span className="text-gray-500 font-normal">(opsional)</span>
+                          <span className="text-ink font-bold">Catatan dokter </span>
+                          <span className="text-muted font-normal">(opsional)</span>
                         </label>
                         <textarea
                           id="input-catatan-dokter"
                           value={catatanDokter}
                           onChange={(e) => setCatatanDokter(e.target.value)}
                           placeholder="Tulis catatan klinis tambahan..."
-                          className="w-full h-14 p-2.5 bg-white rounded-md border border-slate-500 text-teal-950 text-sm font-atkinson focus:border-cyan-700 focus:outline-none resize-none"
+                          className="w-full h-14 p-2.5 bg-white rounded-md border border-line-strong text-ink text-sm font-atkinson focus:border-primary focus:outline-none resize-none"
                         />
                       </div>
 
@@ -1215,8 +1209,8 @@ export default function Home() {
                         onClick={simpanTinjauan}
                         className={`w-full h-11 px-5 rounded-[10px] text-base font-bold font-atkinson flex items-center justify-center transition-all ${
                           !pilihanTinjauan || savingTinjauan
-                            ? "bg-zinc-200 text-gray-400 cursor-not-allowed"
-                            : "bg-cyan-700 hover:bg-cyan-800 text-white cursor-pointer shadow-xs"
+                            ? "bg-line text-muted cursor-not-allowed"
+                            : "bg-primary hover:bg-primary/90 text-white cursor-pointer shadow-xs"
                         }`}
                       >
                         {savingTinjauan ? "Menyimpan..." : "Simpan tinjauan"}
@@ -1228,7 +1222,7 @@ export default function Home() {
                         href={`${API}/pemeriksaan/${hasil.id}/rujukan.pdf`}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 text-cyan-700 hover:text-cyan-800 hover:underline text-sm font-bold font-atkinson pt-1"
+                        className="inline-flex items-center gap-2 text-primary hover:text-primary/90 hover:underline text-sm font-bold font-atkinson pt-1"
                       >
                         <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -1238,19 +1232,19 @@ export default function Home() {
                     </div>
                   ) : (
                     /* State B: Tinjauan Tersimpan */
-                    <div className="w-full p-5 bg-white rounded-2xl border border-cyan-700 flex flex-col gap-3 shadow-xs animate-in fade-in">
+                    <div className="w-full p-5 bg-white rounded-2xl border border-primary flex flex-col gap-3 shadow-xs animate-in fade-in">
                       <div className="flex items-center gap-2.5">
-                        <div className="size-8 bg-cyan-700 rounded-full flex items-center justify-center text-white shrink-0">
+                        <div className="size-8 bg-primary rounded-full flex items-center justify-center text-white shrink-0">
                           <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
-                        <h3 className="text-teal-950 text-xl font-bold font-atkinson leading-6">
+                        <h3 className="text-ink text-xl font-bold font-atkinson leading-6">
                           Tinjauan tersimpan
                         </h3>
                       </div>
 
-                      <div id="teks-status-tinjauan" className="text-teal-950 text-base font-normal font-atkinson">
+                      <div id="teks-status-tinjauan" className="text-ink text-base font-normal font-atkinson">
                         Dokter:{" "}
                         <strong className="font-bold">
                           {tinjauanTersimpan.keputusan === "setuju" ? "Setuju" : "Tidak setuju"}
@@ -1261,18 +1255,18 @@ export default function Home() {
                       {tinjauanTersimpan.catatan ? (
                         <div
                           id="kotak-catatan-dokter-tersimpan"
-                          className="w-full px-3 py-2.5 bg-gray-100 rounded-[10px] border border-zinc-200 flex flex-col gap-0.5"
+                          className="w-full px-3 py-2.5 bg-status-neutral rounded-[10px] border border-line flex flex-col gap-0.5"
                         >
-                          <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                          <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
                             Catatan dokter
                           </span>
-                          <span className="text-teal-950 text-sm font-normal font-atkinson leading-5 whitespace-pre-wrap">
+                          <span className="text-ink text-sm font-normal font-atkinson leading-5 whitespace-pre-wrap">
                             {tinjauanTersimpan.catatan}
                           </span>
                         </div>
                       ) : null}
 
-                      <div className="text-gray-500 text-sm font-medium font-mono">
+                      <div className="text-muted text-sm font-medium font-mono">
                         {formatTanggalJam(tinjauanTersimpan.tanggal)}
                       </div>
 
@@ -1281,7 +1275,7 @@ export default function Home() {
                         href={`${API}/pemeriksaan/${hasil.id}/rujukan.pdf`}
                         target="_blank"
                         rel="noreferrer"
-                        className="w-full h-11 px-5 bg-cyan-700 hover:bg-cyan-800 text-white rounded-[10px] flex items-center justify-center gap-2 text-base font-bold font-atkinson transition-colors shadow-xs cursor-pointer"
+                        className="w-full h-11 px-5 bg-primary hover:bg-primary/90 text-white rounded-[10px] flex items-center justify-center gap-2 text-base font-bold font-atkinson transition-colors shadow-xs cursor-pointer"
                       >
                         <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

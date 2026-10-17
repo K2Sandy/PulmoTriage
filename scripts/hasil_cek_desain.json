@@ -36,7 +36,9 @@
       "btnTidakSetujuVisibleWithoutScroll": true
     },
     "fonts": [
-      "\"Times New Roman\"",
+      "atkinsonNext, \"atkinsonNext Fallback\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "fraunces, \"fraunces Fallback\", Georgia, serif",
+      "atkinsonMono, \"atkinsonMono Fallback\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
       "__nextjs-Geist, Geist, -apple-system, \"Source Sans Pro\", sans-serif"
     ],
     "size_audit": {
@@ -49,25 +51,25 @@
         },
         {
           "tag": "div",
-          "class": "text-gray-500 text-[11px] leading-tight font-atkin",
+          "class": "text-muted text-[11px] leading-tight font-atkinson",
           "fontSize": 11,
           "text": "Sinkron terakhir: Hari ini"
         },
         {
           "tag": "span",
-          "class": "text-xs font-mono font-medium text-zinc-300",
+          "class": "text-xs font-mono font-medium text-line",
           "fontSize": 12,
           "text": "26"
         },
         {
           "tag": "span",
-          "class": "text-xs font-mono font-medium text-teal-950",
+          "class": "text-xs font-mono font-medium text-ink",
           "fontSize": 12,
           "text": "15"
         },
         {
           "tag": "span",
-          "class": "text-xs font-mono font-medium text-teal-950",
+          "class": "text-xs font-mono font-medium text-ink",
           "fontSize": 12,
           "text": "0"
         },
@@ -121,43 +123,43 @@
         },
         {
           "tag": "span",
-          "class": "size-5 rounded-full bg-amber-100 border border-amb",
+          "class": "size-5 rounded-full bg-status-neutral border borde",
           "fontSize": 10,
           "text": "!"
         },
         {
           "tag": "span",
-          "class": "h-6 px-2.5 bg-gray-100 rounded-full border border-",
+          "class": "h-6 px-2.5 bg-status-neutral rounded-full border b",
           "fontSize": 12,
           "text": "Belum ditinjau"
         },
         {
           "tag": "span",
-          "class": "h-6 px-2.5 bg-gray-100 rounded-full border border-",
+          "class": "h-6 px-2.5 bg-status-neutral rounded-full border b",
           "fontSize": 12,
           "text": "Belum ditinjau"
         },
         {
           "tag": "span",
-          "class": "h-6 px-2.5 bg-gray-100 rounded-full border border-",
+          "class": "h-6 px-2.5 bg-status-neutral rounded-full border b",
           "fontSize": 12,
           "text": "Belum ditinjau"
         },
         {
           "tag": "span",
-          "class": "h-6 px-2.5 bg-gray-100 rounded-full border border-",
+          "class": "h-6 px-2.5 bg-status-neutral rounded-full border b",
           "fontSize": 12,
           "text": "Belum ditinjau"
         },
         {
           "tag": "span",
-          "class": "size-5 rounded-full bg-amber-100 border border-amb",
+          "class": "size-5 rounded-full bg-status-neutral border borde",
           "fontSize": 10,
           "text": "!"
         },
         {
           "tag": "span",
-          "class": "size-5 rounded-full bg-amber-100 border border-amb",
+          "class": "size-5 rounded-full bg-status-neutral border borde",
           "fontSize": 10,
           "text": "!"
         }
