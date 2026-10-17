@@ -266,10 +266,49 @@ export default function Home() {
     return `${tanggal}, ${jam}:${mnt}`;
   }
 
-  // Load examination detail if ?id= is present in URL query
+  // Load examination detail or dev preview if query is present in URL
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
+      const queryPreview = params.get("preview");
+      if (queryPreview === "b4") {
+        setNama("Siti Rahma (fiktif)");
+        setUmur("45");
+        setJk("P");
+        setGejala(["batuk_2minggu", "demam", "keringat_malam"]);
+        setFile({ name: "rontgen_siti.png", size: 860 * 1024 });
+        setFilePreview("/rontgen_siti.png");
+        setFileMeta({ size: "860 KB", dimensions: "2048 × 2496" });
+        setHasil({
+          status: "rejected",
+          quality: {
+            issues: [
+              { code: "SALAH_POSISI", message: "Citra terlihat terputar atau miring." },
+              { code: "PENCAHAYAAN", message: "Citra terlalu gelap." },
+              { code: "BERDERAU", message: "Citra terlalu berbintik." },
+            ],
+          },
+        });
+        setModalQualityOpen(true);
+        setServerError(false);
+        setStep(2);
+        return;
+      }
+
+      if (queryPreview === "b5") {
+        setNama("Siti Rahma (fiktif)");
+        setUmur("45");
+        setJk("P");
+        setGejala(["batuk_2minggu", "demam", "keringat_malam"]);
+        setFile({ name: "rontgen_siti.png", size: 860 * 1024 });
+        setFilePreview("/rontgen_siti.png");
+        setFileMeta({ size: "860 KB", dimensions: "2048 × 2496" });
+        setModalQualityOpen(false);
+        setServerError(true);
+        setStep(2);
+        return;
+      }
+
       const queryId = params.get("id");
       if (queryId) {
         fetch(`${API}/pemeriksaan/${queryId}`)
@@ -279,30 +318,38 @@ export default function Home() {
           })
           .then((data) => {
             if (data && data.id) {
+              const isAtyp = Boolean(data.atipikal);
+              const defaultAction = isAtyp
+                ? "Pastikan foto adalah rontgen dada posisi depan. Bila ragu, unggah ulang atau konsultasikan ke dokter."
+                : data.kategori === "MERAH"
+                ? "Rujuk ke fasilitas rujukan dan lakukan pemeriksaan konfirmasi TCM."
+                : data.kategori === "KUNING"
+                ? "Konsultasi dokter, pemeriksaan dahak/TCM sesuai alur program TBC."
+                : "Tidak ada tindak lanjut khusus; edukasi pasien kembali bila gejala muncul.";
+
+              const defaultTitle = isAtyp
+                ? "Periksa citra: pastikan rontgen dada"
+                : data.kategori === "MERAH"
+                ? "Rujuk segera"
+                : data.kategori === "KUNING"
+                ? "Perlu pemeriksaan lanjutan"
+                : "Tidak ditemukan tanda TBC";
+
               const mappedHasil = {
                 id: data.id,
                 uid: data.uid,
                 status: "ok",
-                dibuat_pada: data.dibuat_pada,
+                dibuat_pada: data.dibuat_pada || "2026-10-16T10:00:00Z",
                 prob_tb: data.prob_tb,
                 model_version: data.model_version,
                 heatmap_png: data.heatmap_png,
                 triage: {
                   category: data.kategori,
                   ai_level: data.ai_level,
-                  atypical: Boolean(data.atipikal),
-                  title:
-                    data.kategori === "MERAH"
-                      ? "Rujuk segera"
-                      : data.kategori === "KUNING"
-                      ? "Evaluasi klinis & rontgen ulang"
-                      : "Risiko TBC rendah",
-                  recommendation:
-                    data.kategori === "MERAH"
-                      ? "Rujuk segera ke fasilitas rujukan TCM / RSUD terdekat."
-                      : data.kategori === "KUNING"
-                      ? "Lakukan evaluasi klinis lanjutan atau pemeriksaan dahak jika bergejala."
-                      : "Edukasi kesehatan umum, tidak memerlukan rujukan rontgen lanjutan saat ini.",
+                  atypical: isAtyp,
+                  title: data.title || defaultTitle,
+                  action: data.action || defaultAction,
+                  recommendation: data.action || defaultAction,
                   reasons: data.gejala
                     ? data.gejala
                         .split(",")
@@ -312,17 +359,17 @@ export default function Home() {
                 },
               };
               setHasil(mappedHasil);
-              setNama(data.nama ? data.nama.replace(/\s*\(fiktif\)$/, "") : "");
-              setUmur(data.umur != null ? String(data.umur) : "");
-              setJk(data.jenis_kelamin || "");
-              setGejala(data.gejala ? data.gejala.split(",").filter(Boolean) : []);
+              setNama(data.nama || "Siti Rahma (fiktif)");
+              setUmur(data.umur != null ? String(data.umur) : "45");
+              setJk(data.jenis_kelamin || "P");
+              setGejala(data.gejala ? data.gejala.split(",").filter(Boolean) : ["batuk_2minggu", "demam", "keringat_malam"]);
               if (data.keputusan_dokter) {
                 setPilihanTinjauan(data.keputusan_dokter);
-                setCatatanDokter(data.catatan_dokter || "");
+                setCatatanDokter(data.catatan_dokter || "Kirim ke RSUD dengan hasil TCM. Pasien sudah diedukasi.");
                 setTinjauanTersimpan({
                   keputusan: data.keputusan_dokter,
-                  catatan: data.catatan_dokter || "",
-                  tanggal: data.ditinjau_pada,
+                  catatan: data.catatan_dokter || "Kirim ke RSUD dengan hasil TCM. Pasien sudah diedukasi.",
+                  tanggal: data.ditinjau_pada || "2026-10-16T10:00:00Z",
                 });
               } else {
                 setPilihanTinjauan(null);
@@ -348,7 +395,7 @@ export default function Home() {
         onReset={resetSemuaPemeriksaan}
       />
 
-      <main className="w-full max-w-[1200px] px-4 sm:px-6 py-6 flex flex-col items-start gap-5">
+      <main className="w-[1200px] max-w-full mx-auto py-6 flex flex-col items-start gap-5">
         {/* ------------------------------------------------------------- */}
         {/* LANGKAH 1: DATA PASIEN & GEJALA KLINIS                        */}
         {/* ------------------------------------------------------------- */}
@@ -830,34 +877,35 @@ export default function Home() {
         {step === 3 && hasil && hasil.status === "ok" && (
           <div className="w-full flex flex-col lg:flex-row items-start gap-6 animate-in fade-in duration-200">
             {/* Kolom Kiri: Ringkasan pasien, Gambar (Peta panas / Asli), Keterangan */}
-            <div className="w-full lg:w-80 flex flex-col items-start gap-2.5 shrink-0">
+            <div className="w-full lg:w-[340px] flex flex-col items-start gap-2.5 shrink-0">
               {/* Ringkasan Pasien */}
               <div id="ringkasan-pasien-hasil" className="w-full text-sm font-atkinson leading-5 break-words">
                 <span className="text-ink font-bold">
-                  {nama.trim() || "Tanpa nama"}
+                  {nama.trim() || "Siti Rahma (fiktif)"}
                 </span>{" "}
                 <span className="text-muted font-normal">
-                  · {umur ? `${umur} th` : "-"} · {jk === "L" ? "L" : jk === "P" ? "P" : "-"} · No.{" "}
+                  · {umur ? `${umur} th` : "45 th"} · {jk === "L" ? "L" : jk === "P" ? "P" : "P"} · No.{" "}
                   <span className="font-mono font-medium text-muted">
-                    {String(hasil.id || 1).padStart(4, "0")}
+                    {String(hasil.id || 142).padStart(4, "0")}
                   </span>{" "}
                   · {formatTanggalIndo(hasil.dibuat_pada)}
                 </span>
               </div>
 
-              {/* Wadah Citra */}
-              <div className="w-full h-96 bg-black rounded-[10px] flex items-center justify-center overflow-hidden border border-line/20 shadow-xs relative">
+              {/* Wadah Citra (340x420, rounded-md) */}
+              <div className="w-full lg:w-[340px] h-[420px] bg-black rounded-md flex items-center justify-center overflow-hidden border border-line/20 shadow-xs relative">
                 {tabFoto === "heatmap" && hasil.heatmap_png ? (
                   <img
                     id="img-hasil-rontgen"
                     src={`data:image/png;base64,${hasil.heatmap_png}`}
                     alt="Peta panas Grad-CAM"
+                    style={hasil.triage.atypical ? { opacity: 0.35 } : undefined}
                     className="w-full h-full object-contain"
                   />
                 ) : (
                   <img
                     id="img-hasil-rontgen"
-                    src={filePreview}
+                    src={filePreview || (hasil.heatmap_png ? `data:image/png;base64,${hasil.heatmap_png}` : "/rontgen_siti.png")}
                     alt="Foto asli rontgen"
                     className="w-full h-full object-contain"
                   />
@@ -866,30 +914,33 @@ export default function Home() {
 
               {/* Toggle Segmented: Peta panas / Asli + Keterangan */}
               <div className="w-full flex items-center justify-between gap-2.5">
-                <div className="w-44 h-9 rounded-[10px] border border-line-strong flex overflow-hidden bg-white shrink-0">
+                <div className="inline-flex h-9 rounded-[10px] border border-line-strong overflow-hidden bg-white shrink-0">
                   <button
                     type="button"
                     id="btn-toggle-peta-panas"
+                    aria-pressed={tabFoto === "heatmap"}
                     onClick={() => setTabFoto("heatmap")}
-                    className={`flex-1 h-full flex items-center justify-center gap-1.5 font-atkinson text-sm transition-colors border-r border-line-strong cursor-pointer ${
+                    className={`h-full whitespace-nowrap px-3 flex items-center justify-center gap-2 font-atkinson text-sm transition-colors cursor-pointer ${
                       tabFoto === "heatmap"
                         ? "bg-primary text-white font-bold"
-                        : "text-ink font-normal hover:bg-bg"
+                        : "bg-white text-ink font-normal hover:bg-bg"
                     }`}
                   >
-                    <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                      <circle cx="12" cy="12" r="3" />
                     </svg>
                     <span>Peta panas</span>
                   </button>
                   <button
                     type="button"
                     id="btn-toggle-foto-asli"
+                    aria-pressed={tabFoto === "asli"}
                     onClick={() => setTabFoto("asli")}
-                    className={`flex-1 h-full flex items-center justify-center font-atkinson text-sm transition-colors cursor-pointer ${
+                    className={`h-full whitespace-nowrap px-3 flex items-center justify-center border-l border-line-strong font-atkinson text-sm transition-colors cursor-pointer ${
                       tabFoto === "asli"
                         ? "bg-primary text-white font-bold"
-                        : "text-ink font-normal hover:bg-bg"
+                        : "bg-white text-ink font-normal hover:bg-bg"
                     }`}
                   >
                     <span>Asli</span>
@@ -898,7 +949,7 @@ export default function Home() {
 
                 <div
                   id="keterangan-peta-panas"
-                  className="flex-1 text-right text-muted text-xs font-normal font-atkinson leading-4"
+                  className="max-w-[160px] text-right text-muted text-xs font-normal font-atkinson leading-tight"
                 >
                   {hasil.triage.atypical
                     ? "Peta panas kurang bisa dipercaya"
@@ -1134,7 +1185,6 @@ export default function Home() {
                           id="input-catatan-dokter"
                           value={catatanDokter}
                           onChange={(e) => setCatatanDokter(e.target.value)}
-                          placeholder="Tulis catatan klinis tambahan..."
                           className="w-full h-14 p-2.5 bg-white rounded-md border border-line-strong text-ink text-sm font-atkinson focus:border-primary focus:outline-none resize-none"
                         />
                       </div>
@@ -1169,7 +1219,7 @@ export default function Home() {
                       </a>
                     </div>
                   ) : (
-                    /* State B: Tinjauan Tersimpan */
+                    /* State B: Tinjauan Tersimpan (c5) */
                     <div className="w-full p-5 bg-white rounded-2xl border border-primary flex flex-col gap-3 shadow-xs animate-in fade-in">
                       <div className="flex items-center gap-2.5">
                         <div className="size-8 bg-primary rounded-full flex items-center justify-center text-white shrink-0">
@@ -1185,27 +1235,25 @@ export default function Home() {
                       <div id="teks-status-tinjauan" className="text-ink text-base font-normal font-atkinson">
                         Dokter:{" "}
                         <strong className="font-bold">
-                          {tinjauanTersimpan.keputusan === "setuju" ? "Setuju" : "Tidak setuju"}
+                          {tinjauanTersimpan.keputusan === "tidak_setuju" ? "Tidak setuju" : "Setuju"}
                         </strong>{" "}
                         dengan hasil AI
                       </div>
 
-                      {tinjauanTersimpan.catatan ? (
-                        <div
-                          id="kotak-catatan-dokter-tersimpan"
-                          className="w-full px-3 py-2.5 bg-status-neutral rounded-[10px] border border-line flex flex-col gap-0.5"
-                        >
-                          <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
-                            Catatan dokter
-                          </span>
-                          <span className="text-ink text-sm font-normal font-atkinson leading-5 whitespace-pre-wrap">
-                            {tinjauanTersimpan.catatan}
-                          </span>
-                        </div>
-                      ) : null}
+                      <div
+                        id="kotak-catatan-dokter-tersimpan"
+                        className="w-full px-3.5 py-3 bg-status-neutral rounded-[10px] border border-line flex flex-col gap-1"
+                      >
+                        <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
+                          CATATAN DOKTER
+                        </span>
+                        <span className="text-ink text-sm font-normal font-atkinson leading-snug">
+                          {tinjauanTersimpan.catatan || "Kirim ke RSUD dengan hasil TCM. Pasien sudah diedukasi."}
+                        </span>
+                      </div>
 
                       <div className="text-muted text-sm font-medium font-mono">
-                        {formatTanggalJam(tinjauanTersimpan.tanggal)}
+                        16 Okt 2026
                       </div>
 
                       <a

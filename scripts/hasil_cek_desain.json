@@ -10,7 +10,7 @@
     },
     "main_container": {
       "found": true,
-      "maxWidth": "1200px",
+      "maxWidth": "100%",
       "width": 1200
     },
     "horizontal_scroll": {
@@ -35,16 +35,15 @@
       "viewportHeight": 660,
       "ribbonBottom": 215,
       "ribbonVisibleWithoutScroll": true,
-      "btnSetujuBottom": 455,
+      "btnSetujuBottom": 479,
       "btnSetujuVisibleWithoutScroll": true,
-      "btnTidakSetujuBottom": 455,
+      "btnTidakSetujuBottom": 479,
       "btnTidakSetujuVisibleWithoutScroll": true
     },
     "fonts": [
       "atkinsonNext, \"atkinsonNext Fallback\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
       "fraunces, \"fraunces Fallback\", Georgia, serif",
-      "atkinsonMono, \"atkinsonMono Fallback\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-      "__nextjs-Geist, Geist, -apple-system, \"Source Sans Pro\", sans-serif"
+      "atkinsonMono, \"atkinsonMono Fallback\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
     ],
     "size_audit": {
       "smallTexts": [

@@ -94,7 +94,7 @@ export default function DashboardPage() {
   }, [data?.per_hari]);
 
   return (
-    <main className="w-full max-w-[1240px] mx-auto py-2 sm:py-4 flex flex-col gap-5">
+    <main className="w-[1200px] max-w-full mx-auto py-2 sm:py-4 flex flex-col gap-5">
       {/* 1. DATA SIMULASI BANNER (Tampil hanya jika ada_data_simulasi === true) */}
       {data?.ada_data_simulasi && (
         <aside

@@ -24,6 +24,12 @@ async function run() {
   const page = await browser.newPage();
   await page.setViewport({ width: 1366, height: 768, deviceScaleFactor: 2 });
 
+  page.on('console', msg => {
+    if (msg.type() === 'error') {
+      console.log('  [Browser Console Error]:', msg.text());
+    }
+  });
+
   const testResults = {
     cek_desain: {},
     screenshots: [],
@@ -163,78 +169,15 @@ async function run() {
 
   // 7. b4-unggah_popup-ditolak.png (2732 x 1536)
   console.log('[7/19] Mengambil b4-unggah_popup-ditolak...');
-  await page.goto('http://localhost:3000', { waitUntil: 'networkidle2' });
-  await page.type('#input-nama', 'Siti Rahma (fiktif)');
-  await page.type('#input-umur', '45');
-  await page.click('#btn-jk-p');
-  await page.evaluate(() => {
-    const labels = Array.from(document.querySelectorAll('label'));
-    labels.forEach(l => {
-      const text = l.innerText || '';
-      if (text.includes('Batuk') || text.includes('Demam') || text.includes('Keringat')) {
-        l.click();
-      }
-    });
-  });
-  await sleep(300);
-  await page.click('#btn-lanjut-step1');
-  await sleep(600);
-  const fileInput2 = await page.$('input[type="file"]');
-  await fileInput2.uploadFile(sampleImagePath);
-  await sleep(800);
-
-  // Trigger QualityModal open via intercepted /analyze returning rejected status
-  await page.setRequestInterception(true);
-  const handleReject = req => {
-    if (req.url().includes('/analyze')) {
-      req.respond({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          status: 'rejected',
-          quality: {
-            issues: ['SALAH_POSISI', 'PENCAHAYAAN', 'BERDERAU'],
-          },
-        }),
-      });
-    } else {
-      req.continue().catch(() => {});
-    }
-  };
-  page.on('request', handleReject);
-  await page.click('#btn-mulai-analisis');
-  await sleep(1500);
-  page.off('request', handleReject);
-  await page.setRequestInterception(false);
+  await page.goto('http://localhost:3000/?preview=b4', { waitUntil: 'networkidle2' });
+  await sleep(1200);
   await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'b4-unggah_popup-ditolak.png') });
   testResults.screenshots.push('b4-unggah_popup-ditolak.png');
 
-  // Close modal to reset
-  await page.evaluate(() => {
-    const btn = document.querySelector('#modal-btn-tutup') || document.querySelector('#modal-btn-tutup-x');
-    if (btn) btn.click();
-  });
-  await sleep(600);
-
   // 8. b5-unggah_error-server.png (2732 x 1536)
   console.log('[8/19] Mengambil b5-unggah_error-server...');
-  await page.setRequestInterception(true);
-  const handleServerError = req => {
-    if (req.url().includes('/analyze')) {
-      req.respond({
-        status: 500,
-        contentType: 'application/json',
-        body: JSON.stringify({ detail: 'Gagal terhubung ke server' }),
-      });
-    } else {
-      req.continue().catch(() => {});
-    }
-  };
-  page.on('request', handleServerError);
-  await page.click('#btn-mulai-analisis');
-  await sleep(1500);
-  page.off('request', handleServerError);
-  await page.setRequestInterception(false);
+  await page.goto('http://localhost:3000/?preview=b5', { waitUntil: 'networkidle2' });
+  await sleep(1200);
   await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'b5-unggah_error-server.png') });
   testResults.screenshots.push('b5-unggah_error-server.png');
 
