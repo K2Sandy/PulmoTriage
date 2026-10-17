@@ -47,8 +47,14 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState(false);
   const [hasil, setHasil] = useState(null);
-  const [tinjauan, setTinjauan] = useState("");
   const [modalQualityOpen, setModalQualityOpen] = useState(false);
+
+  // Step 3 State
+  const [tabFoto, setTabFoto] = useState("heatmap"); // "heatmap" | "asli"
+  const [pilihanTinjauan, setPilihanTinjauan] = useState(null); // "setuju" | "tidak_setuju"
+  const [catatanDokter, setCatatanDokter] = useState("");
+  const [tinjauanTersimpan, setTinjauanTersimpan] = useState(null);
+  const [savingTinjauan, setSavingTinjauan] = useState(false);
 
   // Validate Umur
   function validateUmur(value) {
@@ -181,6 +187,10 @@ export default function Home() {
       }
 
       setHasil(data);
+      setPilihanTinjauan(null);
+      setCatatanDokter("");
+      setTinjauanTersimpan(null);
+      setTabFoto("heatmap");
 
       if (data.status === "rejected") {
         setModalQualityOpen(true);
@@ -196,20 +206,29 @@ export default function Home() {
     }
   }
 
-  // Doctor Review
-  async function tinjau(keputusan) {
-    if (!hasil || !hasil.id) return;
-    const f = new FormData();
-    f.append("keputusan", keputusan);
+  // Doctor Review Handler
+  async function simpanTinjauan() {
+    if (!pilihanTinjauan || !hasil || !hasil.id || savingTinjauan) return;
+    setSavingTinjauan(true);
     try {
+      const f = new FormData();
+      f.append("keputusan", pilihanTinjauan);
+      f.append("catatan", catatanDokter.trim());
       const r = await fetch(`${API}/pemeriksaan/${hasil.id}/tinjau`, {
         method: "POST",
         body: f,
       });
-      if (!r.ok) throw new Error();
-      setTinjauan(keputusan);
-    } catch {
+      if (!r.ok) throw new Error("Gagal menyimpan tinjauan");
+      setTinjauanTersimpan({
+        keputusan: pilihanTinjauan,
+        catatan: catatanDokter.trim(),
+        tanggal: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("Gagal simpan tinjauan:", err);
       alert("Tinjauan dokter GAGAL disimpan. Silakan coba lagi.");
+    } finally {
+      setSavingTinjauan(false);
     }
   }
 
@@ -220,9 +239,30 @@ export default function Home() {
     setFileMeta({ size: "", dimensions: "" });
     setInvalidFileError(null);
     setHasil(null);
-    setTinjauan("");
+    setPilihanTinjauan(null);
+    setCatatanDokter("");
+    setTinjauanTersimpan(null);
+    setSavingTinjauan(false);
+    setTabFoto("heatmap");
     setServerError(false);
     setStep(1);
+  }
+
+  function formatTanggalIndo(isoString) {
+    const d = isoString ? new Date(isoString) : new Date();
+    const bulan = [
+      "Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+      "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
+    ];
+    return `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
+  }
+
+  function formatTanggalJam(isoString) {
+    const d = isoString ? new Date(isoString) : new Date();
+    const tanggal = formatTanggalIndo(isoString);
+    const jam = String(d.getHours()).padStart(2, "0");
+    const mnt = String(d.getMinutes()).padStart(2, "0");
+    return `${tanggal}, ${jam}:${mnt}`;
   }
 
   return (
@@ -233,6 +273,7 @@ export default function Home() {
         onStepClick={(targetStep) => {
           if (targetStep < step) setStep(targetStep);
         }}
+        onReset={resetSemuaPemeriksaan}
       />
 
       <main className="w-full max-w-[1200px] px-4 sm:px-6 py-6 flex flex-col items-start gap-5">
@@ -755,121 +796,428 @@ export default function Home() {
         {/* LANGKAH 3: HASIL ANALISIS, PETA PANAS, DAN TRIASE            */}
         {/* ------------------------------------------------------------- */}
         {step === 3 && hasil && hasil.status === "ok" && (
-          <div className="w-full flex flex-col gap-6 animate-in fade-in duration-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-teal-950 text-2xl font-semibold font-fraunces leading-7">
-                  Hasil Analisis
-                </h1>
-                <p className="text-gray-500 text-sm font-atkinson mt-0.5">
-                  Pemeriksaan telah selesai dianalisis oleh model PulmoTriage.
-                </p>
+          <div className="w-full flex flex-col lg:flex-row items-start gap-6 animate-in fade-in duration-200">
+            {/* Kolom Kiri: Ringkasan pasien, Gambar (Peta panas / Asli), Keterangan */}
+            <div className="w-full lg:w-80 flex flex-col items-start gap-2.5 shrink-0">
+              {/* Ringkasan Pasien */}
+              <div id="ringkasan-pasien-hasil" className="w-full text-sm font-atkinson leading-5 break-words">
+                <span className="text-teal-950 font-bold">
+                  {nama.trim() || "Tanpa nama"}
+                </span>{" "}
+                <span className="text-gray-500 font-normal">
+                  · {umur ? `${umur} th` : "-"} · {jk === "L" ? "L" : jk === "P" ? "P" : "-"} · No.{" "}
+                  <span className="font-mono font-medium text-gray-500">
+                    {String(hasil.id || 1).padStart(4, "0")}
+                  </span>{" "}
+                  · {formatTanggalIndo(hasil.dibuat_pada)}
+                </span>
               </div>
-              <button
-                type="button"
-                id="btn-pemeriksaan-baru"
-                onClick={resetSemuaPemeriksaan}
-                className="h-10 px-4 rounded-[10px] border border-cyan-700 text-cyan-700 hover:bg-cyan-50 font-bold text-sm font-atkinson transition-colors"
-              >
-                Pemeriksaan Baru
-              </button>
+
+              {/* Wadah Citra */}
+              <div className="w-full h-96 bg-neutral-950 rounded-[10px] flex items-center justify-center overflow-hidden border border-zinc-800 shadow-xs relative">
+                {tabFoto === "heatmap" && hasil.heatmap_png ? (
+                  <img
+                    id="img-hasil-rontgen"
+                    src={`data:image/png;base64,${hasil.heatmap_png}`}
+                    alt="Peta panas Grad-CAM"
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <img
+                    id="img-hasil-rontgen"
+                    src={filePreview}
+                    alt="Foto asli rontgen"
+                    className="w-full h-full object-contain"
+                  />
+                )}
+              </div>
+
+              {/* Toggle Segmented: Peta panas / Asli + Keterangan */}
+              <div className="w-full flex items-center justify-between gap-2.5">
+                <div className="w-44 h-9 rounded-[10px] border border-slate-500 flex overflow-hidden bg-white shrink-0">
+                  <button
+                    type="button"
+                    id="btn-toggle-peta-panas"
+                    onClick={() => setTabFoto("heatmap")}
+                    className={`flex-1 h-full flex items-center justify-center gap-1.5 font-atkinson text-sm transition-colors border-r border-slate-500 cursor-pointer ${
+                      tabFoto === "heatmap"
+                        ? "bg-cyan-700 text-white font-bold"
+                        : "text-teal-950 font-normal hover:bg-gray-50"
+                    }`}
+                  >
+                    <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Peta panas</span>
+                  </button>
+                  <button
+                    type="button"
+                    id="btn-toggle-foto-asli"
+                    onClick={() => setTabFoto("asli")}
+                    className={`flex-1 h-full flex items-center justify-center font-atkinson text-sm transition-colors cursor-pointer ${
+                      tabFoto === "asli"
+                        ? "bg-cyan-700 text-white font-bold"
+                        : "text-teal-950 font-normal hover:bg-gray-50"
+                    }`}
+                  >
+                    <span>Asli</span>
+                  </button>
+                </div>
+
+                <div
+                  id="keterangan-peta-panas"
+                  className="flex-1 text-right text-gray-500 text-xs font-normal font-atkinson leading-4"
+                >
+                  {hasil.triage.atypical
+                    ? "Peta panas kurang bisa dipercaya"
+                    : "Area paling berpengaruh pada skor AI"}
+                </div>
+              </div>
             </div>
 
-            {/* Triage Banner */}
-            <div className={`w-full rounded-2xl border-2 p-6 shadow-xs ${WARNA[hasil.triage.category]}`}>
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <div className="flex items-center gap-3">
-                  <span className="size-4 rounded-full bg-current"></span>
-                  <h2 className="text-2xl font-bold font-fraunces tracking-tight">
-                    {hasil.triage.category} — {hasil.triage.title}
-                  </h2>
-                </div>
-                <div className="px-3 py-1 bg-white/80 rounded-md border border-current font-mono text-sm font-bold">
-                  Skor suspek: {hasil.prob_tb.toFixed(2)}
-                </div>
-              </div>
+            {/* Kolom Kanan: Banner Triase, Anjuran, Pernyataan Wajib, Skor AI & Alasan, Tinjauan Dokter */}
+            <div className="flex-1 w-full flex flex-col items-start gap-3.5">
+              {/* Banner Kategori Triase */}
+              <div
+                id="banner-triase-hasil"
+                className={`w-full h-16 px-4 rounded-[10px] flex items-center gap-3 shadow-xs ${
+                  hasil.triage.category === "MERAH"
+                    ? "bg-red-700 text-white"
+                    : hasil.triage.category === "KUNING"
+                    ? "bg-yellow-500 text-stone-900"
+                    : "bg-emerald-700 text-white"
+                }`}
+              >
+                {/* Ikon Kategori */}
+                {hasil.triage.category === "MERAH" ? (
+                  <svg className="size-7 shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                ) : hasil.triage.category === "KUNING" ? (
+                  <svg className="size-7 shrink-0 text-stone-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                ) : (
+                  <svg className="size-7 shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                )}
 
-              <p className="mt-3 text-base leading-relaxed font-atkinson">
-                {hasil.triage.action}
-              </p>
-
-              {/* Reasons */}
-              <div className="mt-4 pt-4 border-t border-current/20">
-                <span className="text-xs font-bold uppercase tracking-wider font-atkinson">
-                  Alasan Klinis & Pertimbangan AI:
-                </span>
-                <ul className="mt-1.5 list-disc pl-5 text-sm space-y-1 font-atkinson">
-                  {hasil.triage.reasons.map((r, i) => (
-                    <li key={i}>{r}</li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Warnings */}
-              {hasil.warnings && hasil.warnings.length > 0 && (
-                <div className="mt-4 space-y-2">
-                  {hasil.warnings.map((w, i) => (
-                    <div key={i} className="p-3 bg-white/90 rounded-lg border border-amber-300 text-amber-900 text-xs font-medium font-atkinson flex items-center gap-2">
-                      <span>⚠️</span>
-                      <span>{w}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Heatmap Grad-CAM */}
-              {hasil.heatmap_png && (
-                <div className="mt-6 flex flex-col items-center">
-                  <div className="w-full max-w-[560px] bg-neutral-950 rounded-xl overflow-hidden border border-zinc-800 shadow-md">
-                    <img
-                      src={`data:image/png;base64,${hasil.heatmap_png}`}
-                      alt="Peta panas Grad-CAM"
-                      className="w-full max-h-[460px] object-contain"
-                    />
-                  </div>
-                  <span className="mt-2 text-xs text-center text-gray-600 font-atkinson italic">
-                    Area yang paling memengaruhi keputusan model AI (Grad-CAM)
+                {/* Teks Kategori + Status */}
+                <div className="flex items-baseline gap-2 flex-wrap font-atkinson">
+                  <span className="text-xl font-extrabold tracking-wide">
+                    {hasil.triage.category}
+                  </span>
+                  <span className="text-xl font-bold">
+                    ·{" "}
+                    {hasil.triage.atypical
+                      ? "Periksa citra: pastikan rontgen dada"
+                      : hasil.triage.title ||
+                        (hasil.triage.category === "MERAH"
+                          ? "Rujuk segera"
+                          : hasil.triage.category === "KUNING"
+                          ? "Perlu pemeriksaan lanjutan"
+                          : "Tidak ditemukan tanda TBC")}
                   </span>
                 </div>
-              )}
-
-              {/* Doctor Review Actions */}
-              <div className="mt-6 pt-5 border-t border-current/20 flex flex-wrap items-center gap-3">
-                <button
-                  type="button"
-                  id="btn-tinjau-setuju"
-                  onClick={() => tinjau("setuju")}
-                  className="h-10 px-4 rounded-[10px] bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm font-atkinson shadow-xs transition-colors cursor-pointer"
-                >
-                  Dokter setuju
-                </button>
-                <button
-                  type="button"
-                  id="btn-tinjau-tidak-setuju"
-                  onClick={() => tinjau("tidak_setuju")}
-                  className="h-10 px-4 rounded-[10px] bg-gray-700 hover:bg-gray-800 text-white font-bold text-sm font-atkinson shadow-xs transition-colors cursor-pointer"
-                >
-                  Dokter tidak setuju
-                </button>
-                <a
-                  id="link-draf-rujukan-pdf"
-                  href={`${API}/pemeriksaan/${hasil.id}/rujukan.pdf`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="h-10 px-4 rounded-[10px] border border-cyan-700 bg-white text-cyan-700 hover:bg-cyan-50 font-bold text-sm font-atkinson flex items-center gap-2 shadow-xs transition-colors"
-                >
-                  <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <span>Buka draf rujukan (PDF)</span>
-                </a>
               </div>
 
-              {tinjauan && (
-                <div className="mt-3.5 p-3 rounded-lg bg-white/95 border border-current text-sm font-atkinson font-semibold">
-                  ✓ Tinjauan tersimpan: {tinjauan === "setuju" ? "Dokter setuju dengan hasil AI" : "Dokter tidak setuju"}. Draf PDF rujukan telah diperbarui.
+              {/* Anjuran */}
+              <div className="w-full flex flex-col">
+                <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                  Anjuran
+                </span>
+                <div
+                  id="teks-anjuran-triase"
+                  className="pt-1 text-teal-950 text-lg font-bold font-atkinson leading-6"
+                >
+                  {hasil.triage.action}
                 </div>
-              )}
+              </div>
+
+              {/* Pernyataan Wajib Alat Bantu */}
+              <div className="w-full px-3.5 py-2.5 bg-gray-100 rounded-[10px] border border-zinc-200 flex items-center gap-2.5">
+                <svg className="size-4 shrink-0 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-gray-500 text-xs font-normal font-atkinson leading-5">
+                  Hasil AI adalah alat bantu triase, bukan diagnosis. Keputusan klinis tetap di tangan dokter.
+                </p>
+              </div>
+
+              {/* Bagian Grid: Skor AI & Alasan (Kiri) vs Tinjauan Dokter (Kanan) */}
+              <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-5 items-start pt-1">
+                {/* Subkolom Kiri: Kartu Skor AI, Alasan, Peringatan */}
+                <div className="md:col-span-7 flex flex-col gap-3">
+                  {/* Kartu Skor AI */}
+                  <div className="w-full p-4 bg-white rounded-2xl border border-zinc-200 flex flex-col shadow-xs">
+                    <div className="w-full flex justify-between items-center">
+                      <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                        Skor AI
+                      </span>
+                      <div className="h-6 px-2.5 bg-gray-100 rounded-full border border-zinc-200 flex items-center">
+                        <span className="text-gray-500 text-xs font-bold font-atkinson tracking-wide">
+                          Tingkat skor:{" "}
+                          {(() => {
+                            const lvl = String(hasil.triage.ai_level || "").toLowerCase();
+                            if (lvl === "high" || lvl === "tinggi") return "Tinggi";
+                            if (lvl === "mid" || lvl === "sedang") return "Sedang";
+                            return "Rendah";
+                          })()}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Nilai Skor */}
+                    <div className="pt-1.5 flex flex-col">
+                      {hasil.triage.atypical ? (
+                        <>
+                          <div className="flex items-baseline gap-2">
+                            <span
+                              id="nilai-skor-ai"
+                              className="text-teal-950 text-4xl font-semibold font-mono leading-10"
+                            >
+                              {hasil.prob_tb.toFixed(2).replace(".", ",")}
+                            </span>
+                            <span
+                              id="tanda-skor-atipikal"
+                              className="text-gray-500 text-3xl font-normal font-mono leading-none"
+                            >
+                              (?)
+                            </span>
+                          </div>
+                          <span
+                            id="keterangan-skor-atipikal"
+                            className="text-gray-500 text-sm font-normal font-atkinson pt-0.5"
+                          >
+                            Skor kurang bisa dipercaya untuk citra ini
+                          </span>
+                        </>
+                      ) : (
+                        <span
+                          id="nilai-skor-ai"
+                          className="text-teal-950 text-4xl font-semibold font-mono leading-10"
+                        >
+                          {hasil.prob_tb.toFixed(2).replace(".", ",")}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Bilah 0 - 1 */}
+                    <div className="w-full pt-2.5">
+                      <div className="w-full h-2 bg-zinc-200 rounded-full overflow-hidden relative">
+                        <div
+                          id="bilah-skor-ai"
+                          className={`h-full rounded-full transition-all duration-300 ${
+                            hasil.triage.atypical ? "bg-slate-500" : "bg-teal-950"
+                          }`}
+                          style={{
+                            width: `${Math.min(Math.max(hasil.prob_tb * 100, 0), 100)}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="w-full pt-1 flex justify-between items-center text-gray-500 text-xs font-medium font-mono">
+                      <span>0</span>
+                      <span>0,5</span>
+                      <span>1</span>
+                    </div>
+                  </div>
+
+                  {/* Daftar Alasan */}
+                  <div className="w-full flex flex-col">
+                    <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                      Alasan
+                    </span>
+                    <div id="daftar-alasan-triase" className="pt-1.5 flex flex-col gap-1">
+                      {hasil.triage.reasons &&
+                        hasil.triage.reasons.map((r, i) => (
+                          <div
+                            key={i}
+                            className="flex items-start gap-2 text-teal-950 text-base font-normal font-atkinson leading-5"
+                          >
+                            <span className="text-teal-950 shrink-0 leading-5 select-none">•</span>
+                            <span>{r}</span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+
+                  {/* Peringatan (Jika Ada) */}
+                  {hasil.warnings && hasil.warnings.length > 0 && (
+                    <div className="w-full flex flex-col gap-1.5">
+                      <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                        Peringatan
+                      </span>
+                      <div id="daftar-peringatan-triase" className="flex flex-col gap-2">
+                        {hasil.warnings.map((w, i) => (
+                          <div
+                            key={i}
+                            className="w-full px-3 py-2 bg-gray-100 rounded-[10px] border border-zinc-200 flex items-start gap-2.5"
+                          >
+                            <svg className="size-4 text-teal-950 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                              <circle cx="12" cy="12" r="9" />
+                              <line x1="12" y1="8" x2="12" y2="12" />
+                              <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <span className="text-teal-950 text-sm font-normal font-atkinson leading-5">
+                              {w}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Subkolom Kanan: Kartu Tinjauan Dokter */}
+                <div className="md:col-span-5 flex flex-col">
+                  {!tinjauanTersimpan ? (
+                    /* State A: Tinjauan Belum Disimpan */
+                    <div className="w-full p-5 bg-white rounded-2xl border border-zinc-200 flex flex-col gap-3 shadow-xs">
+                      <h3 className="text-teal-950 text-xl font-bold font-atkinson leading-6">
+                        Tinjauan dokter
+                      </h3>
+                      <p className="text-gray-500 text-base font-normal font-atkinson leading-5">
+                        Apakah dokter setuju dengan hasil AI?
+                      </p>
+
+                      {/* Segmented Control Setuju / Tidak Setuju */}
+                      <div className="w-full h-11 rounded-[10px] border border-slate-500 flex overflow-hidden bg-white">
+                        <button
+                          type="button"
+                          id="btn-tinjau-setuju"
+                          onClick={() => setPilihanTinjauan("setuju")}
+                          className={`flex-1 h-full border-r border-slate-500 flex items-center justify-center gap-2 font-atkinson text-base transition-colors cursor-pointer ${
+                            pilihanTinjauan === "setuju"
+                              ? "bg-cyan-700 text-white font-bold"
+                              : "text-teal-950 font-normal hover:bg-gray-50"
+                          }`}
+                        >
+                          <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span>Setuju</span>
+                        </button>
+                        <button
+                          type="button"
+                          id="btn-tinjau-tidak-setuju"
+                          onClick={() => setPilihanTinjauan("tidak_setuju")}
+                          className={`flex-1 h-full flex items-center justify-center gap-2 font-atkinson text-base transition-colors cursor-pointer ${
+                            pilihanTinjauan === "tidak_setuju"
+                              ? "bg-cyan-700 text-white font-bold"
+                              : "text-teal-950 font-normal hover:bg-gray-50"
+                          }`}
+                        >
+                          <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                          <span>Tidak setuju</span>
+                        </button>
+                      </div>
+
+                      {/* Catatan Dokter (Opsional) */}
+                      <div className="flex flex-col gap-1.5 pt-1">
+                        <label htmlFor="input-catatan-dokter" className="text-sm font-atkinson">
+                          <span className="text-teal-950 font-bold">Catatan dokter </span>
+                          <span className="text-gray-500 font-normal">(opsional)</span>
+                        </label>
+                        <textarea
+                          id="input-catatan-dokter"
+                          value={catatanDokter}
+                          onChange={(e) => setCatatanDokter(e.target.value)}
+                          placeholder="Tulis catatan klinis tambahan..."
+                          className="w-full h-14 p-2.5 bg-white rounded-md border border-slate-500 text-teal-950 text-sm font-atkinson focus:border-cyan-700 focus:outline-none resize-none"
+                        />
+                      </div>
+
+                      {/* Tombol Simpan Tinjauan */}
+                      <button
+                        type="button"
+                        id="btn-simpan-tinjauan"
+                        disabled={!pilihanTinjauan || savingTinjauan}
+                        onClick={simpanTinjauan}
+                        className={`w-full h-11 px-5 rounded-[10px] text-base font-bold font-atkinson flex items-center justify-center transition-all ${
+                          !pilihanTinjauan || savingTinjauan
+                            ? "bg-zinc-200 text-gray-400 cursor-not-allowed"
+                            : "bg-cyan-700 hover:bg-cyan-800 text-white cursor-pointer shadow-xs"
+                        }`}
+                      >
+                        {savingTinjauan ? "Menyimpan..." : "Simpan tinjauan"}
+                      </button>
+
+                      {/* Tautan Draf Surat Rujukan (PDF) */}
+                      <a
+                        id="link-draf-rujukan-pdf"
+                        href={`${API}/pemeriksaan/${hasil.id}/rujukan.pdf`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 text-cyan-700 hover:text-cyan-800 hover:underline text-sm font-bold font-atkinson pt-1"
+                      >
+                        <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <span>Lihat draf surat rujukan (PDF)</span>
+                      </a>
+                    </div>
+                  ) : (
+                    /* State B: Tinjauan Tersimpan */
+                    <div className="w-full p-5 bg-white rounded-2xl border border-cyan-700 flex flex-col gap-3 shadow-xs animate-in fade-in">
+                      <div className="flex items-center gap-2.5">
+                        <div className="size-8 bg-cyan-700 rounded-full flex items-center justify-center text-white shrink-0">
+                          <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <h3 className="text-teal-950 text-xl font-bold font-atkinson leading-6">
+                          Tinjauan tersimpan
+                        </h3>
+                      </div>
+
+                      <div id="teks-status-tinjauan" className="text-teal-950 text-base font-normal font-atkinson">
+                        Dokter:{" "}
+                        <strong className="font-bold">
+                          {tinjauanTersimpan.keputusan === "setuju" ? "Setuju" : "Tidak setuju"}
+                        </strong>{" "}
+                        dengan hasil AI
+                      </div>
+
+                      {tinjauanTersimpan.catatan ? (
+                        <div
+                          id="kotak-catatan-dokter-tersimpan"
+                          className="w-full px-3 py-2.5 bg-gray-100 rounded-[10px] border border-zinc-200 flex flex-col gap-0.5"
+                        >
+                          <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                            Catatan dokter
+                          </span>
+                          <span className="text-teal-950 text-sm font-normal font-atkinson leading-5 whitespace-pre-wrap">
+                            {tinjauanTersimpan.catatan}
+                          </span>
+                        </div>
+                      ) : null}
+
+                      <div className="text-gray-500 text-sm font-medium font-mono">
+                        {formatTanggalJam(tinjauanTersimpan.tanggal)}
+                      </div>
+
+                      <a
+                        id="btn-buka-surat-rujukan"
+                        href={`${API}/pemeriksaan/${hasil.id}/rujukan.pdf`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-full h-11 px-5 bg-cyan-700 hover:bg-cyan-800 text-white rounded-[10px] flex items-center justify-center gap-2 text-base font-bold font-atkinson transition-colors shadow-xs cursor-pointer"
+                      >
+                        <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <span>Buka surat rujukan (PDF)</span>
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         )}
