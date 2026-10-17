@@ -90,7 +90,7 @@ export default function RiwayatPage() {
   return (
     <main className="w-[1200px] max-w-full mx-auto py-2 sm:py-4 flex flex-col gap-5">
       {/* 1. Header: Judul, Catatan Privasi & Input Pencarian */}
-      <section className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-line">
+      <section className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2">
         <div>
           <h1 className="text-2xl sm:text-3xl font-semibold font-fraunces text-ink leading-tight">
             Riwayat pemeriksaan
@@ -134,16 +134,13 @@ export default function RiwayatPage() {
           type="button"
           id="filter-semua"
           onClick={() => setFilterTab("semua")}
-          className={`h-9 px-4 rounded-full text-sm font-bold font-atkinson transition-all flex items-center gap-1.5 cursor-pointer ${
+          className={`h-9 px-4 rounded-full text-sm font-bold font-atkinson transition-all flex items-center cursor-pointer ${
             filterTab === "semua"
               ? "bg-ink text-surface shadow-xs"
               : "bg-surface text-ink border border-line hover:bg-bg"
           }`}
         >
           <span>Semua</span>
-          <span className={`text-xs font-mono font-medium ${filterTab === "semua" ? "text-line" : "text-muted"}`}>
-            {data.length}
-          </span>
         </button>
 
         {/* Tab Belum ditinjau */}
@@ -255,14 +252,14 @@ export default function RiwayatPage() {
             <table className="w-full text-left text-sm border-collapse min-w-[960px]">
               <thead>
                 <tr className="border-b-2 border-line-strong text-xs font-bold font-atkinson uppercase tracking-wide text-muted">
-                  <th className="py-2.5 px-3.5 w-20 text-left">No.</th>
-                  <th className="py-2.5 px-3.5 w-44 text-left">Waktu</th>
-                  <th className="py-2.5 px-3.5 w-56 text-left">Pasien</th>
-                  <th className="py-2.5 px-3.5 w-44 text-left">Kategori</th>
-                  <th className="py-2.5 px-3.5 w-24 text-right">Skor AI</th>
-                  <th className="py-2.5 px-3.5 w-40 text-left">Tinjauan dokter</th>
-                  <th className="py-2.5 px-3.5 w-36 text-left">Sinkron</th>
-                  <th className="py-2.5 px-3.5 w-28 text-right">Aksi</th>
+                  <th className="py-2 px-3.5 w-20 text-left">No.</th>
+                  <th className="py-2 px-3.5 w-44 text-left">Waktu</th>
+                  <th className="py-2 px-3.5 w-56 text-left">Pasien</th>
+                  <th className="py-2 px-3.5 w-44 text-left">Kategori</th>
+                  <th className="py-2 px-3.5 w-24 text-right">Skor AI</th>
+                  <th className="py-2 px-3.5 w-40 text-left">Tinjauan dokter</th>
+                  <th className="py-2 px-3.5 w-36 text-left">Sinkron</th>
+                  <th className="py-2 px-3.5 w-28 text-right"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line font-atkinson">
@@ -274,58 +271,68 @@ export default function RiwayatPage() {
                   </tr>
                 ) : (
                   filteredData.map((item) => {
-                    const cleanNama = item.nama
-                      ? item.nama.replace(/\s*\(fiktif\)$/, "")
+                    const hasFiktif = item.nama && item.nama.includes("(fiktif)");
+                    const baseName = item.nama
+                      ? item.nama.replace(/\s*\(fiktif\)/, "").trim()
                       : "Tanpa nama";
                     const idPadded = String(item.id).padStart(4, "0");
-                    const skorStr = item.atipikal
-                      ? "(?)"
-                      : item.prob_tb != null
+                    const skorStr = item.prob_tb != null
                       ? item.prob_tb.toFixed(2).replace(".", ",")
-                      : "-";
+                      : "—";
 
                     return (
-                      <tr key={item.id} className="hover:bg-bg/80 transition-colors">
+                      <tr key={item.id} className="h-12 hover:bg-bg/80 transition-colors">
                         {/* No. */}
-                        <td className="py-3 px-3.5 font-mono font-medium text-ink text-base">
+                        <td className="py-2 px-3.5 font-mono font-medium text-ink text-base">
                           {idPadded}
                         </td>
 
                         {/* Waktu */}
-                        <td className="py-3 px-3.5 text-ink text-sm sm:text-base font-normal">
+                        <td className="py-2 px-3.5 text-ink text-sm sm:text-base font-normal">
                           {formatWaktu(item.dibuat_pada)}
                         </td>
 
                         {/* Pasien */}
-                        <td className="py-3 px-3.5 text-sm sm:text-base">
-                          <span className="text-ink font-normal">{cleanNama} </span>
-                          <span className="text-muted font-normal">(fiktif)</span>
+                        <td className="py-2 px-3.5 text-sm sm:text-base">
+                          <span className="text-ink font-normal">{baseName}</span>
+                          {hasFiktif && <span className="text-muted font-normal"> (fiktif)</span>}
                         </td>
 
                         {/* Kategori Badge */}
-                        <td className="py-3 px-3.5">
+                        <td className="py-2 px-3.5">
                           <div className="flex items-center gap-2">
                             <CategoryBadge category={item.kategori} variant="solid" />
 
-                            {/* Indikator Atipikal */}
+                            {/* Indikator Atipikal (Lucide scan-search) */}
                             {Boolean(item.atipikal) && (
-                              <span
+                              <svg
                                 title="Citra janggal / atipikal"
-                                className="size-5 rounded-full bg-status-neutral border border-line text-text-kuning text-[10px] font-bold inline-flex items-center justify-center shrink-0"
+                                className="size-4 text-ink shrink-0"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               >
-                                !
-                              </span>
+                                <path d="M3 7V5a2 2 0 0 1 2-2h2" />
+                                <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+                                <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
+                                <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="m16 16-1.9-1.9" />
+                              </svg>
                             )}
                           </div>
                         </td>
 
                         {/* Skor AI */}
-                        <td className="py-3 px-3.5 text-right font-mono font-medium text-ink text-base">
+                        <td className="py-2 px-3.5 text-right font-mono font-medium text-ink text-base">
                           {skorStr}
                         </td>
 
                         {/* Tinjauan Dokter */}
-                        <td className="py-3 px-3.5">
+                        <td className="py-2 px-3.5">
                           {item.keputusan_dokter === "setuju" ? (
                             <div className="inline-flex items-center gap-1.5 text-ink text-sm sm:text-base">
                               <svg className="size-4 text-ink shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -348,7 +355,7 @@ export default function RiwayatPage() {
                         </td>
 
                         {/* Sinkron */}
-                        <td className="py-3 px-3.5">
+                        <td className="py-2 px-3.5">
                           {item.tersinkron === 1 ? (
                             <div className="inline-flex items-center gap-1.5 text-muted text-sm sm:text-base">
                               <svg className="size-4 text-muted shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -367,15 +374,27 @@ export default function RiwayatPage() {
                         </td>
 
                         {/* Tombol Buka */}
-                        <td className="py-3 px-3.5 text-right">
+                        <td className="py-2 px-3.5 text-right">
                           <Link
                             href={`/?id=${item.id}`}
                             id={`btn-buka-${item.id}`}
                             className="inline-flex items-center gap-1.5 text-primary font-bold text-sm sm:text-base hover:text-primary/90 transition-colors"
                           >
                             <span>Buka</span>
-                            <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                            <svg
+                              className="size-4 text-primary shrink-0"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+                              <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                              <path d="M10 9H8" />
+                              <path d="M16 13H8" />
+                              <path d="M16 17H8" />
                             </svg>
                           </Link>
                         </td>

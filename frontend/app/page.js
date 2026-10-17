@@ -441,9 +441,12 @@ export default function Home() {
                         max="120"
                         value={umur}
                         onChange={(e) => handleUmurChange(e.target.value)}
+                        onBlur={() => validateUmur(umur)}
+                        aria-invalid={umurError ? "true" : "false"}
+                        aria-describedby={umurError ? "error-umur-pesan" : undefined}
                         className={`w-28 h-11 px-3 bg-white rounded-md text-ink text-base font-medium font-mono focus:outline-none transition-all ${
                           umurError
-                            ? "outline outline-2 outline-offset-[-2px] outline-status-error border-transparent"
+                            ? "border-2 border-status-error"
                             : "border border-line-strong focus:border-primary"
                         }`}
                       />
@@ -454,11 +457,11 @@ export default function Home() {
 
                     {/* Inline Error for Age */}
                     {umurError && (
-                      <div id="error-umur-pesan" className="pt-1 flex items-start gap-1.5 text-status-error max-w-[210px] animate-in fade-in">
-                        <svg className="size-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <div id="error-umur-pesan" className="pt-1 flex items-start gap-1.5 text-status-error w-36 animate-in fade-in">
+                        <svg className="size-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <circle cx="12" cy="12" r="10" />
-                          <line x1="12" y1="16" x2="12" y2="12" />
-                          <line x1="12" y1="8" x2="12.01" y2="8" />
+                          <path d="M12 16v-4" />
+                          <path d="M12 8h.01" />
                         </svg>
                         <span className="text-sm font-bold font-atkinson leading-tight">
                           {umurError}
@@ -619,9 +622,9 @@ export default function Home() {
             </div>
 
             {/* Main Step 2 Layout: Left Upload Area, Right Sidebars */}
-            <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="w-full flex flex-col lg:flex-row gap-6 items-start">
               {/* Left Column: Dropzone / Preview / Invalid file state */}
-              <div className="lg:col-span-8 flex flex-col">
+              <div className="flex-1 min-w-0 w-full flex flex-col">
                 {/* Hidden File Input */}
                 <input
                   ref={fileInputRef}
@@ -670,8 +673,8 @@ export default function Home() {
                 ) : file && filePreview ? (
                   /* State B: Foto Terpilih (Preview + Details) */
                   <div className="w-full min-h-96 p-5 bg-white rounded-2xl border border-line flex flex-col sm:flex-row items-center sm:items-start gap-5 shadow-xs">
-                    {/* Thumbnail Box */}
-                    <div className="w-full sm:w-72 h-80 sm:h-96 relative bg-black rounded-[10px] flex items-center justify-center overflow-hidden shrink-0 border border-line/20">
+                    {/* Thumbnail Box: 304x378 */}
+                    <div className="w-[304px] h-[378px] relative bg-black rounded-[10px] flex items-center justify-center overflow-hidden shrink-0">
                       <img
                         id="preview-foto-rontgen"
                         src={filePreview}
@@ -683,9 +686,9 @@ export default function Home() {
                       {loading && (
                         <div
                           id="overlay-menganalisis"
-                          className="absolute inset-x-0 bottom-0 py-3 px-4 bg-ink/80 backdrop-blur-xs flex items-center gap-2.5 text-white animate-in fade-in"
+                          className="absolute inset-x-0 bottom-0 py-3.5 px-4 bg-ink/70 flex items-center gap-2.5 text-white animate-in fade-in"
                         >
-                          <svg className="size-4 animate-spin text-primary shrink-0" fill="none" viewBox="0 0 24 24">
+                          <svg className="size-4 animate-spin text-white shrink-0" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
@@ -716,7 +719,7 @@ export default function Home() {
                           onClick={() => fileInputRef.current?.click()}
                           className={`h-11 px-5 rounded-[10px] text-base font-bold font-atkinson flex items-center gap-2 transition-colors ${
                             loading
-                              ? "bg-line text-muted cursor-not-allowed"
+                              ? "bg-line text-muted cursor-not-allowed pointer-events-none"
                               : "bg-white border border-primary text-primary hover:bg-status-info-bg cursor-pointer shadow-xs"
                           }`}
                         >
@@ -767,8 +770,12 @@ export default function Home() {
                 )}
               </div>
 
-              {/* Right Column: Ringkasan Langkah 1 & Tips Foto */}
-              <div className="lg:col-span-4 flex flex-col gap-4">
+              {/* Right Column: Ringkasan Langkah 1 & Tips Foto (±440px) */}
+              <div
+                className={`w-full lg:w-[440px] shrink-0 flex flex-col gap-4 transition-opacity ${
+                  loading ? "opacity-60 pointer-events-none select-none" : ""
+                }`}
+              >
                 {/* Ringkasan Langkah 1 Card */}
                 <div className="w-full p-5 bg-white rounded-2xl border border-line flex flex-col gap-3 shadow-xs">
                   <div className="w-full flex items-center justify-between">
@@ -850,8 +857,10 @@ export default function Home() {
                 disabled={!file || loading}
                 onClick={jalankanAnalisis}
                 className={`h-11 px-6 rounded-[10px] text-base font-bold font-atkinson flex items-center gap-2 transition-all ${
-                  !file || loading
+                  !file
                     ? "bg-line text-muted cursor-not-allowed"
+                    : loading
+                    ? "bg-primary/75 text-white cursor-wait"
                     : "bg-primary hover:bg-primary/90 text-white shadow-xs cursor-pointer"
                 }`}
               >
