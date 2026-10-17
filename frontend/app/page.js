@@ -30,9 +30,23 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [hasil, setHasil] = useState(null);
   const [error, setError] = useState("");
+  const [tinjauan, setTinjauan] = useState("");
 
   function toggle(key) {
     setGejala((g) => (g.includes(key) ? g.filter((k) => k !== key) : [...g, key]));
+  }
+
+  async function tinjau(keputusan) {
+    const f = new FormData();
+    f.append("keputusan", keputusan);
+    try {
+      const r = await fetch(`${API}/pemeriksaan/${hasil.id}/tinjau`, { method: "POST", body: f });
+      if (!r.ok) throw new Error();
+      setTinjauan(keputusan);
+    } catch {
+      setTinjauan("");
+      setError("Tinjauan dokter GAGAL disimpan. Coba klik lagi.");
+    }
   }
 
   async function kirim(e) {
@@ -41,6 +55,7 @@ export default function Home() {
     setLoading(true);
     setError("");
     setHasil(null);
+    setTinjauan("");
 
     const form = new FormData();
     form.append("foto", file);
@@ -142,6 +157,23 @@ export default function Home() {
             className="mt-4 w-full rounded"
           />
           <p className="mt-3 text-xs">{hasil.disclaimer}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button type="button" onClick={() => tinjau("setuju")} className="rounded bg-green-700 px-3 py-1 text-white">
+              Dokter setuju
+            </button>
+            <button type="button" onClick={() => tinjau("tidak_setuju")} className="rounded bg-gray-700 px-3 py-1 text-white">
+              Dokter tidak setuju
+            </button>
+            <a
+              href={`${API}/pemeriksaan/${hasil.id}/rujukan.pdf`}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded border border-blue-600 bg-white px-3 py-1 text-blue-700"
+            >
+              Buka draf rujukan (PDF)
+            </a>
+          </div>
+          {tinjauan && <p className="mt-2 text-sm">Tinjauan tersimpan: {tinjauan}. Buka ulang PDF untuk melihatnya.</p>}
         </div>
       )}
     </main>

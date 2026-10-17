@@ -3,8 +3,10 @@ import io
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 
 import db
+from pdf import buat_pdf
 from pulmotriage_infer import SYMPTOMS, PulmoTriage, load_image, overlay_heatmap
 
 app = FastAPI(title="PulmoTriage API", version="0.2")
@@ -79,3 +81,15 @@ def tinjau_pemeriksaan(id_: int, keputusan: str = Form(...), catatan: str = Form
     if not db.tinjau(id_, keputusan, catatan):
         raise HTTPException(status_code=404, detail="Pemeriksaan tidak ditemukan")
     return {"id": id_, "keputusan": keputusan}
+
+
+@app.get("/pemeriksaan/{id_}/rujukan.pdf")
+def rujukan_pdf(id_: int):
+    data = db.ambil(id_)
+    if data is None:
+        raise HTTPException(status_code=404, detail="Pemeriksaan tidak ditemukan")
+    return Response(
+        content=buat_pdf(data),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'inline; filename="rujukan-{id_}.pdf"'},
+    )
