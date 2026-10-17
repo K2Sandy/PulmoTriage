@@ -50,11 +50,7 @@ export default function CheckboxCard({
       </div>
 
       <div className="flex-1 min-w-0">
-        <span
-          className={`block text-base font-atkinson leading-snug transition-colors select-none ${
-            checked ? "text-primary font-semibold" : "text-ink font-normal"
-          }`}
-        >
+        <span className="block text-base font-atkinson leading-snug transition-colors select-none text-ink font-normal">
           {label}
         </span>
         {description && (
