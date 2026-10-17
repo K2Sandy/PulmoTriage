@@ -1,158 +1,669 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 
-// Alamat layanan cloud. Saat deploy, diganti lewat NEXT_PUBLIC_CLOUD_URL.
 const CLOUD = process.env.NEXT_PUBLIC_CLOUD_URL || "http://localhost:8001";
 
-const KATEGORI = [
-  ["MERAH", "bg-red-600", "text-red-700", "border-red-200 bg-red-50/50"],
-  ["KUNING", "bg-yellow-500", "text-yellow-700", "border-yellow-200 bg-yellow-50/50"],
-  ["HIJAU", "bg-green-600", "text-green-700", "border-green-200 bg-green-50/50"],
-];
+function formatTanggal(tglStr) {
+  if (!tglStr) return "-";
+  const parts = tglStr.split("-");
+  if (parts.length !== 3) return tglStr;
+  const [y, m, d] = parts;
+  const bulan = [
+    "Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+    "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
+  ];
+  const bIndex = parseInt(m, 10) - 1;
+  return `${parseInt(d, 10)} ${bulan[bIndex] || m} ${y}`;
+}
 
-export default function Dashboard() {
+function formatTanggalSingkat(tglStr) {
+  if (!tglStr) return "-";
+  const parts = tglStr.split("-");
+  if (parts.length !== 3) return tglStr;
+  const [, m, d] = parts;
+  const bulan = [
+    "Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+    "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
+  ];
+  const bIndex = parseInt(m, 10) - 1;
+  return `${parseInt(d, 10)} ${bulan[bIndex] || m}`;
+}
+
+function formatPersen(n, total) {
+  if (!total || total === 0) return "0,0%";
+  const p = (n / total) * 100;
+  return `${p.toFixed(1).replace(".", ",")}%`;
+}
+
+export default function DashboardPage() {
   const [data, setData] = useState(null);
   const [hari, setHari] = useState(30);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [activeBar, setActiveBar] = useState(null);
+
+  const muatData = useCallback(async (periode) => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(`${CLOUD}/dashboard/ringkasan?hari=${periode}`);
+      if (!res.ok) {
+        throw new Error(`Server cloud merespons dengan status ${res.status}`);
+      }
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      console.error("Gagal mengambil ringkasan dasbor:", err);
+      setError("Gagal terhubung ke layanan cloud Dinas Kesehatan.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    setError("");
-    fetch(`${CLOUD}/dashboard/ringkasan?hari=${hari}`)
-      .then((r) => r.json())
-      .then(setData)
-      .catch(() => setError("Tidak bisa terhubung ke layanan cloud."));
-  }, [hari]);
+    muatData(hari);
+  }, [hari, muatData]);
 
-  if (error) {
-    return (
-      <main className="p-6 max-w-4xl mx-auto">
-        <div className="rounded-xl border border-[#7A2E8A]/30 bg-[#F7EEF8] p-4 text-[#7A2E8A] text-sm">
-          <strong>Koneksi Gagal:</strong> {error}
-        </div>
-      </main>
-    );
-  }
+  // Urutkan per Puskesmas berdasarkan jumlah MERAH terbanyak
+  const puskesmasSorted = useMemo(() => {
+    if (!data?.per_puskesmas) return [];
+    return [...data.per_puskesmas].sort((a, b) => {
+      if (b.MERAH !== a.MERAH) {
+        return b.MERAH - a.MERAH;
+      }
+      return b.total - a.total;
+    });
+  }, [data?.per_puskesmas]);
 
-  if (!data) return <main className="p-6 max-w-4xl mx-auto text-gray-500">Memuat dasbor...</main>;
+  // Cari tanggal terakhir dari data
+  const dataTerakhir = useMemo(() => {
+    if (!data?.per_hari || data.per_hari.length === 0) return "-";
+    const tgls = data.per_hari.map((d) => d.tanggal).filter(Boolean);
+    if (tgls.length === 0) return "-";
+    tgls.sort();
+    return tgls[tgls.length - 1];
+  }, [data?.per_hari]);
 
-  const maks = Math.max(1, ...data.per_hari.map((d) => d.MERAH + d.KUNING + d.HIJAU));
+  // Hitung nilai maks untuk skala grafik batang
+  const maksHarian = useMemo(() => {
+    if (!data?.per_hari || data.per_hari.length === 0) return 10;
+    const totals = data.per_hari.map((d) => (d.MERAH || 0) + (d.KUNING || 0) + (d.HIJAU || 0));
+    const maxVal = Math.max(...totals, 0);
+    return maxVal > 0 ? Math.ceil(maxVal * 1.15) : 10;
+  }, [data?.per_hari]);
 
   return (
-    <main className="mx-auto max-w-5xl w-full py-4 space-y-6">
-      {/* Title & Filter */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <main className="w-full max-w-[1240px] mx-auto py-2 sm:py-4 flex flex-col gap-5">
+      {/* 1. DATA SIMULASI BANNER (Tampil hanya jika ada_data_simulasi === true) */}
+      {data?.ada_data_simulasi && (
+        <aside
+          id="banner-simulasi"
+          aria-label="Pemberitahuan Data Simulasi"
+          className="w-full bg-teal-950 text-white px-4 py-2.5 rounded-xl flex items-center justify-center gap-2.5 shadow-sm border border-teal-900"
+        >
+          <svg className="size-4 shrink-0 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <span className="text-xs sm:text-sm font-extrabold font-atkinson tracking-wider uppercase">
+            DATA SIMULASI
+          </span>
+          <span className="text-xs sm:text-sm opacity-90 font-atkinson">
+            · angka contoh untuk demo, bukan data pasien sungguhan
+          </span>
+        </aside>
+      )}
+
+      {/* 2. Top Header Controls: Title, Period Selector, & Data Terakhir */}
+      <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-zinc-200">
         <div>
-          <h1 className="text-2xl font-bold font-fraunces text-teal-950">Ringkasan Dasbor Wilayah</h1>
-          <p className="text-gray-500 text-sm font-atkinson mt-0.5">
-            Agregasi data triase TBC dari Puskesmas. Data bersifat anonim tanpa identitas pribadi dan tanpa citra.
+          <h1 className="text-2xl sm:text-3xl font-semibold font-fraunces text-teal-950 leading-tight">
+            Ringkasan triase TBC
+          </h1>
+          <p className="text-gray-500 text-xs sm:text-sm font-atkinson mt-1">
+            Agregasi data triase wilayah Dinkes · {hari} hari terakhir
           </p>
         </div>
 
-        <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 self-start sm:self-auto bg-white px-3 py-1.5 rounded-[10px] border border-zinc-200 shadow-xs">
-          <span>Periode:</span>
-          <select
-            className="rounded-md border border-zinc-300 px-2 py-1 text-sm bg-white focus:outline-none focus:border-cyan-700 cursor-pointer"
-            value={hari}
-            onChange={(e) => setHari(Number(e.target.value))}
-          >
-            <option value={7}>7 hari terakhir</option>
-            <option value={30}>30 hari terakhir</option>
-            <option value={90}>90 hari terakhir</option>
-          </select>
-        </label>
-      </div>
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Selektor Periode (7, 30, 90 hari) */}
+          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-[10px] border border-zinc-200 shadow-xs">
+            <svg className="size-4 text-teal-950 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <label htmlFor="periode-select" className="sr-only">Pilih Periode Hari</label>
+            <select
+              id="periode-select"
+              value={hari}
+              onChange={(e) => setHari(Number(e.target.value))}
+              className="bg-transparent text-teal-950 text-sm font-bold font-atkinson focus:outline-none cursor-pointer pr-1"
+            >
+              <option value={7}>7 hari terakhir</option>
+              <option value={30}>30 hari terakhir</option>
+              <option value={90}>90 hari terakhir</option>
+            </select>
+          </div>
 
-      {/* Warning Box SIMULASI (Wajib Ada) */}
-      {data.ada_data_simulasi && (
-        <div className="rounded-xl border border-yellow-400 bg-yellow-50 p-4 text-yellow-900 text-sm flex items-start gap-3 shadow-xs">
-          <span className="text-lg">⚠️</span>
-          <div>
-            <p className="font-bold">Perhatian: Mode Simulasi Aktif</p>
-            <p className="mt-0.5">
-              Sebagian data adalah SIMULASI untuk demo, bukan data pasien nyata.
-            </p>
+          {/* Catatan Data Terakhir */}
+          <div className="text-gray-500 text-xs sm:text-sm font-normal font-atkinson shrink-0 bg-white sm:bg-transparent px-3 py-1.5 sm:px-0 sm:py-0 rounded-[10px] sm:rounded-none border sm:border-0 border-zinc-200">
+            Data terakhir: <span className="font-mono text-teal-950 font-medium">{formatTanggal(dataTerakhir)}</span>
           </div>
         </div>
+      </section>
+
+      {/* 3. STATE: ERROR BANNER (+ Tombol Coba Lagi) */}
+      {error && !loading && (
+        <section
+          id="state-error"
+          aria-live="assertive"
+          className="rounded-2xl border border-fuchsia-300 bg-[#F7EEF8] p-5 text-[#7A2E8A] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs"
+        >
+          <div className="flex items-start gap-3">
+            <svg className="size-5 shrink-0 mt-0.5 text-fuchsia-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div>
+              <p className="font-bold text-sm text-fuchsia-900">Koneksi Gagal</p>
+              <p className="text-sm text-fuchsia-800 mt-0.5">{error}</p>
+            </div>
+          </div>
+          <button
+            id="btn-coba-lagi"
+            onClick={() => muatData(hari)}
+            className="self-start sm:self-auto px-4 py-2 bg-fuchsia-800 hover:bg-fuchsia-900 text-white rounded-lg text-sm font-semibold font-atkinson transition-colors shadow-xs"
+          >
+            Coba lagi
+          </button>
+        </section>
       )}
 
-      {/* 4 Summary Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-        <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-xs">
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Total Pemeriksaan</div>
-          <div className="text-3xl font-bold text-teal-950 font-mono mt-1">{data.total}</div>
-        </div>
-        {KATEGORI.map(([k, , teks, styleCard]) => (
-          <div key={k} className={`rounded-xl border p-4 shadow-xs ${styleCard}`}>
-            <div className="text-xs font-bold uppercase tracking-wide text-gray-600">{k}</div>
-            <div className={`text-3xl font-bold font-mono mt-1 ${teks}`}>{data.per_kategori[k]}</div>
+      {/* 4. STATE: LOADING SKELETON */}
+      {loading && (
+        <section id="state-loading" aria-label="Memuat Data Dasbor" className="space-y-5 animate-pulse">
+          {/* Skeleton 4 Kartu */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-28 bg-white rounded-2xl border border-zinc-200 p-5 flex flex-col justify-between">
+                <div className="h-4 w-20 bg-zinc-200 rounded"></div>
+                <div className="h-8 w-24 bg-zinc-200 rounded"></div>
+                <div className="h-3 w-28 bg-zinc-100 rounded"></div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      {/* Daily Barchart */}
-      <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-xs">
-        <h2 className="text-base font-bold text-teal-950 font-fraunces mb-1">Pemeriksaan per hari</h2>
-        <p className="text-xs text-gray-500 mb-4">Volume hasil triase per tanggal dalam rentang periode yang dipilih.</p>
-        <div className="flex h-44 items-end gap-1.5 rounded-lg border border-zinc-100 bg-gray-50/50 p-3 overflow-x-auto">
-          {data.per_hari.map((d) => (
-            <div
-              key={d.tanggal}
-              className="flex h-full flex-1 min-w-[8px] flex-col-reverse group relative"
-              title={`${d.tanggal}: Total ${d.MERAH + d.KUNING + d.HIJAU} (Merah: ${d.MERAH}, Kuning: ${d.KUNING}, Hijau: ${d.HIJAU})`}
-            >
-              {KATEGORI.map(([k, warna]) => (
-                <div key={k} className={`${warna} transition-all`} style={{ height: `${(d[k] / maks) * 100}%` }} />
+          {/* Skeleton Grafik & Sebaran */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div className="lg:col-span-2 h-72 bg-white rounded-2xl border border-zinc-200 p-6 flex flex-col justify-between">
+              <div className="h-5 w-40 bg-zinc-200 rounded"></div>
+              <div className="h-44 bg-zinc-100 rounded"></div>
+            </div>
+            <div className="h-72 bg-white rounded-2xl border border-zinc-200 p-6 flex flex-col justify-between">
+              <div className="h-5 w-36 bg-zinc-200 rounded"></div>
+              <div className="space-y-4">
+                <div className="h-4 bg-zinc-100 rounded"></div>
+                <div className="h-4 bg-zinc-100 rounded"></div>
+                <div className="h-4 bg-zinc-100 rounded"></div>
+              </div>
+              <div className="h-3 w-32 bg-zinc-100 rounded"></div>
+            </div>
+          </div>
+
+          {/* Skeleton Tabel */}
+          <div className="h-64 bg-white rounded-2xl border border-zinc-200 p-6">
+            <div className="h-5 w-32 bg-zinc-200 rounded mb-4"></div>
+            <div className="space-y-3">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-8 bg-zinc-100 rounded"></div>
               ))}
             </div>
-          ))}
-        </div>
-        <div className="flex items-center justify-center gap-4 mt-3 text-xs text-gray-600">
-          <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-full bg-red-600 inline-block"></span> Merah
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-full bg-yellow-500 inline-block"></span> Kuning
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-full bg-green-600 inline-block"></span> Hijau
-          </span>
-        </div>
-      </div>
+          </div>
+        </section>
+      )}
 
-      {/* Puskesmas Table */}
-      <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-xs overflow-hidden">
-        <h2 className="text-base font-bold text-teal-950 font-fraunces mb-1">Per Puskesmas</h2>
-        <p className="text-xs text-gray-500 mb-4">Daftar fasilitas kesehatan yang telah menyinkronkan data triase.</p>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-gray-50 text-gray-700 text-xs font-bold uppercase tracking-wider border-b border-zinc-200">
-              <tr>
-                <th className="py-2.5 px-3">Puskesmas</th>
-                <th className="py-2.5 px-3">Total</th>
-                <th className="py-2.5 px-3">MERAH</th>
-                <th className="py-2.5 px-3">KUNING</th>
-                <th className="py-2.5 px-3">HIJAU</th>
-                <th className="py-2.5 px-3">% MERAH</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-100 font-atkinson">
-              {data.per_puskesmas.map((p) => (
-                <tr key={p.puskesmas_id} className="hover:bg-gray-50/80 transition-colors">
-                  <td className="py-2.5 px-3 font-semibold text-teal-950">{p.puskesmas_id}</td>
-                  <td className="py-2.5 px-3 font-mono">{p.total}</td>
-                  <td className="py-2.5 px-3 font-mono text-red-700 font-bold">{p.MERAH}</td>
-                  <td className="py-2.5 px-3 font-mono text-yellow-700">{p.KUNING}</td>
-                  <td className="py-2.5 px-3 font-mono text-green-700">{p.HIJAU}</td>
-                  <td className="py-2.5 px-3 font-mono font-bold">
-                    {((p.MERAH / p.total) * 100).toFixed(1)}%
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* 5. STATE: KOSONG (Tanpa Angka Palsu) */}
+      {!loading && !error && data && data.total === 0 && (
+        <section
+          id="state-kosong"
+          className="rounded-2xl border border-zinc-200 bg-white p-12 text-center flex flex-col items-center justify-center gap-3 shadow-xs"
+        >
+          <div className="size-14 rounded-full bg-zinc-100 flex items-center justify-center text-gray-400">
+            <svg className="size-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-bold font-fraunces text-teal-950">
+            Belum Ada Data Triase
+          </h2>
+          <p className="text-gray-500 text-sm max-w-md font-atkinson">
+            Tidak ada pemeriksaan tersinkron dalam rentang {hari} hari terakhir. Data akan muncul otomatis setelah Puskesmas melakukan sinkronisasi.
+          </p>
+        </section>
+      )}
+
+      {/* 6. KONTEN UTAMA: JIKA ADA DATA */}
+      {!loading && !error && data && data.total > 0 && (
+        <>
+          {/* A. 4 Kartu Angka (Total, MERAH, KUNING, HIJAU) */}
+          <section aria-label="Statistik Utama" className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* Card Total */}
+            <div className="px-5 py-4 bg-white rounded-2xl border border-zinc-200 flex flex-col justify-start gap-1.5 shadow-xs">
+              <div className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+                Total
+              </div>
+              <div className="text-teal-950 text-4xl sm:text-5xl font-semibold font-fraunces leading-tight">
+                {data.total}
+              </div>
+              <div className="text-gray-500 text-xs sm:text-sm font-normal font-atkinson">
+                pemeriksaan tersinkron
+              </div>
+            </div>
+
+            {/* Card MERAH */}
+            <div className="px-5 py-4 bg-white rounded-2xl border border-zinc-200 flex flex-col justify-start gap-1.5 shadow-xs">
+              <div className="flex items-center gap-2">
+                <span className="h-7 px-2.5 bg-red-700 text-white rounded-md inline-flex items-center gap-1.5 text-xs font-extrabold font-atkinson tracking-wide">
+                  <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  MERAH
+                </span>
+              </div>
+              <div className="text-teal-950 text-4xl sm:text-5xl font-semibold font-fraunces leading-tight">
+                {data.per_kategori?.MERAH ?? 0}
+              </div>
+              <div className="text-gray-500 text-xs sm:text-sm font-normal font-atkinson">
+                {formatPersen(data.per_kategori?.MERAH || 0, data.total)} dari total
+              </div>
+            </div>
+
+            {/* Card KUNING */}
+            <div className="px-5 py-4 bg-white rounded-2xl border border-zinc-200 flex flex-col justify-start gap-1.5 shadow-xs">
+              <div className="flex items-center gap-2">
+                <span className="h-7 px-2.5 bg-yellow-500 text-stone-900 rounded-md inline-flex items-center gap-1.5 text-xs font-extrabold font-atkinson tracking-wide">
+                  <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  KUNING
+                </span>
+              </div>
+              <div className="text-teal-950 text-4xl sm:text-5xl font-semibold font-fraunces leading-tight">
+                {data.per_kategori?.KUNING ?? 0}
+              </div>
+              <div className="text-gray-500 text-xs sm:text-sm font-normal font-atkinson">
+                {formatPersen(data.per_kategori?.KUNING || 0, data.total)} dari total
+              </div>
+            </div>
+
+            {/* Card HIJAU */}
+            <div className="px-5 py-4 bg-white rounded-2xl border border-zinc-200 flex flex-col justify-start gap-1.5 shadow-xs">
+              <div className="flex items-center gap-2">
+                <span className="h-7 px-2.5 bg-green-700 text-white rounded-md inline-flex items-center gap-1.5 text-xs font-extrabold font-atkinson tracking-wide">
+                  <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  HIJAU
+                </span>
+              </div>
+              <div className="text-teal-950 text-4xl sm:text-5xl font-semibold font-fraunces leading-tight">
+                {data.per_kategori?.HIJAU ?? 0}
+              </div>
+              <div className="text-gray-500 text-xs sm:text-sm font-normal font-atkinson">
+                {formatPersen(data.per_kategori?.HIJAU || 0, data.total)} dari total
+              </div>
+            </div>
+          </section>
+
+          {/* B. Grafik Batang Bertumpuk & Sebaran Kategori */}
+          <section className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            {/* 1. Grafik Batang Bertumpuk Per Hari (Span 2 Cols) */}
+            <div className="lg:col-span-2 p-5 sm:p-6 bg-white rounded-2xl border border-zinc-200 flex flex-col gap-4 shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold font-atkinson text-teal-950">
+                    Pemeriksaan per hari
+                  </h2>
+                  <p className="text-xs text-gray-500 font-atkinson">
+                    Volume pemeriksaan harian dalam rentang periode yang dipilih
+                  </p>
+                </div>
+
+                {/* Legend */}
+                <div className="flex items-center gap-3.5 text-xs font-atkinson font-medium text-teal-950 shrink-0">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="size-2.5 rounded-[2px] bg-red-700 inline-block"></span>
+                    MERAH
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="size-2.5 rounded-[2px] bg-yellow-500 inline-block"></span>
+                    KUNING
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="size-2.5 rounded-[2px] bg-green-700 inline-block"></span>
+                    HIJAU
+                  </span>
+                </div>
+              </div>
+
+              {/* Batang Bertumpuk Chart Container */}
+              <div className="w-full pt-4">
+                {/* Visual Chart with Grid Lines */}
+                <div className="relative h-56 w-full flex flex-col justify-between">
+                  {/* Grid Lines & Y-Labels */}
+                  <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                    <div className="w-full flex items-center">
+                      <span className="w-8 text-right pr-2 text-xs font-mono text-gray-400">
+                        {maksHarian}
+                      </span>
+                      <div className="flex-1 border-t border-zinc-200"></div>
+                    </div>
+                    <div className="w-full flex items-center">
+                      <span className="w-8 text-right pr-2 text-xs font-mono text-gray-400">
+                        {Math.round(maksHarian / 2)}
+                      </span>
+                      <div className="flex-1 border-t border-zinc-200"></div>
+                    </div>
+                    <div className="w-full flex items-center">
+                      <span className="w-8 text-right pr-2 text-xs font-mono text-gray-400">
+                        0
+                      </span>
+                      <div className="flex-1 border-t border-zinc-200"></div>
+                    </div>
+                  </div>
+
+                  {/* Columns of Stacked Bars */}
+                  <div className="relative pl-10 h-48 mt-2 flex items-end justify-between gap-1 sm:gap-1.5">
+                    {data.per_hari?.map((d) => {
+                      const totalHari = (d.MERAH || 0) + (d.KUNING || 0) + (d.HIJAU || 0);
+                      const tMerah = (d.MERAH || 0);
+                      const tKuning = (d.KUNING || 0);
+                      const tHijau = (d.HIJAU || 0);
+
+                      // Percent of max height
+                      const barHeightPct = maksHarian > 0 ? Math.min(100, Math.max(4, (totalHari / maksHarian) * 100)) : 0;
+                      const hMerah = totalHari > 0 ? (tMerah / totalHari) * 100 : 0;
+                      const hKuning = totalHari > 0 ? (tKuning / totalHari) * 100 : 0;
+                      const hHijau = totalHari > 0 ? (tHijau / totalHari) * 100 : 0;
+
+                      const isHovered = activeBar === d.tanggal;
+
+                      return (
+                        <div
+                          key={d.tanggal}
+                          onMouseEnter={() => setActiveBar(d.tanggal)}
+                          onMouseLeave={() => setActiveBar(null)}
+                          className="flex-1 h-full flex flex-col justify-end items-center group relative cursor-pointer"
+                        >
+                          {/* Tooltip on hover */}
+                          {isHovered && (
+                            <div className="absolute bottom-full mb-2 z-30 px-2.5 py-1.5 bg-teal-950 text-white text-xs rounded-lg shadow-lg pointer-events-none whitespace-nowrap">
+                              <p className="font-bold font-mono">{formatTanggal(d.tanggal)}</p>
+                              <p className="text-[11px] text-zinc-300">Total: {totalHari}</p>
+                              <div className="flex items-center gap-2 mt-0.5 text-[10px]">
+                                <span className="text-red-300">M: {tMerah}</span>
+                                <span className="text-yellow-300">K: {tKuning}</span>
+                                <span className="text-green-300">H: {tHijau}</span>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Stacked Bar (Bottom: Hijau, Mid: Kuning, Top: Merah) */}
+                          <div
+                            style={{ height: `${barHeightPct}%` }}
+                            className="w-full max-w-[20px] flex flex-col-reverse rounded-t overflow-hidden transition-all duration-200 group-hover:opacity-90"
+                          >
+                            {tHijau > 0 && (
+                              <div
+                                style={{ height: `${hHijau}%` }}
+                                className="w-full bg-green-700 shrink-0"
+                              />
+                            )}
+                            {tKuning > 0 && (
+                              <div
+                                style={{ height: `${hKuning}%` }}
+                                className="w-full bg-yellow-500 shrink-0 border-t border-white"
+                              />
+                            )}
+                            {tMerah > 0 && (
+                              <div
+                                style={{ height: `${hMerah}%` }}
+                                className="w-full bg-red-700 shrink-0 border-t border-white"
+                              />
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* X-Axis Date Labels */}
+                <div className="pl-10 pt-2 flex justify-between text-[11px] font-mono text-gray-500 overflow-hidden">
+                  {(() => {
+                    const list = data.per_hari || [];
+                    if (list.length === 0) return null;
+                    if (list.length <= 5) {
+                      return list.map((d) => (
+                        <span key={d.tanggal}>{formatTanggalSingkat(d.tanggal)}</span>
+                      ));
+                    }
+                    // Tampilkan 5 interval tanggal
+                    const indices = [
+                      0,
+                      Math.floor(list.length * 0.25),
+                      Math.floor(list.length * 0.5),
+                      Math.floor(list.length * 0.75),
+                      list.length - 1,
+                    ];
+                    return indices.map((idx) => (
+                      <span key={list[idx]?.tanggal || idx}>
+                        {formatTanggalSingkat(list[idx]?.tanggal)}
+                      </span>
+                    ));
+                  })()}
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Sebaran Kategori (1 Col) */}
+            <div className="p-5 sm:p-6 bg-white rounded-2xl border border-zinc-200 flex flex-col justify-between gap-5 shadow-xs">
+              <div>
+                <h2 className="text-lg sm:text-xl font-bold font-atkinson text-teal-950">
+                  Sebaran kategori
+                </h2>
+                <p className="text-xs text-gray-500 font-atkinson mt-0.5">
+                  Proporsi triase seluruh wilayah
+                </p>
+              </div>
+
+              {/* Progress bars per category */}
+              <div className="space-y-4">
+                {/* MERAH */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="inline-flex items-center gap-1.5 font-bold font-atkinson text-red-700">
+                      <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      MERAH
+                    </span>
+                    <span className="font-mono font-medium text-teal-950">
+                      {formatPersen(data.per_kategori?.MERAH || 0, data.total)}
+                    </span>
+                  </div>
+                  <div className="h-2.5 w-full bg-zinc-200 rounded-full overflow-hidden">
+                    <div
+                      style={{
+                        width: `${data.total > 0 ? ((data.per_kategori?.MERAH || 0) / data.total) * 100 : 0}%`,
+                      }}
+                      className="h-full bg-red-700 rounded-full transition-all duration-500"
+                    />
+                  </div>
+                </div>
+
+                {/* KUNING */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="inline-flex items-center gap-1.5 font-bold font-atkinson text-yellow-800">
+                      <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                      </svg>
+                      KUNING
+                    </span>
+                    <span className="font-mono font-medium text-teal-950">
+                      {formatPersen(data.per_kategori?.KUNING || 0, data.total)}
+                    </span>
+                  </div>
+                  <div className="h-2.5 w-full bg-zinc-200 rounded-full overflow-hidden">
+                    <div
+                      style={{
+                        width: `${data.total > 0 ? ((data.per_kategori?.KUNING || 0) / data.total) * 100 : 0}%`,
+                      }}
+                      className="h-full bg-yellow-500 rounded-full transition-all duration-500"
+                    />
+                  </div>
+                </div>
+
+                {/* HIJAU */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="inline-flex items-center gap-1.5 font-bold font-atkinson text-green-800">
+                      <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      HIJAU
+                    </span>
+                    <span className="font-mono font-medium text-teal-950">
+                      {formatPersen(data.per_kategori?.HIJAU || 0, data.total)}
+                    </span>
+                  </div>
+                  <div className="h-2.5 w-full bg-zinc-200 rounded-full overflow-hidden">
+                    <div
+                      style={{
+                        width: `${data.total > 0 ? ((data.per_kategori?.HIJAU || 0) / data.total) * 100 : 0}%`,
+                      }}
+                      className="h-full bg-green-700 rounded-full transition-all duration-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Note bottom of card */}
+              <div className="pt-2 border-t border-zinc-100 text-xs text-gray-500 font-atkinson">
+                Persen dari {data.total} pemeriksaan, {hari} hari.
+              </div>
+            </div>
+          </section>
+
+          {/* C. Tabel Per Puskesmas (Diurutkan dari MERAH Terbanyak) */}
+          <section className="bg-white rounded-2xl border border-zinc-200 p-5 sm:p-6 shadow-xs flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <div>
+                <h2 className="text-lg sm:text-xl font-bold font-atkinson text-teal-950">
+                  Per Puskesmas
+                </h2>
+                <p className="text-xs text-gray-500 font-atkinson">
+                  Diurutkan dari jumlah MERAH terbanyak
+                </p>
+              </div>
+              <span className="text-xs font-mono text-gray-400">
+                Total: {puskesmasSorted.length} fasilitas
+              </span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-zinc-200 text-xs font-bold font-atkinson uppercase tracking-wide text-gray-500">
+                    <th className="py-3 px-3">Puskesmas</th>
+                    <th className="py-3 px-3 text-right">
+                      <span className="inline-flex items-center gap-1 text-red-700">
+                        <svg className="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        MERAH
+                      </span>
+                    </th>
+                    <th className="py-3 px-3 text-right">
+                      <span className="inline-flex items-center gap-1 text-yellow-800">
+                        <svg className="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <circle cx="12" cy="12" r="10" />
+                          <line x1="12" y1="8" x2="12" y2="12" />
+                          <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        KUNING
+                      </span>
+                    </th>
+                    <th className="py-3 px-3 text-right">
+                      <span className="inline-flex items-center gap-1 text-green-800">
+                        <svg className="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        HIJAU
+                      </span>
+                    </th>
+                    <th className="py-3 px-3 text-right text-gray-600">Total</th>
+                    <th className="py-3 px-3 text-right text-gray-600">% MERAH</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-100 font-atkinson">
+                  {puskesmasSorted.map((p) => {
+                    const pctMerah = formatPersen(p.MERAH, p.total);
+                    return (
+                      <tr key={p.puskesmas_id} className="hover:bg-gray-50/80 transition-colors">
+                        <td className="py-3 px-3 font-semibold text-teal-950">
+                          {p.puskesmas_id}
+                        </td>
+                        <td className="py-3 px-3 text-right font-mono font-medium text-red-700">
+                          {p.MERAH}
+                        </td>
+                        <td className="py-3 px-3 text-right font-mono font-medium text-yellow-800">
+                          {p.KUNING}
+                        </td>
+                        <td className="py-3 px-3 text-right font-mono font-medium text-green-800">
+                          {p.HIJAU}
+                        </td>
+                        <td className="py-3 px-3 text-right font-mono font-semibold text-teal-950">
+                          {p.total}
+                        </td>
+                        <td className="py-3 px-3 text-right font-mono font-medium text-teal-950">
+                          {pctMerah}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* 7. Catatan Privasi & Pernyataan Wajib Triase */}
+      <footer className="space-y-3 pt-2">
+        {/* Catatan Data Anonim */}
+        <div className="px-4 py-3 bg-white sm:bg-gray-50/80 rounded-[10px] border border-zinc-200 flex items-start gap-2.5 text-xs sm:text-sm font-atkinson text-teal-950">
+          <svg className="size-4 shrink-0 text-cyan-700 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <div>
+            <span className="font-semibold">Data anonim:</span> tanpa nama, tanpa umur pasti, tanpa foto. Versi lomba tanpa login.
+          </div>
         </div>
-      </div>
+
+        {/* Pernyataan Wajib */}
+        <div className="px-4 py-3 bg-cyan-50/60 rounded-[10px] border border-cyan-200/70 text-cyan-950 text-xs sm:text-sm font-atkinson flex items-start gap-2.5">
+          <svg className="size-4 text-cyan-700 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p>
+            <strong>Peringatan Medis:</strong> Hasil AI adalah alat bantu triase, bukan diagnosis. Keputusan klinis tetap di tangan dokter.
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }
