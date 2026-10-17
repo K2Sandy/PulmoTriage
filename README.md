@@ -46,7 +46,8 @@ PulmoTriage membantu petugas Puskesmas memilah pasien terduga TBC lebih cepat:
 | 🩺 | **Tinjauan dokter** | Dokter menekan Setuju atau Tidak setuju. Keputusan akhir selalu di tangan dokter. |
 | 📄 | **Draf surat rujukan** | PDF terisi otomatis dari data pemeriksaan, bertanda DRAFT sampai ditinjau. |
 | 🔄 | **Sinkron pseudonim** | Hanya data tanpa identitas langsung yang dikirim ke server untuk dasbor Dinkes. |
-| 📊 | **Dasbor Dinkes** | Tren MERAH, KUNING, HIJAU per hari dan per Puskesmas. |
+| 📊 | **Dasbor Dinkes** | Aplikasi web terpisah: peta persebaran per kelompok pulau (klik untuk memperbesar), tren harian, dan tabel per Puskesmas (kode, provinsi, kab/kota). |
+| 🔑 | **Lisensi per Puskesmas** | File lisensi bertanda tangan digital, diperiksa tanpa internet. |
 
 <br>
 
@@ -103,32 +104,33 @@ PulmoTriage membantu petugas Puskesmas memilah pasien terduga TBC lebih cepat:
 
 ## ◆ Arsitektur
 
-<img src="docs/assets/arsitektur.png" alt="Arsitektur: frontend dan backend di Puskesmas, sinkron pseudonim ke server cloud dan dasbor Dinkes" width="100%">
+PulmoTriage terdiri dari **dua aplikasi yang di-deploy terpisah**, dihubungkan oleh satu layanan cloud:
 
-<details>
-<summary><b>Versi Mermaid (bisa diedit)</b></summary>
+1. **Aplikasi Puskesmas** (`backend/` + `frontend/`): satu program yang dipasang di komputer Puskesmas. Berjalan tanpa internet di `http://localhost:8000`.
+2. **Dasbor Dinas Kesehatan** (`dinkes/`): aplikasi web online (Vercel) yang membaca ringkasan dari layanan cloud.
+3. **Layanan cloud** (`cloud/`): API di Render dengan database PostgreSQL di Neon. Hanya menerima data pseudonim dari Puskesmas **berlisensi**.
 
 ```mermaid
 flowchart LR
-  subgraph PKM["Di Puskesmas (luring)"]
-    FE["Frontend<br/>Next.js :3000"] --> BE["Backend<br/>FastAPI + ONNX :8000"]
+  subgraph PKM["Komputer Puskesmas (luring)"]
+    UI["Tampilan<br/>(frontend hasil build)"] --> BE["Backend FastAPI + ONNX<br/>localhost:8000"]
     BE --> DB[("SQLite")]
     BE --> PDF["Surat rujukan PDF"]
+    LIS["File lisensi<br/>bertanda tangan"] --> BE
   end
-  subgraph CLOUD["Server cloud (Dinkes)"]
-    API["API sinkron<br/>FastAPI :8001"] --> PG[("PostgreSQL")]
-    PG --> DASH["Dasbor Dinkes"]
+  subgraph CLOUD["Online"]
+    API["Layanan cloud<br/>Render"] --> PG[("PostgreSQL<br/>Neon")]
+    DASH["Dasbor Dinkes<br/>Vercel"] -- "baca ringkasan" --> API
   end
-  BE -- "data pseudonim · X-API-Key" --> API
+  BE -- "data pseudonim + lisensi (X-Lisensi)<br/>saat ada internet" --> API
 ```
 
-</details>
-
-| Bagian | Teknologi | Tempat deploy |
-|---|---|---|
-| Frontend | Next.js 16, React, Tailwind CSS | Vercel |
-| Backend Puskesmas | Python 3.11, FastAPI, ONNX Runtime, SQLite, ReportLab | Komputer Puskesmas / Google Cloud Run (demo) |
-| Layanan cloud | FastAPI, SQLAlchemy, PostgreSQL | Google Cloud Run + Neon/Supabase atau Cloud SQL |
+| Bagian | Folder | Teknologi | Tempat jalan |
+|---|---|---|---|
+| Aplikasi Puskesmas | `backend/`, `frontend/` | FastAPI, ONNX Runtime, SQLite, ReportLab, Next.js (ekspor statis) | Komputer Puskesmas, luring |
+| Layanan cloud | `cloud/` | FastAPI, SQLAlchemy, PostgreSQL | Render + Neon |
+| Dasbor Dinkes | `dinkes/` | Next.js | Vercel |
+| Penerbit lisensi | `scripts/lisensi/` | Python, Ed25519 | Laptop tim PulmoTriage |
 
 <br>
 
@@ -163,66 +165,95 @@ Gerbang kualitas salah menolak 0,2% rontgen asli.
 | Alat | Versi | Cek dengan |
 |---|---|---|
 | Python | **3.11** (paket yang dipakai butuh ≥ 3.11) | `py -3.11 --version` |
-| Node.js | ≥ 20.9 (untuk frontend) | `node -v` |
+| Node.js | ≥ 20.9 (hanya untuk mengembangkan tampilan dan dasbor) | `node -v` |
 | Git | terbaru | `git --version` |
 
-### 1. Backend Puskesmas (port 8000)
+### A. Menjalankan aplikasi Puskesmas (satu klik, luring)
+
+Klik dua kali **`jalankan-pulmotriage.bat`** di folder utama. Saat pertama kali, skrip menyiapkan Python dan paketnya (butuh internet sekali). Setelah itu aplikasi terbuka di http://localhost:8000 dan berjalan tanpa internet.
+
+Saat pertama dibuka, aplikasi meminta **file lisensi**. Pasang file `lisensi-<ID>.json` dari tim (lihat bagian [Lisensi Puskesmas](#-lisensi-puskesmas)).
+
+### B. Mode pengembangan
 
 ```bash
+# Terminal 1: backend
 cd backend
-py -3.11 -m venv .venv          # macOS/Linux: python3.11 -m venv .venv
-.venv\Scripts\activate          # macOS/Linux: source .venv/bin/activate
+py -3.11 -m venv .venv
+.venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
-```
 
-Buka http://localhost:8000/health. Hasil yang benar:
-
-```json
-{"status": "ok", "model_version": "pulmotriage-effb0-v3.1"}
-```
-
-Dokumentasi API interaktif tersedia di http://localhost:8000/docs.
-
-> [!TIP]
-> Kalau PowerShell menolak menjalankan `activate`, jalankan sekali `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`, lalu buka ulang terminal.
-
-### 2. Layanan cloud (port 8001)
-
-Buka terminal baru:
-
-```bash
+# Terminal 2: layanan cloud (opsional, untuk uji sinkron)
 cd cloud
 py -3.11 -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8001
-```
 
-Tanpa `DATABASE_URL`, layanan memakai SQLite lokal (`cloud.db`), cukup untuk belajar dan uji.
-
-### 3. Frontend (port 3000)
-
-```bash
+# Terminal 3: tampilan Puskesmas (http://localhost:3000)
 cd frontend
+npm install
+npm run dev
+
+# Terminal 4: dasbor Dinkes (http://localhost:3001)
+cd dinkes
 npm install
 npm run dev
 ```
 
-Buka http://localhost:3000.
+Setelah mengubah tampilan Puskesmas, bangun ulang versi luring:
+
+```bash
+cd frontend
+npm run build:offline     # hasilnya disalin ke backend/web
+```
+
+> [!TIP]
+> Kalau PowerShell menolak menjalankan `activate`, jalankan sekali `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`, lalu buka ulang terminal.
 
 ### Variabel lingkungan
 
 | Variabel | Dipakai di | Bawaan | Fungsi |
 |---|---|---|---|
-| `SINKRON_DETIK` | backend | `60` | Jeda sinkron otomatis. `0` mematikannya. |
-| `CLOUD_URL` | backend | `http://localhost:8001` | Alamat layanan cloud. |
-| `SYNC_API_KEY` | backend, cloud | `dev-key` | Kunci bersama untuk `/sync`. **Ganti saat deploy.** |
-| `PUSKESMAS_ID` | backend | `PKM-DEMO-LOKAL` | Identitas Puskesmas pengirim. |
-| `NAMA_FASILITAS` | backend | `Puskesmas (isi nama Puskesmas)` | Nama di kop surat rujukan. |
-| `DATABASE_URL` | cloud | `sqlite:///cloud.db` | Alamat PostgreSQL saat deploy. |
-| `CORS_ORIGINS` | cloud | `http://localhost:3000` | Alamat frontend yang diizinkan (pisahkan dengan koma). |
-| `NEXT_PUBLIC_API_URL` | frontend | `http://localhost:8000` | Alamat backend. |
+| `CLOUD_URL` | backend | `http://localhost:8001` (skrip .bat: alamat Render) | Alamat layanan cloud |
+| `SINKRON_DETIK` | backend | `60` | Jeda sinkron otomatis. `0` mematikannya |
+| `LISENSI_WAJIB` | backend | `1` | `0` = boleh dipakai tanpa lisensi (khusus pengembangan) |
+| `SYNC_API_KEY` | backend, cloud | kosong / `dev-key` | Kunci cadangan untuk pengembangan dan `/demo/seed`. Puskesmas berlisensi tidak memerlukannya |
+| `PUSKESMAS_ID`, `NAMA_FASILITAS` | backend | | Cadangan bila lisensi belum dipasang. Normalnya diambil dari lisensi |
+| `DATABASE_URL` | cloud | `sqlite:///cloud.db` | Alamat PostgreSQL (Neon) |
+| `CORS_ORIGINS` | cloud | `http://localhost:3000` | Alamat dasbor Dinkes yang diizinkan, pisahkan dengan koma |
+| `NEXT_PUBLIC_API_URL` | frontend | `http://localhost:8000` saat `npm run dev` | Alamat backend saat pengembangan |
+| `NEXT_PUBLIC_CLOUD_URL` | dinkes | `http://localhost:8001` | Alamat layanan cloud |
+
+<br>
+
+## ◆ Lisensi Puskesmas
+
+Setiap Puskesmas memakai **satu file lisensi** (`lisensi-<ID>.json`) yang ditandatangani digital oleh tim. Aplikasi memeriksanya **tanpa internet**, memakai kunci publik `backend/lisensi_publik.pem`. File yang diubah, misalnya tanggalnya diperpanjang sendiri, otomatis ditolak.
+
+```bash
+# Sekali saja, di laptop tim: membuat pasangan kunci
+python scripts/lisensi/buat_kunci.py
+
+# Menerbitkan lisensi untuk satu Puskesmas (kode jadi 1171-001)
+python scripts/lisensi/terbitkan_lisensi.py --kode-wilayah 1171 --nomor 1 --provinsi "Aceh" --kab-kota "Kota Banda Aceh" --nama "Puskesmas Lamteumen" --sampai 2027-10-31
+
+# Atau banyak sekaligus dari CSV
+python scripts/lisensi/terbitkan_lisensi.py --csv scripts/lisensi/contoh_daftar_puskesmas.csv
+```
+
+| Status | Arti | Pemeriksaan baru |
+|---|---|---|
+| Aktif | Dalam masa berlaku. Peringatan mulai 30 hari sebelum berakhir | ✅ |
+| Masa tenggang | Sudah berakhir, kurang dari 30 hari | ✅ (dengan peringatan) |
+| Kedaluwarsa | Lewat masa tenggang | ⛔ (riwayat dan PDF tetap bisa dibuka) |
+| Tidak valid | Tanda tangan tidak cocok atau format salah | ⛔ |
+
+Setiap Puskesmas mendapat **kode unik** `<kode wilayah kab/kota>-<nomor urut>`, misalnya `1171-001`. Kode wilayah mengikuti kode Kemendagri/BPS (2 angka provinsi + 2 angka kab/kota); dua angka pertamanya menentukan kelompok pulau di peta dasbor. Nama, provinsi, dan kabupaten/kota dari lisensi tampil di aplikasi, di kop surat rujukan, dan di dasbor Dinkes. Lisensi juga dikirim saat sinkron (header `X-Lisensi`), jadi cloud hanya menerima data dari Puskesmas terdaftar, dan setiap Puskesmas tidak perlu kunci API bersama.
+
+> [!CAUTION]
+> `scripts/lisensi/kunci_rahasia.pem` hanya boleh ada di laptop tim. Jangan di-commit dan jangan dikirim. File itu sudah tercantum di `.gitignore`.
 
 <br>
 
@@ -241,6 +272,9 @@ Buka http://localhost:3000.
 | `GET` | `/pemeriksaan/{id}/rujukan.pdf` | Draf surat rujukan PDF |
 | `GET` | `/sinkron/status` | Jumlah data yang menunggu sinkron |
 | `POST` | `/sinkron` | Sinkron sekarang ke layanan cloud |
+| `GET` | `/lisensi` | Status lisensi terpasang |
+| `POST` | `/lisensi` | Pasang lisensi (file `berkas`) |
+| `DELETE` | `/lisensi` | Lepas lisensi (untuk reset demo; data tidak terhapus) |
 
 </details>
 
@@ -250,7 +284,7 @@ Buka http://localhost:3000.
 | Metode | Endpoint | Fungsi |
 |---|---|---|
 | `GET` | `/health` | Status layanan |
-| `POST` | `/sync` | Terima data pseudonim dari Puskesmas (header `X-API-Key`) |
+| `POST` | `/sync` | Terima data pseudonim dari Puskesmas berlisensi (header `X-Lisensi`, atau `X-API-Key` untuk pengembangan) |
 | `GET` | `/dashboard/ringkasan?hari=30` | Ringkasan untuk dasbor |
 | `POST` | `/demo/seed` | Isi data simulasi (header `X-API-Key`) |
 | `DELETE` | `/demo` | Hapus data simulasi (header `X-API-Key`) |
@@ -305,22 +339,23 @@ Sistem dirancang mengikuti prinsip minimisasi data UU PDP No. 27 Tahun 2022. Dat
 
 ```text
 PulmoTriage/
-├── backend/                  FastAPI + model, berjalan di Puskesmas
-│   ├── main.py               endpoint API
+├── jalankan-pulmotriage.bat  menjalankan aplikasi Puskesmas (satu klik)
+├── backend/                  aplikasi Puskesmas: API + model, luring
+│   ├── main.py               endpoint API + menyajikan tampilan dari web/
 │   ├── pulmotriage_infer.py  gerbang kualitas, inferensi, triase, peta panas
 │   ├── pulmotriage.onnx      model (16 MB)
-│   ├── pulmotriage_config.json
-│   ├── db.py                 penyimpanan SQLite
-│   ├── pdf.py                draf surat rujukan
-│   ├── sinkron.py            kirim data pseudonim ke cloud
-│   └── requirements.txt
-├── cloud/                    penerima sinkron + API dasbor
-│   ├── main.py
-│   └── requirements.txt
-├── frontend/                 Next.js (formulir, hasil, dasbor)
+│   ├── lisensi.py            pemeriksaan lisensi (luring)
+│   ├── lisensi_publik.pem    kunci publik lisensi
+│   ├── db.py · pdf.py · sinkron.py
+│   ├── assets/               font dan logo untuk surat rujukan
+│   └── web/                  tampilan hasil `npm run build:offline`
+├── frontend/                 kode tampilan aplikasi Puskesmas (Next.js)
+├── dinkes/                   dasbor Dinas Kesehatan (Next.js, deploy ke Vercel)
+├── cloud/                    penerima sinkron + API dasbor (Render + Neon)
+├── scripts/lisensi/          pembuat kunci dan penerbit lisensi (laptop tim)
 ├── docs/
 │   ├── assets/               gambar README
-│   └── hasil-uji.md          catatan hasil pengujian
+│   └── panduan-demo.md       alur dan naskah video demo
 ├── LICENSE
 └── README.md
 ```
@@ -332,8 +367,12 @@ PulmoTriage/
 - [x] Model v3.1 + gerbang kualitas + peta panas
 - [x] Backend: analisis, riwayat, tinjauan dokter, draf PDF, sinkron
 - [x] Layanan cloud + API dasbor
-- [ ] Antarmuka Next.js sesuai DESIGN.md
-- [ ] Deploy publik (Vercel + Cloud Run)
+- [x] Antarmuka Next.js sesuai DESIGN.md
+- [x] Aplikasi Puskesmas sebagai satu program luring
+- [x] Lisensi per Puskesmas (tanda tangan digital, diperiksa luring)
+- [x] Dasbor Dinkes terpisah (Vercel) + layanan cloud (Render + Neon)
+- [ ] Login untuk dasbor Dinkes
+- [ ] Installer Windows untuk Puskesmas
 - [ ] Uji eksternal pada dataset lain
 - [ ] Pilot 3–8 Puskesmas rawat inap di Aceh, dengan TCM sebagai acuan
 - [ ] Kalibrasi ulang ambang dengan data lokal

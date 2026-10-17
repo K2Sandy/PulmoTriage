@@ -8,8 +8,8 @@ import Button from "./components/Button";
 import CategoryBadge from "./components/CategoryBadge";
 import TriageRibbon from "./components/TriageRibbon";
 import CheckboxCard from "./components/CheckboxCard";
+import { API } from "./utils/api";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const GEJALA = [
   { key: "batuk_2minggu", label: "Batuk lebih dari 2 minggu" },
@@ -179,6 +179,12 @@ export default function Home() {
     try {
       const res = await fetch(`${API}/analyze`, { method: "POST", body: form });
       const data = await res.json();
+
+      if (res.status === 403) {
+        // Lisensi belum aktif atau sudah berakhir: arahkan ke halaman aktivasi.
+        window.location.href = "/aktivasi/";
+        return;
+      }
 
       if (!res.ok) {
         throw new Error(data.detail || "Terjadi kesalahan pada server");

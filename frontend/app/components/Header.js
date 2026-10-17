@@ -4,12 +4,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SyncBar from "./SyncBar";
 import ThemeToggle from "./ThemeToggle";
+import LisensiChip from "./LisensiChip";
+import { useLisensi } from "../context/LisensiContext";
 
 export default function Header() {
   const pathname = usePathname();
-  const isDashboard = pathname.startsWith("/dashboard");
+  const { lisensi, perluAktivasi } = useLisensi();
   const isRiwayat = pathname.startsWith("/riwayat");
-  const isPemeriksaan = !isDashboard && !isRiwayat;
+  const isAktivasi = pathname.startsWith("/aktivasi");
+  const isPemeriksaan = !isRiwayat && !isAktivasi;
+  // Sebelum lisensi aktif, navigasi dan sinkron disembunyikan.
+  const tampilkanMenu = !perluAktivasi;
 
   return (
     <header className="sticky top-0 z-40 w-full bg-surface/95 backdrop-blur-md border-b border-line">
@@ -34,12 +39,12 @@ export default function Header() {
             {/* Subtitle separator */}
             <div className="h-4 w-px bg-line mx-1.5 sm:mx-2" />
             <span id="header-subtitle" className="text-muted text-xs sm:text-sm font-normal font-atkinson">
-              {isDashboard ? "Dasbor Dinas Kesehatan" : "Alat bantu triase TBC"}
+              {lisensi?.boleh_periksa && lisensi?.nama ? lisensi.nama : "Alat bantu triase TBC"}
             </span>
           </div>
 
           {/* Navigation Tabs (Attached after subtitle with ~14px gap) */}
-          {!isDashboard && (
+          {tampilkanMenu && (
             <nav aria-label="Navigasi Utama" className="flex items-center gap-1.5 shrink-0 ml-0.5">
               {/* Tab Pemeriksaan Baru */}
               <Link
@@ -76,19 +81,8 @@ export default function Header() {
 
         {/* Right side: Sync Bar + Theme Toggle (Note: Tombol "ID" sengaja tidak ditampilkan sesuai aturan) */}
         <div className="shrink-0 flex items-center gap-2">
-          {!isDashboard ? (
-            <SyncBar />
-          ) : (
-            <Link
-              href="/"
-              className="h-9 px-3 rounded-[10px] border border-primary text-primary text-xs sm:text-sm font-bold font-atkinson hover:bg-status-info-bg flex items-center gap-1.5 transition-colors"
-            >
-              <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              <span>Kembali ke Puskesmas</span>
-            </Link>
-          )}
+          {tampilkanMenu && <SyncBar />}
+          <LisensiChip />
 
           <ThemeToggle />
 

@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "./components/Header";
 import Toast from "./components/Toast";
 import { SyncProvider } from "./context/SyncContext";
+import { LisensiGate, LisensiProvider } from "./context/LisensiContext";
 
 const fraunces = localFont({
   src: "./fonts/Fraunces.ttf",
@@ -49,13 +50,15 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="min-h-screen bg-bg text-ink font-atkinson flex flex-col antialiased">
-        <SyncProvider>
-          <Header />
-          <div className="w-full flex-1 flex flex-col overflow-x-hidden">
-            {children}
-          </div>
-          <Toast />
-        </SyncProvider>
+        <LisensiProvider>
+          <SyncProvider>
+            <Header />
+            <div className="w-full flex-1 flex flex-col overflow-x-hidden">
+              <LisensiGate>{children}</LisensiGate>
+            </div>
+            <Toast />
+          </SyncProvider>
+        </LisensiProvider>
       </body>
     </html>
   );

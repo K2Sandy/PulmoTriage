@@ -3,10 +3,21 @@ import os
 import httpx
 
 import db
+import lisensi
 
-CLOUD_URL = os.environ.get("CLOUD_URL", "http://localhost:8001")
-SYNC_API_KEY = os.environ.get("SYNC_API_KEY", "dev-key")
+CLOUD_URL = os.environ.get("CLOUD_URL", "http://localhost:8001").rstrip("/")
+# Puskesmas berlisensi tidak butuh kunci API: lisensinya sendiri yang membuktikan asal data.
+# SYNC_API_KEY dan PUSKESMAS_ID hanya dipakai kalau lisensi belum dipasang (pengembangan/demo).
+SYNC_API_KEY = os.environ.get("SYNC_API_KEY", "")
 PUSKESMAS_ID = os.environ.get("PUSKESMAS_ID", "PKM-DEMO-LOKAL")
+
+
+def _identitas_dan_header():
+    pid, _ = lisensi.identitas()
+    header = lisensi.header_sinkron() if pid else {}
+    if SYNC_API_KEY:
+        header["X-API-Key"] = SYNC_API_KEY
+    return pid or PUSKESMAS_ID, header
 
 
 def kelompok_umur(umur):
@@ -36,6 +47,9 @@ def anonimkan(r):
 def jalankan():
     """Kirim semua data yang belum tersinkron. Aman dipanggil berulang kali."""
     terkirim = 0
+    puskesmas_id, header = _identitas_dan_header()
+    if not header:
+        return {"status": "ditolak", "kode": 401, "pesan": "Lisensi belum dipasang", "terkirim": 0, "menunggu": db.jumlah_belum_sinkron()}
     for _ in range(50):  # maksimal 50 kelompok x 200 data
         baris = db.belum_sinkron(200)
         if not baris:
@@ -43,9 +57,9 @@ def jalankan():
         try:
             r = httpx.post(
                 f"{CLOUD_URL}/sync",
-                json={"puskesmas_id": PUSKESMAS_ID, "records": [anonimkan(b) for b in baris]},
-                headers={"X-API-Key": SYNC_API_KEY},
-                timeout=10,
+                json={"puskesmas_id": puskesmas_id, "records": [anonimkan(b) for b in baris]},
+                headers=header,
+                timeout=30,  # server cloud gratis bisa butuh waktu untuk bangun
             )
         except httpx.HTTPError:
             # Tidak ada internet atau cloud mati: data tetap aman di komputer lokal.

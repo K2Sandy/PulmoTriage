@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
+import PetaPulau, { NAMA_PULAU } from "./components/PetaPulau";
+import RincianPulau from "./components/RincianPulau";
 
 const CLOUD = process.env.NEXT_PUBLIC_CLOUD_URL || "http://localhost:8001";
 
@@ -42,6 +44,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeBar, setActiveBar] = useState(null);
+  const [pulauTerpilih, setPulauTerpilih] = useState(null);
 
   const muatData = useCallback(async (periode) => {
     setLoading(true);
@@ -68,13 +71,10 @@ export default function DashboardPage() {
   // Urutkan per Puskesmas berdasarkan jumlah MERAH terbanyak
   const puskesmasSorted = useMemo(() => {
     if (!data?.per_puskesmas) return [];
-    return [...data.per_puskesmas].sort((a, b) => {
-      if (b.MERAH !== a.MERAH) {
-        return b.MERAH - a.MERAH;
-      }
-      return b.total - a.total;
-    });
-  }, [data?.per_puskesmas]);
+    return data.per_puskesmas
+      .filter((p) => !pulauTerpilih || p.pulau === pulauTerpilih)
+      .sort((a, b) => b.MERAH - a.MERAH || b.total - a.total);
+  }, [data?.per_puskesmas, pulauTerpilih]);
 
   // Cari tanggal terakhir dari data
   const dataTerakhir = useMemo(() => {
@@ -313,6 +313,28 @@ export default function DashboardPage() {
                 {formatPersen(data.per_kategori?.HIJAU || 0, data.total)} dari total
               </div>
             </div>
+          </section>
+
+          {/* A2. Peta persebaran per kelompok pulau */}
+          <section id="peta-persebaran" className="bg-surface rounded-2xl border border-line p-5 sm:p-6 shadow-xs flex flex-col gap-4">
+            <div>
+              <h2 className="text-lg sm:text-xl font-bold font-atkinson text-ink">Peta persebaran hasil triase</h2>
+              <p className="text-xs text-muted font-atkinson">
+                Warna makin gelap berarti makin banyak hasil MERAH (perlu rujukan tes TCM). Ini bukan jumlah kasus TBC.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+              <div className="lg:col-span-2">
+                <PetaPulau perPuskesmas={data.per_puskesmas} terpilih={pulauTerpilih} onPilih={setPulauTerpilih} />
+              </div>
+              <div className="lg:border-l lg:border-line lg:pl-5">
+                <RincianPulau perPuskesmas={data.per_puskesmas} terpilih={pulauTerpilih} onPilih={setPulauTerpilih} />
+              </div>
+            </div>
+            <p className="text-[11px] text-muted font-atkinson">
+              Pulau kecil digabung ke kelompok pulau terdekat. Lokasi Puskesmas diambil dari kode wilayah di lisensinya.
+              Garis pantai: Peta Dasar BAKOSURTANAL, disederhanakan.
+            </p>
           </section>
 
           {/* B. Grafik Batang Bertumpuk & Sebaran Kategori */}
@@ -558,83 +580,60 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          {/* C. Tabel Per Puskesmas (Diurutkan dari MERAH Terbanyak) */}
-          <section className="bg-surface rounded-2xl border border-line p-5 sm:p-6 shadow-xs flex flex-col gap-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+          {/* C. Tabel Per Puskesmas: kode, provinsi, kab/kota, Puskesmas */}
+          <section id="tabel-puskesmas" className="bg-surface rounded-2xl border border-line p-5 sm:p-6 shadow-xs flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h2 className="text-lg sm:text-xl font-bold font-atkinson text-ink">
-                  Per Puskesmas
+                  Per Puskesmas{pulauTerpilih ? ` · ${NAMA_PULAU[pulauTerpilih]}` : ""}
                 </h2>
-                <p className="text-xs text-muted font-atkinson">
-                  Diurutkan dari jumlah MERAH terbanyak
-                </p>
+                <p className="text-xs text-muted font-atkinson">Diurutkan dari jumlah MERAH terbanyak</p>
               </div>
-              <span className="text-xs font-mono text-muted">
-                Total: {puskesmasSorted.length} fasilitas
-              </span>
+              <div className="flex items-center gap-3">
+                {pulauTerpilih && (
+                  <button
+                    type="button"
+                    onClick={() => setPulauTerpilih(null)}
+                    className="text-xs font-bold text-primary hover:underline cursor-pointer"
+                  >
+                    Tampilkan semua pulau
+                  </button>
+                )}
+                <span className="text-xs font-mono text-muted">Total: {puskesmasSorted.length} fasilitas</span>
+              </div>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm border-collapse">
                 <thead>
                   <tr className="border-b-2 border-line text-xs font-bold font-atkinson uppercase tracking-wide text-muted">
+                    <th className="py-3 px-3">Kode</th>
+                    <th className="py-3 px-3">Provinsi</th>
+                    <th className="py-3 px-3">Kabupaten/Kota</th>
                     <th className="py-3 px-3">Puskesmas</th>
-                    <th className="py-3 px-3 text-right">
-                      <span className="inline-flex items-center gap-1 text-text-merah">
-                        <svg className="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                        MERAH
-                      </span>
-                    </th>
-                    <th className="py-3 px-3 text-right">
-                      <span className="inline-flex items-center gap-1 text-text-kuning">
-                        <svg className="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <circle cx="12" cy="12" r="10" />
-                          <line x1="12" y1="8" x2="12" y2="12" />
-                          <line x1="12" y1="16" x2="12.01" y2="16" />
-                        </svg>
-                        KUNING
-                      </span>
-                    </th>
-                    <th className="py-3 px-3 text-right">
-                      <span className="inline-flex items-center gap-1 text-text-hijau">
-                        <svg className="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                        HIJAU
-                      </span>
-                    </th>
-                    <th className="py-3 px-3 text-right text-muted">Total</th>
-                    <th className="py-3 px-3 text-right text-muted">% MERAH</th>
+                    <th className="py-3 px-3 text-right text-text-merah">MERAH</th>
+                    <th className="py-3 px-3 text-right text-text-kuning">KUNING</th>
+                    <th className="py-3 px-3 text-right text-text-hijau">HIJAU</th>
+                    <th className="py-3 px-3 text-right">Total</th>
+                    <th className="py-3 px-3 text-right">% MERAH</th>
+                    <th className="py-3 px-3 text-right">Data terakhir</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line font-atkinson">
-                  {puskesmasSorted.map((p) => {
-                    const pctMerah = formatPersen(p.MERAH, p.total);
-                    return (
-                      <tr key={p.puskesmas_id} className="hover:bg-bg/80 transition-colors">
-                        <td className="py-3 px-3 font-semibold text-ink">
-                          {p.puskesmas_id}
-                        </td>
-                        <td className="py-3 px-3 text-right font-mono font-medium text-text-merah">
-                          {p.MERAH}
-                        </td>
-                        <td className="py-3 px-3 text-right font-mono font-medium text-text-kuning">
-                          {p.KUNING}
-                        </td>
-                        <td className="py-3 px-3 text-right font-mono font-medium text-text-hijau">
-                          {p.HIJAU}
-                        </td>
-                        <td className="py-3 px-3 text-right font-mono font-semibold text-ink">
-                          {p.total}
-                        </td>
-                        <td className="py-3 px-3 text-right font-mono font-medium text-ink">
-                          {pctMerah}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {puskesmasSorted.map((p) => (
+                    <tr key={p.puskesmas_id} className="hover:bg-bg/80 transition-colors">
+                      <td className="py-3 px-3 font-mono text-ink whitespace-nowrap">{p.puskesmas_id}</td>
+                      <td className="py-3 px-3 text-ink">{p.provinsi || "-"}</td>
+                      <td className="py-3 px-3 text-ink">{p.kab_kota || "-"}</td>
+                      <td className="py-3 px-3 font-semibold text-ink">{p.nama || "-"}</td>
+                      <td className="py-3 px-3 text-right font-mono font-medium text-text-merah">{p.MERAH}</td>
+                      <td className="py-3 px-3 text-right font-mono font-medium text-text-kuning">{p.KUNING}</td>
+                      <td className="py-3 px-3 text-right font-mono font-medium text-text-hijau">{p.HIJAU}</td>
+                      <td className="py-3 px-3 text-right font-mono font-semibold text-ink">{p.total}</td>
+                      <td className="py-3 px-3 text-right font-mono text-ink">{formatPersen(p.MERAH, p.total)}</td>
+                      <td className="py-3 px-3 text-right font-mono text-muted whitespace-nowrap">{formatTanggalSingkat(p.terakhir)}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -650,7 +649,7 @@ export default function DashboardPage() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
           <div>
-            <span className="font-semibold">Data anonim:</span> tanpa nama, tanpa umur pasti, tanpa foto. Versi lomba tanpa login.
+            <span className="font-semibold">Data pseudonim:</span> tanpa nama, tanpa umur pasti, tanpa foto. Hanya Puskesmas berlisensi yang dapat mengirim data. Versi lomba belum memakai login.
           </div>
         </div>
 
@@ -660,7 +659,7 @@ export default function DashboardPage() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <p>
-            <strong>Peringatan Medis:</strong> Hasil AI adalah alat bantu triase, bukan diagnosis. Keputusan klinis tetap di tangan dokter.
+            <strong>Peringatan Medis:</strong> Hasil AI adalah alat bantu triase, bukan diagnosis. Angka MERAH berarti perlu rujukan tes TCM, bukan jumlah kasus TBC. Keputusan klinis tetap di tangan dokter.
           </p>
         </div>
       </footer>

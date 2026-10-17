@@ -7,9 +7,11 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
+from fastapi.staticfiles import StaticFiles
 from pdf import buat_pdf
 
 import db
+import lisensi
 import sinkron
 from pulmotriage_infer import SYMPTOMS, PulmoTriage, load_image, overlay_heatmap
 
@@ -53,6 +55,36 @@ def health():
     return {"status": "ok", "model_version": engine.cfg.get("model_version")}
 
 
+# ---------------------------------------------------------------- lisensi
+@app.get("/lisensi")
+def status_lisensi():
+    return lisensi.status()
+
+
+@app.post("/lisensi")
+async def pasang_lisensi(berkas: UploadFile = File(...)):
+    isi = await berkas.read()
+    if len(isi) > 64 * 1024:
+        raise HTTPException(status_code=400, detail="File terlalu besar untuk sebuah lisensi.")
+    hasil = lisensi.simpan(isi)
+    if hasil["status"] == "tidak_valid":
+        raise HTTPException(status_code=400, detail=hasil["pesan"])
+    return hasil
+
+
+@app.delete("/lisensi")
+def lepas_lisensi():
+    # Untuk demo/reset di komputer lokal: lisensi dilepas, data pemeriksaan tidak terhapus.
+    lisensi.hapus()
+    return lisensi.status()
+
+
+def wajib_lisensi():
+    s = lisensi.status()
+    if not s["boleh_periksa"]:
+        raise HTTPException(status_code=403, detail={"kode": "LISENSI_" + s["status"].upper(), "pesan": s["pesan"]})
+
+
 @app.post("/analyze")
 async def analyze(
     foto: UploadFile = File(...),
@@ -61,6 +93,7 @@ async def analyze(
     umur: int | None = Form(None, ge=0, le=120),
     jenis_kelamin: str = Form(""),
 ):
+    wajib_lisensi()
     try:
         img = load_image(io.BytesIO(await foto.read()))
     except Exception:
@@ -114,7 +147,7 @@ def rujukan_pdf(id_: int):
     if data is None:
         raise HTTPException(status_code=404, detail="Pemeriksaan tidak ditemukan")
     return Response(
-        content=buat_pdf(data),
+        content=buat_pdf(data, fasilitas=lisensi.identitas()[1]),
         media_type="application/pdf",
         headers={"Content-Disposition": f'inline; filename="rujukan-{id_}.pdf"'},
     )
@@ -127,3 +160,12 @@ def status_sinkron():
 @app.post("/sinkron")
 def sinkron_sekarang():
     return sinkron.jalankan()
+
+
+# ---------------------------------------------------------------- tampilan
+# Frontend hasil `npm run build:offline` disalin ke folder web/. Kalau folder itu ada,
+# aplikasi lengkap terbuka di http://localhost:8000 tanpa perlu Node.js atau internet.
+# Didaftarkan paling akhir supaya semua alamat API di atas tetap didahulukan.
+WEB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web")
+if os.path.isdir(WEB_DIR):
+    app.mount("/", StaticFiles(directory=WEB_DIR, html=True), name="web")

@@ -227,3 +227,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Lisensi PulmoTriage
+# Kunci rahasia hanya boleh ada di laptop tim. Jangan pernah di-commit.
+scripts/lisensi/kunci_rahasia.pem
+scripts/lisensi/keluaran/
+# Lisensi yang terpasang di komputer Puskesmas
+backend/lisensi.json

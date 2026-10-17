@@ -1,15 +1,15 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { API } from "../utils/api";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const SyncContext = createContext(null);
 
 export function SyncProvider({ children }) {
   const [menunggu, setMenunggu] = useState(null);
   const [statusSync, setStatusSync] = useState("idle"); // "idle" | "syncing"
-  const [sinkronTerakhir, setSinkronTerakhir] = useState("15 Okt 2026");
+  const [sinkronTerakhir, setSinkronTerakhir] = useState("–");
   const [toast, setToast] = useState(null); // { id, pesan, tipe: "success" | "offline" | "rejected" }
 
   const cekSinkron = useCallback(() => {
