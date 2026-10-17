@@ -54,17 +54,22 @@ PulmoTriage membantu petugas Puskesmas memilah pasien terduga TBC lebih cepat:
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/assets/layar-data-pasien.png" alt="Placeholder layar data pasien"></td>
-    <td width="50%"><img src="docs/assets/layar-unggah-citra.png" alt="Placeholder layar unggah citra"></td>
+    <td width="50%"><img src="docs/screenshots/a2-pasien_terisi.png"></td>
+    <td width="50%"><img src="docs/screenshots/b2-unggah_citra-terpilih.png"></td>
   </tr>
   <tr>
     <td align="center"><sub><b>1 · Data pasien</b></sub></td>
     <td align="center"><sub><b>2 · Unggah citra</b></sub></td>
   </tr>
   <tr>
-    <td width="50%"><img src="docs/assets/layar-hasil.png" alt="Placeholder layar hasil triase"></td>
-    <td width="50%"><img src="docs/assets/layar-dasbor.png" alt="Placeholder dasbor Dinkes"></td>
+    <td width="50%"><img src="docs/screenshots/c1-hasil_merah.png"></td>
+    <td width="50%"><img src="docs/screenshots/d5-dasbor_terisi_terpotong.png"></td>
   </tr>
+  <tr>
+    <td align="center"><sub><b>3 · Hasil triase</b></sub></td>
+    <td align="center"><sub><b>Dasbor Dinkes</b></sub></td>
+  </tr>
+</table>
   <tr>
     <td align="center"><sub><b>3 · Hasil triase</b></sub></td>
     <td align="center"><sub><b>Dasbor Dinkes</b></sub></td>
