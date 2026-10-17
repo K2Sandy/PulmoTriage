@@ -1,0 +1,50 @@
+import localFont from "next/font/local";
+import "./globals.css";
+import Header from "./components/Header";
+import Toast from "./components/Toast";
+import { SyncProvider } from "./context/SyncContext";
+
+const fraunces = localFont({
+  src: "./fonts/Fraunces.ttf",
+  variable: "--font-fraunces",
+  display: "swap",
+  fallback: ["Georgia", "serif"],
+});
+
+const atkinsonNext = localFont({
+  src: "./fonts/AtkinsonHyperlegibleNext.ttf",
+  variable: "--font-atkinson",
+  display: "swap",
+  fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+});
+
+const atkinsonMono = localFont({
+  src: "./fonts/AtkinsonHyperlegibleMono.ttf",
+  variable: "--font-mono",
+  display: "swap",
+  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+});
+
+export const metadata = {
+  title: "PulmoTriage - Triase TBC Rontgen Toraks",
+  description: "Alat bantu triase TBC dari rontgen dada berbasis kecerdasan buatan untuk Puskesmas.",
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html
+      lang="id"
+      className={`${fraunces.variable} ${atkinsonNext.variable} ${atkinsonMono.variable} font-atkinson`}
+    >
+      <body className="min-h-screen bg-gray-100 text-teal-950 font-atkinson flex flex-col antialiased">
+        <SyncProvider>
+          <Header />
+          <div className="w-full max-w-[1366px] mx-auto px-4 sm:px-6 py-6 flex-1 flex flex-col overflow-x-hidden">
+            {children}
+          </div>
+          <Toast />
+        </SyncProvider>
+      </body>
+    </html>
+  );
+}

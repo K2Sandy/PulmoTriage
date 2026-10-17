@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand & Core Palette */
+  --color-teal-950: #042f2e;
+  --color-cyan-700: #0e7490;
+  --color-cyan-800: #155e75;
+  --color-cyan-900: #164e63;
+  --color-emerald-50: #ecfdf5;
+
+  /* Status Non-Triase (Khusus dari Desain Figma) */
+  --color-status-error: #7A2E8A;       /* fuchsia-800: teks, ikon, border error (bukan merah) */
+  --color-status-error-bg: #F7EEF8;    /* pink-50: latar banner error */
+  --color-status-info-bg: #E7F3F4;     /* latar info, navigasi aktif, sukses */
+  --color-status-neutral: #EEF2F2;     /* foto ditolak, peringatan, disclaimer */
+
+  /* Triase Klinis (Merah / Kuning / Hijau HANYA untuk Kategori Triase) */
+  --color-triage-merah: #b91c1c;
+  --color-triage-merah-bg: #fef2f2;
+  --color-triage-kuning: #a16207;
+  --color-triage-kuning-bg: #fefce8;
+  --color-triage-hijau: #15803d;
+  --color-triage-hijau-bg: #f0fdf4;
+
+  /* Tipografi Variabel Font */
+  --font-fraunces: var(--font-fraunces, 'Fraunces', Georgia, serif);
+  --font-atkinson: var(--font-atkinson, 'Atkinson Hyperlegible Next', -apple-system, BlinkMacSystemFont, sans-serif);
+  --font-mono: var(--font-mono, 'Atkinson Hyperlegible Mono', ui-monospace, monospace);
+
+  /* Radius & Bayangan Desain */
+  --radius-pill: 999px;
+  --radius-card: 12px;
+  --radius-button: 10px;
+  --shadow-glass: 0px 12px 32px 0px rgba(16, 41, 44, 0.16);
+}
+
+@theme inline {
+  --color-teal-950: var(--color-teal-950);
+  --color-cyan-700: var(--color-cyan-700);
+  --color-cyan-800: var(--color-cyan-800);
+  --color-status-error: var(--color-status-error);
+  --color-status-error-bg: var(--color-status-error-bg);
+  --color-status-info-bg: var(--color-status-info-bg);
+  --color-status-neutral: var(--color-status-neutral);
+
+  --font-fraunces: var(--font-fraunces);
+  --font-atkinson: var(--font-atkinson);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background-color: #f3f4f6;
+  color: var(--color-teal-950);
+  font-family: var(--font-atkinson);
+  overflow-x: hidden;
+}
+
+/* Utilitas font kustom */
+.font-fraunces {
+  font-family: var(--font-fraunces);
+}
+
+.font-atkinson {
+  font-family: var(--font-atkinson);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Glassmorphism shadow */
+.shadow-glass {
+  box-shadow: var(--shadow-glass);
+}
