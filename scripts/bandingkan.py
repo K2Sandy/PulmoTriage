@@ -20,7 +20,7 @@ except ImportError:
     HAS_SCIPY = False
 
 
-def bandingkan_gambar(hasil_path, ref_path, skala=False, toleransi=12, output_diff=None):
+def bandingkan_gambar(hasil_path, ref_path, skala=False, toleransi=12, output_diff=None, abaikan=None):
     if not os.path.exists(hasil_path):
         print(f"Error: Berkas hasil tidak ditemukan: {hasil_path}", file=sys.stderr)
         return None
@@ -61,6 +61,23 @@ def bandingkan_gambar(hasil_path, ref_path, skala=False, toleransi=12, output_di
     diff_channels = np.abs(arr_h - arr_r)
     # Mask piksel yang melebihi toleransi pada kanal manapun
     diff_mask = np.any(diff_channels > toleransi, axis=2)
+
+    # Area yang diabaikan (masking placeholder foto rontgen / heatmap)
+    ignored_mask = np.zeros_like(diff_mask, dtype=bool)
+    ignored_areas = []
+    if abaikan:
+        for item in abaikan:
+            try:
+                if isinstance(item, str):
+                    ix, iy, iw, ih = [int(p.strip()) for p in item.split(",")]
+                else:
+                    ix, iy, iw, ih = item
+                diff_mask[iy:iy + ih, ix:ix + iw] = False
+                ignored_mask[iy:iy + ih, ix:ix + iw] = True
+                ignored_areas.append((ix, iy, iw, ih))
+                print(f"[INFO] Mengabaikan area: x={ix}, y={iy}, w={iw}, h={ih} ({iw * ih} piksel)")
+            except Exception as e:
+                print(f"[PERINGATAN] Format --abaikan salah '{item}': {e}", file=sys.stderr)
 
     total_pixels = diff_mask.size
     num_diff = int(np.count_nonzero(diff_mask))
@@ -120,8 +137,17 @@ def bandingkan_gambar(hasil_path, ref_path, skala=False, toleransi=12, output_di
     # Beri warna merah magenta pada piksel berbeda
     diff_vis[diff_mask] = [235, 30, 90]
 
+    # Beri highlight biru pada area yang diabaikan
+    if np.any(ignored_mask):
+        diff_vis[ignored_mask] = (diff_vis[ignored_mask] * 0.4 + np.array([0, 140, 230]) * 0.6).astype(np.uint8)
+
     out_img = Image.fromarray(diff_vis.astype(np.uint8))
     draw = ImageDraw.Draw(out_img)
+
+    # Gambar batas area yang diabaikan
+    for ix, iy, iw, ih in ignored_areas:
+        draw.rectangle([ix, iy, ix + iw, iy + ih], outline=(0, 200, 255), width=2)
+        draw.text((ix + 6, iy + 6), "[DIABAIKAN]", fill=(0, 200, 255))
 
     # Gambar kotak pembatas untuk 5 area terbesar
     for idx, area in enumerate(area_terbesar, 1):
@@ -137,6 +163,7 @@ def bandingkan_gambar(hasil_path, ref_path, skala=False, toleransi=12, output_di
         "piksel_beda": num_diff,
         "total_piksel": total_pixels,
         "area_terbesar": area_terbesar,
+        "ignored_areas": ignored_areas,
         "output_diff": output_diff
     }
 
@@ -152,9 +179,10 @@ def main():
     parser.add_argument("--skala", action="store_true", help="Izinkan resize gambar hasil jika dimensi berbeda dari ref")
     parser.add_argument("--toleransi", type=int, default=12, help="Toleransi perbedaan warna per kanal (default: 12)")
     parser.add_argument("--output", default=None, help="Path output peta selisih diff")
+    parser.add_argument("--abaikan", action="append", default=[], help="Area persegi panjang yang diabaikan: x,y,w,h (bisa diulang)")
 
     args = parser.parse_args()
-    res = bandingkan_gambar(args.hasil, args.ref, skala=args.skala, toleransi=args.toleransi, output_diff=args.output)
+    res = bandingkan_gambar(args.hasil, args.ref, skala=args.skala, toleransi=args.toleransi, output_diff=args.output, abaikan=args.abaikan)
     if res is None or res.get("status") != "ok":
         sys.exit(1)
 
