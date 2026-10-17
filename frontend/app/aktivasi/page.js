@@ -14,6 +14,8 @@ const TAMPILAN = {
   aktif: { judul: "Lisensi aktif", kotak: "bg-status-info-bg border-primary/30", teks: "text-primary" },
   masa_tenggang: { judul: "Masa tenggang", kotak: "bg-surface border-triage-kuning", teks: "text-text-kuning" },
   kedaluwarsa: { judul: "Lisensi berakhir", kotak: "bg-surface border-triage-merah", teks: "text-text-merah" },
+  belum_aktif: { judul: "Lisensi belum diaktifkan", kotak: "bg-surface border-triage-kuning", teks: "text-text-kuning" },
+  pindah_komputer: { judul: "Lisensi milik komputer lain", kotak: "bg-status-error-bg border-status-error/30", teks: "text-status-error" },
 };
 
 function Baris({ label, children }) {
@@ -87,8 +89,9 @@ export default function AktivasiPage() {
           {lisensi?.boleh_periksa ? "Lisensi Puskesmas" : "Aktifkan PulmoTriage di Puskesmas ini"}
         </h1>
         <p className="text-muted text-sm sm:text-base max-w-[60ch]">
-          Pasang file lisensi dari tim PulmoTriage. Lisensi diperiksa langsung di komputer ini, jadi tidak perlu
-          internet. Nama Puskesmas dari lisensi akan tampil di aplikasi dan di surat rujukan.
+          Pasang file lisensi dari tim PulmoTriage. Aktivasi pertama butuh internet sekali untuk mengikat lisensi ke
+          komputer ini; setelah itu PulmoTriage berjalan tanpa internet. Nama Puskesmas dari lisensi tampil di aplikasi
+          dan di surat rujukan.
         </p>
       </header>
 
@@ -99,7 +102,7 @@ export default function AktivasiPage() {
             <h2 className={`text-lg sm:text-xl font-bold ${t.teks}`}>{t.judul}</h2>
             <p className="text-ink text-sm mt-1">
               {status === "belum_ada"
-                ? "Minta file lisensi untuk Puskesmas ini kepada tim PulmoTriage atau Dinas Kesehatan, lalu pasang di bawah."
+                ? "Minta file lisensi untuk Puskesmas ini kepada tim PulmoTriage, lalu pasang di bawah."
                 : status === "aktif" && lisensi.sisa_hari > 30
                 ? "Pemeriksaan baru dapat dilakukan di komputer ini."
                 : lisensi?.pesan}
@@ -157,9 +160,11 @@ export default function AktivasiPage() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
           </svg>
           <span className="text-ink text-sm sm:text-base font-bold">
-            {mengunggah ? "Memeriksa lisensi..." : "Seret file lisensi ke sini, atau klik untuk memilih"}
+            {mengunggah ? "Mengaktifkan lisensi... (butuh internet, bisa sampai 1 menit)" : "Seret file lisensi ke sini, atau klik untuk memilih"}
           </span>
-          <span className="text-muted text-xs">Hanya file .json dari tim PulmoTriage</span>
+          <span className="text-muted text-xs">
+            Hanya file .json dari tim PulmoTriage. Aktivasi pertama butuh internet; setelah itu aplikasi berjalan tanpa internet.
+          </span>
           <input
             ref={inputRef}
             id="input-lisensi"
@@ -187,9 +192,10 @@ export default function AktivasiPage() {
       )}
 
       <p className="text-muted text-xs border-t border-line pt-4">
-        Lisensi diterbitkan tim PulmoTriage untuk setiap Puskesmas, melalui kerja sama dengan Dinas Kesehatan. Lisensi
-        yang berakhir masih bisa dipakai selama 30 hari masa tenggang. Data pemeriksaan yang sudah tersimpan tidak
-        pernah terhapus karena lisensi.
+        Satu file lisensi hanya untuk satu komputer: saat diaktifkan, lisensi terikat ke komputer ini dan ditolak di
+        komputer lain. Untuk memindahkan lisensi (misalnya komputer rusak), hubungi tim PulmoTriage. Lisensi yang berakhir
+        masih bisa dipakai selama 30 hari masa tenggang. Data pemeriksaan yang sudah tersimpan tidak pernah terhapus
+        karena lisensi.
       </p>
     </main>
   );

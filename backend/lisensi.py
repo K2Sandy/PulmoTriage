@@ -1,14 +1,23 @@
-"""Pemeriksaan lisensi PulmoTriage. Berjalan offline.
+"""Pemeriksaan lisensi PulmoTriage.
 
 File lisensi adalah JSON yang ditandatangani tim dengan kunci rahasia (Ed25519).
 Aplikasi hanya menyimpan kunci publik (lisensi_publik.pem), jadi bisa memeriksa
 keaslian lisensi tanpa internet, tetapi tidak bisa membuat lisensi baru.
+
+Sekali pakai: saat dipasang pertama kali, lisensi diaktifkan ke server cloud dan
+terikat ke SATU komputer (butuh internet sekali). Lisensi yang sama ditolak di
+komputer lain. Setelah aktif, pemeriksaan berjalan tanpa internet.
 """
 
 import base64
+import hashlib
 import json
 import os
+import platform
+import uuid
 from datetime import date, datetime, timedelta, timezone
+
+import httpx
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
@@ -21,6 +30,10 @@ LISENSI_WAJIB = os.environ.get("LISENSI_WAJIB", "1") != "0"
 MASA_TENGGANG_HARI = 30
 PERINGATAN_HARI = 30
 FIELD_WAJIB = ("puskesmas_id", "nama", "berlaku_mulai", "berlaku_sampai")
+FILE_AKTIVASI = os.environ.get("LISENSI_AKTIVASI_FILE", os.path.join(os.path.dirname(FILE_LISENSI), "aktivasi.json"))
+# 0 = lewati aktivasi online (khusus pengembangan/uji). Bawaan: aktivasi wajib.
+AKTIVASI_WAJIB = os.environ.get("LISENSI_AKTIVASI_ONLINE", "1") != "0"
+CLOUD_URL = os.environ.get("CLOUD_URL", "http://localhost:8001").rstrip("/")
 
 WIB = timezone(timedelta(hours=7))
 
@@ -91,6 +104,73 @@ def periksa(data: dict, kunci=None, tanggal: date | None = None) -> dict:
     return {**info, "status": "kedaluwarsa", "pesan": "Lisensi dan masa tenggang sudah berakhir. Pasang lisensi perpanjangan untuk melanjutkan pemeriksaan baru."}
 
 
+def id_mesin() -> str:
+    """Sidik jari komputer ini (bukan data pribadi): hash dari MachineGuid Windows atau /etc/machine-id."""
+    mentah = None
+    try:
+        import winreg  # hanya ada di Windows
+
+        with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Cryptography", 0, winreg.KEY_READ | winreg.KEY_WOW64_64KEY) as k:
+            mentah = winreg.QueryValueEx(k, "MachineGuid")[0]
+    except Exception:
+        for p in ("/etc/machine-id", "/var/lib/dbus/machine-id"):
+            try:
+                with open(p, encoding="utf-8") as f:
+                    mentah = f.read().strip()
+                    break
+            except OSError:
+                pass
+    mentah = mentah or str(uuid.getnode())
+    return hashlib.sha256(("pulmotriage:" + mentah).encode()).hexdigest()[:24]
+
+
+def nama_mesin() -> str:
+    return (platform.node() or "komputer")[:60]
+
+
+def id_lisensi(data: dict) -> str:
+    """Pengenal unik satu file lisensi (berubah bila lisensi diterbitkan ulang)."""
+    return hashlib.sha256(str(data.get("tanda_tangan", "")).encode()).hexdigest()[:16]
+
+
+def _header_lisensi(data: dict) -> dict:
+    raw = json.dumps(data, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    return {"X-Lisensi": base64.b64encode(raw).decode(), "X-Mesin": id_mesin()}
+
+
+def _baca_aktivasi() -> dict | None:
+    try:
+        with open(FILE_AKTIVASI, encoding="utf-8") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError, UnicodeDecodeError):
+        return None
+
+
+def aktifkan_online(data: dict) -> dict:
+    """Mendaftarkan lisensi ke cloud untuk komputer ini. Mengembalikan {ok, pesan}."""
+    try:
+        r = httpx.post(
+            f"{CLOUD_URL}/lisensi/aktivasi",
+            headers=_header_lisensi(data),
+            json={"id_mesin": id_mesin(), "nama_mesin": nama_mesin()},
+            timeout=90,  # server cloud gratis bisa butuh waktu untuk bangun
+        )
+    except httpx.HTTPError:
+        return {"ok": False, "pesan": "Aktivasi pertama butuh internet. Sambungkan komputer ke internet, lalu pasang lisensi lagi."}
+    if r.status_code == 200:
+        return {"ok": True, "pesan": "Lisensi diaktifkan untuk komputer ini."}
+    try:
+        detail = r.json().get("detail")
+    except ValueError:
+        detail = None
+    if r.status_code == 409:
+        nama = (detail or {}).get("nama_mesin") if isinstance(detail, dict) else None
+        lokasi = f" ({nama})" if nama else ""
+        return {"ok": False, "pesan": f"Lisensi ini sudah dipakai di komputer lain{lokasi}. Satu lisensi hanya untuk satu komputer. Hubungi tim PulmoTriage untuk memindahkan lisensi."}
+    pesan = detail if isinstance(detail, str) else f"Server aktivasi menolak lisensi (kode {r.status_code})."
+    return {"ok": False, "pesan": pesan}
+
+
 def baca_file() -> dict | None:
     try:
         with open(FILE_LISENSI, encoding="utf-8") as f:
@@ -105,6 +185,12 @@ def status() -> dict:
         hasil = {"status": "belum_ada", "pesan": "Lisensi belum dipasang."}
     else:
         hasil = periksa(data)
+        if AKTIVASI_WAJIB and hasil["status"] != "tidak_valid":
+            akt = _baca_aktivasi()
+            if not akt or akt.get("id_lisensi") != id_lisensi(data):
+                hasil = {**hasil, "status": "belum_aktif", "pesan": "Lisensi belum diaktifkan di komputer ini. Pasang ulang file lisensi saat ada internet."}
+            elif akt.get("id_mesin") != id_mesin():
+                hasil = {**hasil, "status": "pindah_komputer", "pesan": "Lisensi ini diaktifkan di komputer lain. Satu lisensi hanya untuk satu komputer."}
     hasil["wajib"] = LISENSI_WAJIB
     hasil["boleh_periksa"] = (not LISENSI_WAJIB) or hasil["status"] in ("aktif", "masa_tenggang")
     return hasil
@@ -119,16 +205,27 @@ def simpan(isi_file: bytes) -> dict:
     hasil = periksa(data)
     if hasil["status"] == "tidak_valid":
         return hasil
+    if AKTIVASI_WAJIB:
+        akt = aktifkan_online(data)
+        if not akt["ok"]:
+            return {"status": "tidak_valid", "pesan": akt["pesan"]}
+        with open(FILE_AKTIVASI, "w", encoding="utf-8") as f:
+            json.dump(
+                {"id_lisensi": id_lisensi(data), "id_mesin": id_mesin(), "diaktifkan": datetime.now(WIB).isoformat(timespec="seconds")},
+                f,
+                indent=2,
+            )
     with open(FILE_LISENSI, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     return status()
 
 
 def hapus():
-    try:
-        os.remove(FILE_LISENSI)
-    except FileNotFoundError:
-        pass
+    for p in (FILE_LISENSI, FILE_AKTIVASI):
+        try:
+            os.remove(p)
+        except FileNotFoundError:
+            pass
 
 
 def header_sinkron() -> dict:
@@ -136,8 +233,7 @@ def header_sinkron() -> dict:
     data = baca_file()
     if data is None:
         return {}
-    raw = json.dumps(data, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-    return {"X-Lisensi": base64.b64encode(raw).decode()}
+    return _header_lisensi(data)
 
 
 def identitas() -> tuple[str | None, str | None]:

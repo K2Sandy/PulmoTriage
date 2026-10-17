@@ -1,8 +1,11 @@
 """Menerbitkan file lisensi untuk Puskesmas. Dijalankan oleh tim di laptop yang menyimpan kunci rahasia.
 
+Versi pilih-dari-daftar (tanpa mengetik): klik dua kali penerbit-lisensi.bat di folder ini. Disarankan, karena kode
+dan nama Puskesmas diambil dari data/puskesmas.csv sehingga tidak bisa salah ketik.
+
 Satu Puskesmas:
     python scripts/lisensi/terbitkan_lisensi.py --kode-wilayah 1171 --nomor 1 --provinsi "Aceh" ^
-        --kab-kota "Kota Banda Aceh" --nama "Puskesmas Lamteumen" --sampai 2027-10-31
+        --kab-kota "Kota Banda Aceh" --nama "Puskesmas Meuraxa" --sampai 2027-10-31
 
 Banyak Puskesmas sekaligus dari file CSV
 (kolom: kode_wilayah,nomor,provinsi,kab_kota,nama,berlaku_mulai,berlaku_sampai):
@@ -10,7 +13,7 @@ Banyak Puskesmas sekaligus dari file CSV
 
 Kode Puskesmas dibentuk otomatis: <kode wilayah kab/kota 4 angka>-<nomor urut 3 angka>, misalnya 1171-001.
 Kode wilayah mengikuti kode Kemendagri/BPS (2 angka provinsi + 2 angka kab/kota, misalnya 1171 = Kota Banda Aceh).
-Dua angka pertama menentukan pulau di peta dasbor Dinkes.
+Dua angka pertama menentukan provinsi di peta portal publik.
 
 Hasil: scripts/lisensi/keluaran/lisensi-<KODE>.json  -> kirim file ini ke Puskesmas.
 """
@@ -94,7 +97,7 @@ def main():
     ap.add_argument("--nomor", help="Nomor urut Puskesmas di kab/kota itu, misalnya 1")
     ap.add_argument("--provinsi", help='Misalnya "Aceh"')
     ap.add_argument("--kab-kota", help='Misalnya "Kota Banda Aceh"')
-    ap.add_argument("--nama", help='Nama yang tampil di aplikasi dan surat rujukan, misalnya "Puskesmas Lamteumen"')
+    ap.add_argument("--nama", help='Nama yang tampil di aplikasi dan surat rujukan, misalnya "Puskesmas Meuraxa"')
     ap.add_argument("--mulai", help="Tanggal mulai (default: hari ini)")
     ap.add_argument("--sampai", help="Tanggal berakhir, misalnya 2027-10-31")
     ap.add_argument("--csv", help="File CSV berisi banyak Puskesmas")

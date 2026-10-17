@@ -1,8 +1,10 @@
+import os
 import sqlite3
 import uuid
 from datetime import datetime, timedelta, timezone
 
-DB_PATH = "pulmotriage.db"
+# Installer menyimpan data di folder pengguna (lihat installer/launcher.py).
+DB_PATH = os.environ.get("PULMOTRIAGE_DB", "pulmotriage.db")
 
 
 def koneksi():

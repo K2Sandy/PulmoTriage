@@ -12,7 +12,9 @@ from pdf import buat_pdf
 
 import db
 import lisensi
+import pembaruan
 import sinkron
+from versi import VERSI
 from pulmotriage_infer import SYMPTOMS, PulmoTriage, load_image, overlay_heatmap
 
 SINKRON_DETIK = int(os.environ.get("SINKRON_DETIK", "60"))  # 0 = matikan sinkron otomatis
@@ -35,7 +37,7 @@ async def lifespan(app):
         tugas.cancel()
 
 
-app = FastAPI(title="PulmoTriage API", version="0.4", lifespan=lifespan)
+app = FastAPI(title="PulmoTriage API", version=VERSI, lifespan=lifespan)
 
 CORS_ORIGINS = os.environ.get("CORS_ORIGINS", "http://localhost:3000").split(",")
 
@@ -52,7 +54,16 @@ db.init_db()  # membuat file pulmotriage.db dan tabelnya kalau belum ada
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "model_version": engine.cfg.get("model_version")}
+    return {"status": "ok", "model_version": engine.cfg.get("model_version"), "versi": VERSI}
+
+
+@app.get("/pembaruan")
+def cek_pembaruan():
+    # Dipanggil tampilan saat dibuka. Tanpa internet hasilnya "offline" dan tidak ada pemberitahuan.
+    try:
+        return pembaruan.periksa()
+    except Exception:
+        return {"versi_terpasang": VERSI, "ada_pembaruan": False, "status": "offline"}
 
 
 # ---------------------------------------------------------------- lisensi

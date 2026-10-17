@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
-import PetaPulau, { NAMA_PULAU } from "./components/PetaPulau";
-import RincianPulau from "./components/RincianPulau";
+import PetaProvinsi from "./PetaProvinsi";
+import RincianProvinsi from "./RincianProvinsi";
 
-const CLOUD = process.env.NEXT_PUBLIC_CLOUD_URL || "http://localhost:8001";
+import { CLOUD } from "../utils";
 
 function formatTanggal(tglStr) {
   if (!tglStr) return "-";
@@ -38,19 +38,20 @@ function formatPersen(n, total) {
   return `${p.toFixed(1).replace(".", ",")}%`;
 }
 
-export default function DashboardPage() {
+export default function Statistik() {
   const [data, setData] = useState(null);
   const [hari, setHari] = useState(30);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeBar, setActiveBar] = useState(null);
-  const [pulauTerpilih, setPulauTerpilih] = useState(null);
+  const [provTerpilih, setProvTerpilih] = useState(null);
+  const [metrik, setMetrik] = useState("MERAH");
 
   const muatData = useCallback(async (periode) => {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${CLOUD}/dashboard/ringkasan?hari=${periode}`);
+      const res = await fetch(`${CLOUD}/publik/ringkasan?hari=${periode}`);
       if (!res.ok) {
         throw new Error(`Server cloud merespons dengan status ${res.status}`);
       }
@@ -69,12 +70,10 @@ export default function DashboardPage() {
   }, [hari, muatData]);
 
   // Urutkan per Puskesmas berdasarkan jumlah MERAH terbanyak
-  const puskesmasSorted = useMemo(() => {
-    if (!data?.per_puskesmas) return [];
-    return data.per_puskesmas
-      .filter((p) => !pulauTerpilih || p.pulau === pulauTerpilih)
-      .sort((a, b) => b.MERAH - a.MERAH || b.total - a.total);
-  }, [data?.per_puskesmas, pulauTerpilih]);
+  const provinsiSorted = useMemo(() => {
+    if (!data?.per_provinsi) return [];
+    return [...data.per_provinsi].sort((a, b) => (b.MERAH ?? -1) - (a.MERAH ?? -1) || b.total - a.total);
+  }, [data?.per_provinsi]);
 
   // Cari tanggal terakhir dari data
   const dataTerakhir = useMemo(() => {
@@ -94,7 +93,7 @@ export default function DashboardPage() {
   }, [data?.per_hari]);
 
   return (
-    <main className="w-[1200px] max-w-full mx-auto py-2 sm:py-4 flex flex-col gap-5">
+    <section id="data" className="w-full py-2 sm:py-4 flex flex-col gap-5 scroll-mt-20">
       {/* 1. DATA SIMULASI BANNER (Tampil hanya jika ada_data_simulasi === true) */}
       {data?.ada_data_simulasi && (
         <aside
@@ -118,10 +117,10 @@ export default function DashboardPage() {
       <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-line">
         <div>
           <h1 className="text-2xl sm:text-3xl font-semibold font-fraunces text-ink leading-tight">
-            Ringkasan triase TBC
+            Data persebaran triase TBC
           </h1>
           <p className="text-muted text-xs sm:text-sm font-atkinson mt-1">
-            Agregasi data triase wilayah Dinkes · {hari} hari terakhir
+            Agregat dari Puskesmas pengguna PulmoTriage · {hari} hari terakhir · {data?.jumlah_puskesmas ?? 0} Puskesmas
           </p>
         </div>
 
@@ -315,25 +314,33 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          {/* A2. Peta persebaran per kelompok pulau */}
+          {/* A2. Peta persebaran per provinsi */}
           <section id="peta-persebaran" className="bg-surface rounded-2xl border border-line p-5 sm:p-6 shadow-xs flex flex-col gap-4">
             <div>
-              <h2 className="text-lg sm:text-xl font-bold font-atkinson text-ink">Peta persebaran hasil triase</h2>
+              <h2 className="text-lg sm:text-xl font-bold font-atkinson text-ink">Peta persebaran per provinsi</h2>
               <p className="text-xs text-muted font-atkinson">
-                Warna makin gelap berarti makin banyak hasil MERAH (perlu rujukan tes TCM). Ini bukan jumlah kasus TBC.
+                Warna makin gelap berarti makin tinggi. Hasil MERAH berarti perlu rujukan tes TCM; ini bukan jumlah kasus TBC.
+                Klik provinsi untuk memperbesar.
               </p>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
               <div className="lg:col-span-2">
-                <PetaPulau perPuskesmas={data.per_puskesmas} terpilih={pulauTerpilih} onPilih={setPulauTerpilih} />
+                <PetaProvinsi
+                  perProvinsi={data.per_provinsi}
+                  terpilih={provTerpilih}
+                  onPilih={setProvTerpilih}
+                  metrik={metrik}
+                  onMetrik={setMetrik}
+                />
               </div>
               <div className="lg:border-l lg:border-line lg:pl-5">
-                <RincianPulau perPuskesmas={data.per_puskesmas} terpilih={pulauTerpilih} onPilih={setPulauTerpilih} />
+                <RincianProvinsi perProvinsi={data.per_provinsi} terpilih={provTerpilih} onPilih={setProvTerpilih} batas={data.batas_rincian} />
               </div>
             </div>
             <p className="text-[11px] text-muted font-atkinson">
-              Pulau kecil digabung ke kelompok pulau terdekat. Lokasi Puskesmas diambil dari kode wilayah di lisensinya.
-              Garis pantai: Peta Dasar BAKOSURTANAL, disederhanakan.
+              Batas provinsi: Natural Earth (domain publik), 33 provinsi. Provinsi hasil pemekaran (Kalimantan Utara dan
+              provinsi baru di Papua) digambar di wilayah provinsi induknya. Provinsi dengan kurang dari {data.batas_rincian}{" "}
+              pemeriksaan tidak dirinci per kategori untuk melindungi kelompok kecil.
             </p>
           </section>
 
@@ -580,58 +587,53 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          {/* C. Tabel Per Puskesmas: kode, provinsi, kab/kota, Puskesmas */}
-          <section id="tabel-puskesmas" className="bg-surface rounded-2xl border border-line p-5 sm:p-6 shadow-xs flex flex-col gap-4">
+          {/* C. Tabel per provinsi (tidak ada data per Puskesmas di portal publik) */}
+          <section id="tabel-provinsi" className="bg-surface rounded-2xl border border-line p-5 sm:p-6 shadow-xs flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h2 className="text-lg sm:text-xl font-bold font-atkinson text-ink">
-                  Per Puskesmas{pulauTerpilih ? ` · ${NAMA_PULAU[pulauTerpilih]}` : ""}
-                </h2>
+                <h2 className="text-lg sm:text-xl font-bold font-atkinson text-ink">Per provinsi</h2>
                 <p className="text-xs text-muted font-atkinson">Diurutkan dari jumlah MERAH terbanyak</p>
               </div>
-              <div className="flex items-center gap-3">
-                {pulauTerpilih && (
-                  <button
-                    type="button"
-                    onClick={() => setPulauTerpilih(null)}
-                    className="text-xs font-bold text-primary hover:underline cursor-pointer"
-                  >
-                    Tampilkan semua pulau
-                  </button>
-                )}
-                <span className="text-xs font-mono text-muted">Total: {puskesmasSorted.length} fasilitas</span>
-              </div>
+              <span className="text-xs font-mono text-muted">{provinsiSorted.length} provinsi</span>
             </div>
-
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm border-collapse">
                 <thead>
                   <tr className="border-b-2 border-line text-xs font-bold font-atkinson uppercase tracking-wide text-muted">
-                    <th className="py-3 px-3">Kode</th>
                     <th className="py-3 px-3">Provinsi</th>
-                    <th className="py-3 px-3">Kabupaten/Kota</th>
-                    <th className="py-3 px-3">Puskesmas</th>
+                    <th className="py-3 px-3 text-right">Puskesmas</th>
                     <th className="py-3 px-3 text-right text-text-merah">MERAH</th>
                     <th className="py-3 px-3 text-right text-text-kuning">KUNING</th>
                     <th className="py-3 px-3 text-right text-text-hijau">HIJAU</th>
                     <th className="py-3 px-3 text-right">Total</th>
                     <th className="py-3 px-3 text-right">% MERAH</th>
-                    <th className="py-3 px-3 text-right">Data terakhir</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line font-atkinson">
-                  {puskesmasSorted.map((p) => (
-                    <tr key={p.puskesmas_id} className="hover:bg-bg/80 transition-colors">
-                      <td className="py-3 px-3 font-mono text-ink whitespace-nowrap">{p.puskesmas_id}</td>
-                      <td className="py-3 px-3 text-ink">{p.provinsi || "-"}</td>
-                      <td className="py-3 px-3 text-ink">{p.kab_kota || "-"}</td>
-                      <td className="py-3 px-3 font-semibold text-ink">{p.nama || "-"}</td>
-                      <td className="py-3 px-3 text-right font-mono font-medium text-text-merah">{p.MERAH}</td>
-                      <td className="py-3 px-3 text-right font-mono font-medium text-text-kuning">{p.KUNING}</td>
-                      <td className="py-3 px-3 text-right font-mono font-medium text-text-hijau">{p.HIJAU}</td>
+                  {provinsiSorted.map((p) => (
+                    <tr
+                      key={p.iso}
+                      onClick={() => {
+                        setProvTerpilih(p.iso);
+                        document.getElementById("peta-persebaran")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }}
+                      className={`cursor-pointer transition-colors ${provTerpilih === p.iso ? "bg-status-info-bg" : "hover:bg-bg/80"}`}
+                    >
+                      <td className="py-3 px-3 font-semibold text-ink">{p.provinsi}</td>
+                      <td className="py-3 px-3 text-right font-mono text-ink">{p.puskesmas}</td>
+                      {p.disamarkan ? (
+                        <td colSpan={3} className="py-3 px-3 text-right text-xs text-muted">
+                          data belum cukup untuk dirinci
+                        </td>
+                      ) : (
+                        <>
+                          <td className="py-3 px-3 text-right font-mono font-medium text-text-merah">{p.MERAH}</td>
+                          <td className="py-3 px-3 text-right font-mono font-medium text-text-kuning">{p.KUNING}</td>
+                          <td className="py-3 px-3 text-right font-mono font-medium text-text-hijau">{p.HIJAU}</td>
+                        </>
+                      )}
                       <td className="py-3 px-3 text-right font-mono font-semibold text-ink">{p.total}</td>
-                      <td className="py-3 px-3 text-right font-mono text-ink">{formatPersen(p.MERAH, p.total)}</td>
-                      <td className="py-3 px-3 text-right font-mono text-muted whitespace-nowrap">{formatTanggalSingkat(p.terakhir)}</td>
+                      <td className="py-3 px-3 text-right font-mono text-ink">{p.disamarkan ? "-" : formatPersen(p.MERAH, p.total)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -649,7 +651,7 @@ export default function DashboardPage() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
           <div>
-            <span className="font-semibold">Data pseudonim:</span> tanpa nama, tanpa umur pasti, tanpa foto. Hanya Puskesmas berlisensi yang dapat mengirim data. Versi lomba belum memakai login.
+            <span className="font-semibold">Privasi:</span> portal ini hanya menampilkan angka gabungan per provinsi. Tidak ada nama, umur, foto, atau data per Puskesmas. Hanya Puskesmas berlisensi yang dapat mengirim data.
           </div>
         </div>
 
@@ -663,6 +665,6 @@ export default function DashboardPage() {
           </p>
         </div>
       </footer>
-    </main>
+    </section>
   );
 }

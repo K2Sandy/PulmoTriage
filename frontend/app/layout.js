@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Header from "./components/Header";
 import Toast from "./components/Toast";
+import PembaruanBanner from "./components/PembaruanBanner";
 import { SyncProvider } from "./context/SyncContext";
 import { LisensiGate, LisensiProvider } from "./context/LisensiContext";
 
@@ -38,21 +39,14 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="id"
-      data-theme="system"
       suppressHydrationWarning
       className={`${fraunces.variable} ${atkinsonNext.variable} ${atkinsonMono.variable} font-atkinson`}
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('theme')||'system';document.documentElement.setAttribute('data-theme',t);}catch(e){}`,
-          }}
-        />
-      </head>
       <body className="min-h-screen bg-bg text-ink font-atkinson flex flex-col antialiased">
         <LisensiProvider>
           <SyncProvider>
             <Header />
+            <PembaruanBanner />
             <div className="w-full flex-1 flex flex-col overflow-x-hidden">
               <LisensiGate>{children}</LisensiGate>
             </div>

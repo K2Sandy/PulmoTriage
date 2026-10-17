@@ -516,7 +516,7 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                   <p className="text-ink text-sm font-normal font-atkinson leading-tight">
-                    Nama dan umur hanya tersimpan di komputer Puskesmas ini. Yang dikirim ke dasbor Dinas Kesehatan hanya data tanpa nama.
+                    Nama dan umur hanya tersimpan di komputer Puskesmas ini. Yang dikirim ke server hanya rekap tanpa nama untuk peta persebaran publik.
                   </p>
                 </div>
               </div>

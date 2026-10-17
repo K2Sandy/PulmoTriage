@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import Header from "./components/Header";
+import { UnduhProvider } from "./components/UnduhContext";
 
 const fraunces = localFont({
   src: "./fonts/Fraunces.ttf",
@@ -27,28 +28,23 @@ const atkinsonMono = localFont({
 });
 
 export const metadata = {
-  title: "PulmoTriage - Dasbor Dinas Kesehatan",
-  description: "Ringkasan triase TBC dari Puskesmas pengguna PulmoTriage untuk Dinas Kesehatan.",
+  title: "PulmoTriage - Triase TBC untuk Puskesmas dan klinik",
+  description:
+    "Kenali PulmoTriage: alat bantu triase TBC dari rontgen dada yang berjalan tanpa internet. Lihat data persebaran dan unduh aplikasinya.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html
       lang="id"
-      data-theme="system"
       suppressHydrationWarning
       className={`${fraunces.variable} ${atkinsonNext.variable} ${atkinsonMono.variable} font-atkinson`}
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('theme')||'system';document.documentElement.setAttribute('data-theme',t);}catch(e){}`,
-          }}
-        />
-      </head>
       <body className="min-h-screen bg-bg text-ink font-atkinson flex flex-col antialiased">
-        <Header />
-        <div className="w-full flex-1 flex flex-col overflow-x-hidden px-4 sm:px-6">{children}</div>
+        <UnduhProvider>
+          <Header />
+          <div className="w-full flex-1 flex flex-col overflow-x-hidden">{children}</div>
+        </UnduhProvider>
       </body>
     </html>
   );

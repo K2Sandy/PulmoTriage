@@ -234,3 +234,8 @@ scripts/lisensi/kunci_rahasia.pem
 scripts/lisensi/keluaran/
 # Lisensi yang terpasang di komputer Puskesmas
 backend/lisensi.json
+
+# Installer (hasil build tidak di-commit)
+installer/build/
+installer/cache/
+installer/dist/

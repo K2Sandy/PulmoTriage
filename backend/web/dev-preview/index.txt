@@ -1,34 +1,35 @@
 1:"$Sreact.fragment"
-2:"/_next/static/chunks/1ddi3qf1d_t54.js"
+2:"/_next/static/chunks/05ij_0xnfndrk.js"
 3:I[10502,["$2"],"LisensiProvider"]
 4:I[27567,["$2"],"SyncProvider"]
 5:I[17942,["$2"],"default"]
-6:I[10502,["$2"],"LisensiGate"]
-7:I[39756,["$2"],"default"]
-8:I[37457,["$2"],"default"]
-9:I[73537,["$2"],"default"]
-d:I[47257,["$2"],"ClientPageRoot"]
-e:"/_next/static/chunks/0k4fjet0rum30.js"
-f:I[71969,["$2","$e"],"default"]
-12:I[97367,["$2"],"OutletBoundary"]
-13:"$Sreact.suspense"
-15:"ViewportBoundary"
-16:I[97367,["$2"],"$15"]
-18:"MetadataBoundary"
-19:I[97367,["$2"],"$18"]
-1b:I[68027,["$2"],"default",1]
-:HL["/_next/static/chunks/2sr33w7uqb6wl.css","style"]
+6:I[85823,["$2"],"default"]
+7:I[10502,["$2"],"LisensiGate"]
+8:I[39756,["$2"],"default"]
+9:I[37457,["$2"],"default"]
+a:I[73537,["$2"],"default"]
+e:I[47257,["$2"],"ClientPageRoot"]
+f:"/_next/static/chunks/0k4fjet0rum30.js"
+10:I[71969,["$2","$f"],"default"]
+13:I[97367,["$2"],"OutletBoundary"]
+14:"$Sreact.suspense"
+16:"ViewportBoundary"
+17:I[97367,["$2"],"$16"]
+19:"MetadataBoundary"
+1a:I[97367,["$2"],"$19"]
+1c:I[68027,["$2"],"default",1]
+:HL["/_next/static/chunks/1tvuufrf35yy-.css","style"]
 :HL["/_next/static/media/AtkinsonHyperlegibleMono-s.p.1k_qa8tb0k-y_.ttf","font",{"crossOrigin":"","type":"font/ttf"}]
 :HL["/_next/static/media/AtkinsonHyperlegibleNext-s.p.1ltpm5wrsjj4r.ttf","font",{"crossOrigin":"","type":"font/ttf"}]
 :HL["/_next/static/media/Fraunces-s.p.24tivhgkz9rhh.ttf","font",{"crossOrigin":"","type":"font/ttf"}]
-b:X
-c:[["children",{"s":"__PAGE__","h":512,"d":{"r":["$","$1","c",{"children":[["$","$Ld",null,{"Component":"$f","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@10","$@11"]}}],[["$","script","script-0",{"src":"/_next/static/chunks/0k4fjet0rum30.js","async":true,"nonce":"$undefined"}]],["$","$L12",null,{"children":["$","$13",null,{"name":"Next.MetadataOutlet","children":"$@14"}]}]]}],"p":false,"v":null}}]]
-a:[["children",{"s":"dev-preview","h":512,"d":{"r":["$","$1","c",{"children":[null,["$","$L7",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L8",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],"p":false,"v":"$b"},"c":"$Qc"}]]
-0:{"P":null,"c":["","dev-preview",""],"q":"","i":false,"t":{"t":{"s":"","h":528,"d":{"r":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2sr33w7uqb6wl.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/1ddi3qf1d_t54.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"id","data-theme":"system","suppressHydrationWarning":true,"className":"_P8hjG_variable dbDccW_variable Tr_x2G_variable font-atkinson","children":[["$","head",null,{"children":["$","script",null,{"dangerouslySetInnerHTML":{"__html":"try{var t=localStorage.getItem('theme')||'system';document.documentElement.setAttribute('data-theme',t);}catch(e){}"}}]}],["$","body",null,{"className":"min-h-screen bg-bg text-ink font-atkinson flex flex-col antialiased","children":["$","$L3",null,{"children":["$","$L4",null,{"children":[["$","$L5",null,{}],["$","div",null,{"className":"w-full flex-1 flex flex-col overflow-x-hidden","children":["$","$L6",null,{"children":["$","$L7",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L8",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}],["$","$L9",null,{}]]}]}]}]]}]]}],"p":false,"v":null},"c":"$Qa"},"h":{"r":["$","$1","h",{"children":[null,["$","$L16",null,{"children":"$L17"}],["$","$L19",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$13",null,{"name":"Next.Metadata","children":"$L1a"}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":false,"v":null}},"m":"$undefined","G":["$1b",[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2sr33w7uqb6wl.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]]],"S":true,"r":"$undefined","s":"$undefined","a":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"bqzyf3UXOwHDhI2YAzGW4"}
-b:C
-10:{}
-11:"$c:0:1:d:r:props:children:0:props:serverProvidedParams:params"
-17:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
-1c:I[27201,["$2"],"IconMark"]
-14:null
-1a:[["$","title","0",{"children":"PulmoTriage - Triase TBC Rontgen Toraks"}],["$","meta","1",{"name":"description","content":"Alat bantu triase TBC dari rontgen dada berbasis kecerdasan buatan untuk Puskesmas."}],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.117ezoe8m31dk.ico","sizes":"48x48","type":"image/x-icon"}],["$","link","3",{"rel":"icon","href":"/icon.png?icon.0_razdvenbuju.png","sizes":"500x500","type":"image/png"}],["$","$L1c","4",{}]]
+c:X
+d:[["children",{"s":"__PAGE__","h":512,"d":{"r":["$","$1","c",{"children":[["$","$Le",null,{"Component":"$10","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@11","$@12"]}}],[["$","script","script-0",{"src":"/_next/static/chunks/0k4fjet0rum30.js","async":true,"nonce":"$undefined"}]],["$","$L13",null,{"children":["$","$14",null,{"name":"Next.MetadataOutlet","children":"$@15"}]}]]}],"p":false,"v":null}}]]
+b:[["children",{"s":"dev-preview","h":512,"d":{"r":["$","$1","c",{"children":[null,["$","$L8",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L9",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],"p":false,"v":"$c"},"c":"$Qd"}]]
+0:{"P":null,"c":["","dev-preview",""],"q":"","i":false,"t":{"t":{"s":"","h":528,"d":{"r":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/1tvuufrf35yy-.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/05ij_0xnfndrk.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"id","suppressHydrationWarning":true,"className":"_P8hjG_variable dbDccW_variable Tr_x2G_variable font-atkinson","children":["$","body",null,{"className":"min-h-screen bg-bg text-ink font-atkinson flex flex-col antialiased","children":["$","$L3",null,{"children":["$","$L4",null,{"children":[["$","$L5",null,{}],["$","$L6",null,{}],["$","div",null,{"className":"w-full flex-1 flex flex-col overflow-x-hidden","children":["$","$L7",null,{"children":["$","$L8",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L9",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}],["$","$La",null,{}]]}]}]}]}]]}],"p":false,"v":null},"c":"$Qb"},"h":{"r":["$","$1","h",{"children":[null,["$","$L17",null,{"children":"$L18"}],["$","$L1a",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$14",null,{"name":"Next.Metadata","children":"$L1b"}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":false,"v":null}},"m":"$undefined","G":["$1c",[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/1tvuufrf35yy-.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]]],"S":true,"r":"$undefined","s":"$undefined","a":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"vjAVG76cDcyS2PSbAucpB"}
+c:C
+11:{}
+12:"$d:0:1:d:r:props:children:0:props:serverProvidedParams:params"
+18:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+1d:I[27201,["$2"],"IconMark"]
+15:null
+1b:[["$","title","0",{"children":"PulmoTriage - Triase TBC Rontgen Toraks"}],["$","meta","1",{"name":"description","content":"Alat bantu triase TBC dari rontgen dada berbasis kecerdasan buatan untuk Puskesmas."}],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.117ezoe8m31dk.ico","sizes":"48x48","type":"image/x-icon"}],["$","link","3",{"rel":"icon","href":"/icon.png?icon.0_razdvenbuju.png","sizes":"500x500","type":"image/png"}],["$","$L1d","4",{}]]
