@@ -8,10 +8,10 @@ export default function Stepper({ currentStep, onStepClick, onReset }) {
   ];
 
   return (
-    <div className="w-full h-16 relative border-b border-zinc-200 flex justify-center items-center gap-3.5 bg-white/50 backdrop-blur-xs px-4">
+    <div className="w-full h-16 relative border-b border-line flex justify-center items-center gap-3.5 bg-surface/50 backdrop-blur-xs px-4">
       {/* Left Stepper Label */}
       <div className="hidden sm:flex absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 flex-col justify-start items-start">
-        <span className="text-gray-500 text-xs font-bold font-atkinson uppercase tracking-wide">
+        <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
           Langkah {currentStep} dari 3
         </span>
       </div>
@@ -23,7 +23,7 @@ export default function Stepper({ currentStep, onStepClick, onReset }) {
             type="button"
             id="btn-pemeriksaan-baru"
             onClick={onReset}
-            className="h-8 px-3.5 bg-white rounded-[10px] border border-cyan-700 text-cyan-700 hover:bg-cyan-50 flex items-center gap-2 text-sm font-bold font-atkinson transition-colors cursor-pointer shadow-xs"
+            className="h-8 px-3.5 bg-surface rounded-[10px] border border-primary text-primary hover:bg-status-info-bg flex items-center gap-2 text-sm font-bold font-atkinson transition-colors cursor-pointer shadow-xs"
           >
             <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -54,8 +54,8 @@ export default function Stepper({ currentStep, onStepClick, onReset }) {
                 <div
                   className={`size-7 rounded-full flex justify-center items-center shrink-0 transition-colors ${
                     isDone || isCurrent
-                      ? "bg-cyan-700 text-white"
-                      : "border border-slate-400 bg-white text-gray-500"
+                      ? "bg-primary text-on-primary"
+                      : "border border-line-strong bg-surface text-muted"
                   }`}
                 >
                   {isDone ? (
@@ -73,10 +73,10 @@ export default function Stepper({ currentStep, onStepClick, onReset }) {
                 <span
                   className={`text-sm sm:text-base font-atkinson ${
                     isCurrent
-                      ? "text-teal-950 font-bold"
+                      ? "text-ink font-bold"
                       : isDone
-                      ? "text-teal-950 font-normal"
-                      : "text-gray-500 font-normal"
+                      ? "text-ink font-normal"
+                      : "text-muted font-normal"
                   }`}
                 >
                   {s.label}
@@ -87,7 +87,7 @@ export default function Stepper({ currentStep, onStepClick, onReset }) {
               {idx < steps.length - 1 && (
                 <div
                   className={`w-8 sm:w-14 h-px transition-colors ${
-                    s.num < currentStep ? "bg-cyan-700" : "bg-slate-300"
+                    s.num < currentStep ? "bg-primary" : "bg-line"
                   }`}
                 />
               )}

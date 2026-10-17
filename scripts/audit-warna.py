@@ -40,8 +40,8 @@ def muat_token_desain(design_path="docs/DESIGN.md"):
     with open(design_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    # Ekstrak blok colors dari frontmatter YAML
-    match = re.search(r"colors:\s*\n((?:\s+[\w\-]+:\s*\"#[0-9a-fA-F]+\"\s*(?:#.*)?\n)+)", content)
+    # Ekstrak blok colors dari frontmatter YAML (termasuk baris komentar)
+    match = re.search(r"colors:\s*\n((?:\s*(?:#.*|[\w\-]+:\s*\"#[0-9a-fA-F]+\"(?:\s*#.*)?)\r?\n)+)", content)
     if match:
         block = match.group(1)
         for line in block.strip().splitlines():
