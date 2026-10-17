@@ -13,7 +13,7 @@ export default function SyncBar() {
     <div
       role="region"
       aria-label="Status sinkronisasi cloud"
-      className="h-12 pl-3.5 pr-2 bg-surface rounded-full border border-line shadow-xs inline-flex items-center gap-3 shrink-0"
+      className="h-12 pl-3.5 pr-2 glass-surface rounded-full shadow-xs inline-flex items-center gap-3 shrink-0"
     >
       {/* Icon */}
       <div className="size-5 shrink-0 flex items-center justify-center text-muted">
@@ -61,7 +61,7 @@ export default function SyncBar() {
         type="button"
         onClick={sinkronSekarang}
         disabled={isSyncing}
-        className={`h-8 px-3 rounded-[10px] text-xs sm:text-sm font-bold font-atkinson transition-all flex items-center gap-1.5 ${
+        className={`h-8 px-3.5 rounded-full text-xs sm:text-sm font-bold font-atkinson transition-all flex items-center gap-1.5 ${
           isSyncing
             ? "bg-bg border border-line text-muted/60 cursor-not-allowed"
             : "bg-surface border border-primary text-primary hover:bg-status-info-bg cursor-pointer shadow-xs active:scale-[0.98]"

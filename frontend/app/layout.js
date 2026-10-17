@@ -39,6 +39,13 @@ export default function RootLayout({ children }) {
       lang="id"
       className={`${fraunces.variable} ${atkinsonNext.variable} ${atkinsonMono.variable} font-atkinson`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('theme')||'system';document.documentElement.setAttribute('data-theme',t);}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-bg text-ink font-atkinson flex flex-col antialiased">
         <SyncProvider>
           <Header />

@@ -24,15 +24,20 @@
       "text": "Pernyataan: Hasil AI adalah alat bantu triase, bukan diagnosis. Keputusan klinis tetap di tangan dok"
     },
     "category_ribbon": {
-      "found": false
+      "found": true,
+      "hasText": true,
+      "hasIcon": true,
+      "bgColor": "rgb(198, 40, 40)",
+      "borderColor": "rgb(255, 255, 255)",
+      "textColor": "rgb(255, 255, 255)"
     },
     "viewport_660": {
       "viewportHeight": 660,
-      "ribbonBottom": null,
-      "ribbonVisibleWithoutScroll": false,
-      "btnSetujuBottom": 546.25,
+      "ribbonBottom": 304.25,
+      "ribbonVisibleWithoutScroll": true,
+      "btnSetujuBottom": 544.25,
       "btnSetujuVisibleWithoutScroll": true,
-      "btnTidakSetujuBottom": 546.25,
+      "btnTidakSetujuBottom": 544.25,
       "btnTidakSetujuVisibleWithoutScroll": true
     },
     "fonts": [
@@ -44,12 +49,6 @@
     "size_audit": {
       "smallTexts": [
         {
-          "tag": "span",
-          "class": "",
-          "fontSize": 12,
-          "text": "Dasbor"
-        },
-        {
           "tag": "div",
           "class": "text-muted text-[11px] leading-tight font-atkinson",
           "fontSize": 11,
@@ -59,13 +58,13 @@
           "tag": "span",
           "class": "text-xs font-mono font-medium text-line",
           "fontSize": 12,
-          "text": "26"
+          "text": "28"
         },
         {
           "tag": "span",
           "class": "text-xs font-mono font-medium text-ink",
           "fontSize": 12,
-          "text": "15"
+          "text": "16"
         },
         {
           "tag": "span",
@@ -123,6 +122,24 @@
         },
         {
           "tag": "span",
+          "class": "",
+          "fontSize": 12,
+          "text": "KUNING"
+        },
+        {
+          "tag": "span",
+          "class": "size-5 rounded-full bg-status-neutral border borde",
+          "fontSize": 10,
+          "text": "!"
+        },
+        {
+          "tag": "span",
+          "class": "",
+          "fontSize": 12,
+          "text": "KUNING"
+        },
+        {
+          "tag": "span",
           "class": "size-5 rounded-full bg-status-neutral border borde",
           "fontSize": 10,
           "text": "!"
@@ -135,27 +152,15 @@
         },
         {
           "tag": "span",
-          "class": "h-6 px-2.5 bg-status-neutral rounded-full border b",
+          "class": "",
           "fontSize": 12,
-          "text": "Belum ditinjau"
+          "text": "MERAH"
         },
         {
           "tag": "span",
-          "class": "h-6 px-2.5 bg-status-neutral rounded-full border b",
+          "class": "",
           "fontSize": 12,
-          "text": "Belum ditinjau"
-        },
-        {
-          "tag": "span",
-          "class": "h-6 px-2.5 bg-status-neutral rounded-full border b",
-          "fontSize": 12,
-          "text": "Belum ditinjau"
-        },
-        {
-          "tag": "span",
-          "class": "size-5 rounded-full bg-status-neutral border borde",
-          "fontSize": 10,
-          "text": "!"
+          "text": "KUNING"
         },
         {
           "tag": "span",
@@ -164,28 +169,35 @@
           "text": "!"
         }
       ],
-      "totalSmallTexts": 50,
+      "totalSmallTexts": 80,
       "smallButtons": [
         {
           "tag": "button",
           "id": "btn-sync-now",
-          "class": "h-8 px-3 rounded-[10px] text-xs sm:text-sm font-bo",
+          "class": "h-8 px-3.5 rounded-full text-xs sm:text-sm font-bo",
           "height": 32,
           "text": "Sinkronkan sekarang"
+        },
+        {
+          "tag": "button",
+          "id": "btn-theme-toggle",
+          "class": "size-10 rounded-[10px] bg-surface border border-li",
+          "height": 40,
+          "text": ""
         },
         {
           "tag": "button",
           "id": "filter-semua",
           "class": "h-9 px-4 rounded-full text-sm font-bold font-atkin",
           "height": 36,
-          "text": "Semua\n26"
+          "text": "Semua\n28"
         },
         {
           "tag": "button",
           "id": "filter-belum-ditinjau",
           "class": "h-9 px-4 rounded-full text-sm font-bold font-atkin",
           "height": 36,
-          "text": "Belum ditinjau\n15"
+          "text": "Belum ditinjau\n16"
         },
         {
           "tag": "button",
@@ -195,7 +207,7 @@
           "text": "Menunggu sinkron\n0"
         }
       ],
-      "totalSmallButtons": 4
+      "totalSmallButtons": 5
     }
   },
   "screenshots": [

@@ -12,7 +12,7 @@ export default function Toast() {
       id="toast-notification"
       role="status"
       aria-live="polite"
-      className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] px-4 py-3.5 bg-surface/95 backdrop-blur-md rounded-xl shadow-[0px_12px_32px_0px_rgba(16,41,44,0.16)] border border-line flex items-center gap-3 transition-all duration-300 animate-in fade-in slide-in-from-bottom-3"
+      className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] px-4 py-3.5 glass-surface rounded-xl shadow-glass flex items-center gap-3 transition-all duration-300 animate-in fade-in slide-in-from-bottom-3"
     >
       {/* Icon based on type */}
       <div className="shrink-0 flex items-center justify-center">

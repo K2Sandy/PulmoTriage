@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import Link from "next/link";
+import CategoryBadge from "../components/CategoryBadge";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -304,32 +305,7 @@ export default function RiwayatPage() {
                         {/* Kategori Badge */}
                         <td className="py-3 px-3.5">
                           <div className="flex items-center gap-2">
-                            {item.kategori === "MERAH" && (
-                              <span className="h-7 px-2.5 bg-triage-merah text-on-triage-merah rounded-md inline-flex items-center gap-1.5 text-xs font-extrabold tracking-wide">
-                                <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                </svg>
-                                MERAH
-                              </span>
-                            )}
-                            {item.kategori === "KUNING" && (
-                              <span className="h-7 px-2.5 bg-triage-kuning text-on-triage-kuning rounded-md inline-flex items-center gap-1.5 text-xs font-extrabold tracking-wide">
-                                <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                  <circle cx="12" cy="12" r="10" />
-                                  <line x1="12" y1="8" x2="12" y2="12" />
-                                  <line x1="12" y1="16" x2="12.01" y2="16" />
-                                </svg>
-                                KUNING
-                              </span>
-                            )}
-                            {item.kategori === "HIJAU" && (
-                              <span className="h-7 px-2.5 bg-triage-hijau text-on-triage-hijau rounded-md inline-flex items-center gap-1.5 text-xs font-extrabold tracking-wide">
-                                <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>
-                                HIJAU
-                              </span>
-                            )}
+                            <CategoryBadge category={item.kategori} variant="solid" />
 
                             {/* Indikator Atipikal */}
                             {Boolean(item.atipikal) && (
