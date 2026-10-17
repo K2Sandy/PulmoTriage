@@ -4,11 +4,11 @@ import io
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
+import db
 from pulmotriage_infer import SYMPTOMS, PulmoTriage, load_image, overlay_heatmap
 
-app = FastAPI(title="PulmoTriage API", version="0.1")
+app = FastAPI(title="PulmoTriage API", version="0.2")
 
-# Izinkan halaman web (frontend) memanggil API ini dari alamat lain.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -16,8 +16,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Model dimuat SATU KALI saat server menyala, bukan setiap ada permintaan.
 engine = PulmoTriage("pulmotriage.onnx", "pulmotriage_config.json")
+db.init_db()  # membuat file pulmotriage.db dan tabelnya kalau belum ada
 
 
 @app.get("/health")
@@ -26,26 +26,56 @@ def health():
 
 
 @app.post("/analyze")
-async def analyze(foto: UploadFile = File(...), gejala: str = Form("")):
-    # 1. Baca foto yang dikirim frontend
+async def analyze(
+    foto: UploadFile = File(...),
+    gejala: str = Form(""),
+    nama: str = Form(""),
+    umur: int | None = Form(None, ge=0, le=120),
+    jenis_kelamin: str = Form(""),
+):
     try:
         img = load_image(io.BytesIO(await foto.read()))
     except Exception:
         raise HTTPException(status_code=400, detail="File bukan gambar yang valid")
 
-    # 2. "batuk_2minggu,demam" -> ["batuk_2minggu", "demam"]
+    if jenis_kelamin not in ("", "L", "P"):
+        raise HTTPException(status_code=422, detail="jenis_kelamin harus L, P, atau kosong")
+
     keys = [g.strip() for g in gejala.split(",") if g.strip()]
     salah = [k for k in keys if k not in SYMPTOMS]
     if salah:
         raise HTTPException(status_code=422, detail=f"Kode gejala tidak dikenal: {salah}. Yang valid: {list(SYMPTOMS)}")
 
-    # 3. Jalankan model (gerbang kualitas + skor + triase)
     hasil, cam = engine.analyze(img, keys)
 
-    # 4. Kalau lolos, buat gambar heatmap dan kirim sebagai teks base64
     if cam is not None:
         heat = overlay_heatmap(img, cam, strength=hasil["heatmap_strength"])
         buf = io.BytesIO()
         heat.save(buf, format="PNG")
         hasil["heatmap_png"] = base64.b64encode(buf.getvalue()).decode()
+        # Hanya hasil yang berhasil dianalisis yang disimpan.
+        hasil["id"] = db.simpan(hasil, nama.strip(), umur, jenis_kelamin, keys)
     return hasil
+
+
+@app.get("/pemeriksaan")
+def daftar_pemeriksaan(limit: int = 50):
+    return db.daftar(limit)
+
+
+@app.get("/pemeriksaan/{id_}")
+def detail_pemeriksaan(id_: int):
+    data = db.ambil(id_)
+    if data is None:
+        raise HTTPException(status_code=404, detail="Pemeriksaan tidak ditemukan")
+    return data
+
+
+@app.post("/pemeriksaan/{id_}/tinjau")
+def tinjau_pemeriksaan(id_: int, keputusan: str = Form(...), catatan: str = Form("")):
+    # Dokter wajib meninjau hasil AI: setuju atau tidak setuju.
+    if keputusan not in ("setuju", "tidak_setuju"):
+        raise HTTPException(status_code=422, detail="keputusan harus 'setuju' atau 'tidak_setuju'")
+    if not db.tinjau(id_, keputusan, catatan):
+        raise HTTPException(status_code=404, detail="Pemeriksaan tidak ditemukan")
+    return {"id": id_, "keputusan": keputusan}
