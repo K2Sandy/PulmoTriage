@@ -37,6 +37,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="id"
+      data-theme="system"
       suppressHydrationWarning
       className={`${fraunces.variable} ${atkinsonNext.variable} ${atkinsonMono.variable} font-atkinson`}
     >

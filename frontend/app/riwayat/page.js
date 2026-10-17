@@ -88,7 +88,7 @@ export default function RiwayatPage() {
   }, [data, filterTab, cari]);
 
   return (
-    <main className="w-full max-w-[1240px] mx-auto py-2 sm:py-4 flex flex-col gap-5">
+    <main className="w-[1200px] max-w-full mx-auto py-2 sm:py-4 flex flex-col gap-5">
       {/* 1. Header: Judul, Catatan Privasi & Input Pencarian */}
       <section className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-line">
         <div>

@@ -35,7 +35,7 @@ export default function TriageRibbon({
     );
   } else if (isKuning) {
     bgClass = "bg-triage-kuning text-on-triage-kuning";
-    label = isAtypical ? "Citra Janggal" : "KUNING";
+    label = "KUNING";
     icon = isAtypical ? (
       <svg className="size-6 sm:size-7 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 7V5a2 2 0 0 1 2-2h2" />
@@ -54,6 +54,9 @@ export default function TriageRibbon({
     );
   }
 
+  // Prevent title from duplicating the label
+  const cleanTitle = title ? title.replace(/^KUNING\s*[·—\-]?\s*/i, "").replace(/^MERAH\s*[·—\-]?\s*/i, "").replace(/^HIJAU\s*[·—\-]?\s*/i, "").trim() : "";
+
   return (
     <div
       id={id}
@@ -67,9 +70,9 @@ export default function TriageRibbon({
           <span className="font-atkinson text-xl sm:text-[22px] font-extrabold tracking-[0.02em] uppercase leading-tight">
             {label}
           </span>
-          {title && (
+          {cleanTitle && (
             <span className="font-atkinson text-base sm:text-lg font-bold leading-tight opacity-95">
-              — {title}
+              · {cleanTitle}
             </span>
           )}
         </div>
