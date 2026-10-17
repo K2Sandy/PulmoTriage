@@ -1,0 +1,240 @@
+{
+  "cek_desain": {
+    "header": {
+      "found": true,
+      "position": "sticky",
+      "top": "0px",
+      "height": 65,
+      "computedHeight": "65px",
+      "zIndex": "40"
+    },
+    "main_container": {
+      "found": true,
+      "maxWidth": "100%",
+      "width": 1200
+    },
+    "horizontal_scroll": {
+      "scrollWidth": 1366,
+      "clientWidth": 1366,
+      "hasHorizontalScroll": false
+    },
+    "disclaimer": {
+      "found": true,
+      "visible": true,
+      "text": "Hasil AI adalah alat bantu triase, bukan diagnosis. Keputusan klinis tetap di tangan dokter."
+    },
+    "category_ribbon": {
+      "found": true,
+      "hasText": true,
+      "hasIcon": true,
+      "bgColor": "rgb(198, 40, 40)",
+      "borderColor": "rgb(255, 255, 255)",
+      "textColor": "rgb(255, 255, 255)"
+    },
+    "viewport_660": {
+      "viewportHeight": 660,
+      "ribbonBottom": 215,
+      "ribbonVisibleWithoutScroll": true,
+      "btnSetujuBottom": 479,
+      "btnSetujuVisibleWithoutScroll": true,
+      "btnTidakSetujuBottom": 479,
+      "btnTidakSetujuVisibleWithoutScroll": true
+    },
+    "fonts": [
+      "atkinsonNext, \"atkinsonNext Fallback\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "fraunces, \"fraunces Fallback\", Georgia, serif",
+      "atkinsonMono, \"atkinsonMono Fallback\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
+    ],
+    "size_audit": {
+      "smallTexts": [
+        {
+          "tag": "div",
+          "class": "text-muted text-[11px] leading-tight font-atkinson",
+          "fontSize": 11,
+          "text": "Sinkron terakhir: 15 Okt 2026"
+        },
+        {
+          "tag": "span",
+          "class": "",
+          "fontSize": 12,
+          "text": "ID"
+        },
+        {
+          "tag": "span",
+          "class": "text-xs font-mono font-medium text-ink",
+          "fontSize": 12,
+          "text": "17"
+        },
+        {
+          "tag": "span",
+          "class": "text-xs font-mono font-medium text-ink",
+          "fontSize": 12,
+          "text": "0"
+        },
+        {
+          "tag": "th",
+          "class": "py-2 px-3.5 w-20 text-left",
+          "fontSize": 12,
+          "text": "NO."
+        },
+        {
+          "tag": "th",
+          "class": "py-2 px-3.5 w-44 text-left",
+          "fontSize": 12,
+          "text": "WAKTU"
+        },
+        {
+          "tag": "th",
+          "class": "py-2 px-3.5 w-56 text-left",
+          "fontSize": 12,
+          "text": "PASIEN"
+        },
+        {
+          "tag": "th",
+          "class": "py-2 px-3.5 w-44 text-left",
+          "fontSize": 12,
+          "text": "KATEGORI"
+        },
+        {
+          "tag": "th",
+          "class": "py-2 px-3.5 w-24 text-right",
+          "fontSize": 12,
+          "text": "SKOR AI"
+        },
+        {
+          "tag": "th",
+          "class": "py-2 px-3.5 w-40 text-left",
+          "fontSize": 12,
+          "text": "TINJAUAN DOKTER"
+        },
+        {
+          "tag": "th",
+          "class": "py-2 px-3.5 w-36 text-left",
+          "fontSize": 12,
+          "text": "SINKRON"
+        },
+        {
+          "tag": "span",
+          "class": "",
+          "fontSize": 12,
+          "text": "KUNING"
+        },
+        {
+          "tag": "span",
+          "class": "",
+          "fontSize": 12,
+          "text": "KUNING"
+        },
+        {
+          "tag": "span",
+          "class": "h-6 px-2.5 bg-status-neutral rounded-full border b",
+          "fontSize": 12,
+          "text": "Belum ditinjau"
+        },
+        {
+          "tag": "span",
+          "class": "",
+          "fontSize": 12,
+          "text": "KUNING"
+        },
+        {
+          "tag": "span",
+          "class": "",
+          "fontSize": 12,
+          "text": "KUNING"
+        },
+        {
+          "tag": "span",
+          "class": "h-6 px-2.5 bg-status-neutral rounded-full border b",
+          "fontSize": 12,
+          "text": "Belum ditinjau"
+        },
+        {
+          "tag": "span",
+          "class": "",
+          "fontSize": 12,
+          "text": "MERAH"
+        },
+        {
+          "tag": "span",
+          "class": "",
+          "fontSize": 12,
+          "text": "KUNING"
+        },
+        {
+          "tag": "span",
+          "class": "h-6 px-2.5 bg-status-neutral rounded-full border b",
+          "fontSize": 12,
+          "text": "Belum ditinjau"
+        }
+      ],
+      "totalSmallTexts": 58,
+      "smallButtons": [
+        {
+          "tag": "button",
+          "id": "btn-sync-now",
+          "class": "h-8 px-3.5 rounded-full text-xs sm:text-sm font-bo",
+          "height": 32,
+          "text": "Sinkronkan sekarang"
+        },
+        {
+          "tag": "button",
+          "id": "btn-theme-toggle",
+          "class": "size-10 rounded-[10px] bg-surface border border-li",
+          "height": 40,
+          "text": ""
+        },
+        {
+          "tag": "button",
+          "id": "btn-language-toggle",
+          "class": "h-10 px-3 rounded-[10px] border border-line-strong",
+          "height": 40,
+          "text": "ID"
+        },
+        {
+          "tag": "button",
+          "id": "filter-semua",
+          "class": "h-9 px-4 rounded-full text-sm font-bold font-atkin",
+          "height": 36,
+          "text": "Semua"
+        },
+        {
+          "tag": "button",
+          "id": "filter-belum-ditinjau",
+          "class": "h-9 px-4 rounded-full text-sm font-bold font-atkin",
+          "height": 36,
+          "text": "Belum ditinjau\n17"
+        },
+        {
+          "tag": "button",
+          "id": "filter-menunggu-sinkron",
+          "class": "h-9 px-4 rounded-full text-sm font-bold font-atkin",
+          "height": 36,
+          "text": "Menunggu sinkron\n0"
+        }
+      ],
+      "totalSmallButtons": 6
+    }
+  },
+  "screenshots": [
+    "a1-pasien_kosong.png",
+    "a2-pasien_terisi.png",
+    "a3-pasien_error-validasi.png",
+    "b1-unggah_kosong.png",
+    "b2-unggah_citra-terpilih.png",
+    "b3-unggah_menganalisis.png",
+    "b4-unggah_popup-ditolak.png",
+    "b5-unggah_error-server.png",
+    "b6-unggah_error-bukan-gambar.png",
+    "c1-hasil_merah.png",
+    "c2-hasil_kuning.png",
+    "c3-hasil_hijau.png",
+    "c4-hasil_citra-janggal.png",
+    "c5-hasil_tinjauan-tersimpan.png",
+    "d1-dasbor_terisi.png",
+    "d2-dasbor_kosong.png",
+    "d3-dasbor_gagal-memuat.png",
+    "e1-riwayat_pemeriksaan.png",
+    "e2-riwayat_komponen-token.png"
+  ]
+}
