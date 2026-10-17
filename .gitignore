@@ -11,6 +11,7 @@ __pycache__/
 node_modules/
 .next/
 .vercel/
+scripts/laporan_lab.docx
 # C extensions
 *.so
 
