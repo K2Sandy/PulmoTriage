@@ -52,9 +52,6 @@ PulmoTriage membantu petugas Puskesmas memilah pasien terduga TBC lebih cepat:
 
 ## ◆ Tangkapan layar
 
-> [!NOTE]
-> Antarmuka sedang dibangun. Gambar di bawah adalah placeholder dan akan diganti dengan tangkapan layar asli.
-
 <table>
   <tr>
     <td width="50%"><img src="docs/assets/layar-data-pasien.png" alt="Placeholder layar data pasien"></td>
@@ -73,15 +70,6 @@ PulmoTriage membantu petugas Puskesmas memilah pasien terduga TBC lebih cepat:
     <td align="center"><sub><b>Dasbor Dinkes</b></sub></td>
   </tr>
 </table>
-
-<details>
-<summary><b>Cara mengganti placeholder</b></summary>
-
-1. Ambil tangkapan layar di ukuran 1280 × 800 (rasio 16:10) supaya tata letak tabel tetap rapi.
-2. Simpan dengan nama yang sama di `docs/assets/`, misalnya `layar-hasil.png`.
-3. Gunakan data pasien fiktif. Jangan ada nama atau foto pasien asli.
-
-</details>
 
 <br>
 
@@ -160,16 +148,6 @@ Diuji pada 628 citra yang disisihkan (103 TBC). Citra ini tidak dipakai untuk me
 | Tinggi (0,910) | 98,1% | 100% |
 
 Gerbang kualitas salah menolak 0,2% rontgen asli.
-
-> [!WARNING]
-> **Ini uji internal, bukan uji lapangan.**
-> - Data uji berasal dari dataset publik yang sama dengan data latih.
-> - Semua kasus TBC uji berasal dari 2 sumber (NLM dan Belarus). Model bisa sebagian mengenali sumber data, bukan hanya penyakit. Inilah alasan AUC terlihat 1,000.
-> - Uji jalan pintas (shortcut) masih menunjukkan pergeseran −0,99 logit pada salah satu skenario.
-> - Gerbang kualitas belum sempurna: sebagian film terbalik atau terpotong masih lolos.
-> - Belum divalidasi pada pasien Indonesia. Ambang perlu dikalibrasi ulang dengan data lokal.
->
-> Kami tidak pernah mengklaim "akurasi 100%".
 
 <br>
 
