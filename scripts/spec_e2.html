@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face {
+      font-family: 'Fraunces';
+      src: url('../frontend/app/fonts/Fraunces-VariableFont_opsz,SOFT,WONK,opsz.ttf');
+    }
+    @font-face {
+      font-family: 'Atkinson Hyperlegible Next';
+      src: url('../frontend/app/fonts/AtkinsonHyperlegibleNext-VariableFont_wght.ttf');
+    }
+    @font-face {
+      font-family: 'Atkinson Hyperlegible Mono';
+      src: url('../frontend/app/fonts/AtkinsonHyperlegibleMono-VariableFont_wght.ttf');
+    }
+    body { margin: 0; padding: 0; background-color: #f3f4f6; }
+  </style>
+</head>
+<body>
+<div className="w-[1366px] h-[1080px] bg-gray-100 inline-flex flex-col justify-start items-start overflow-hidden">
+  <div className="w-[1200px] pt-10 flex flex-col justify-start items-start gap-7">
+    <div className="self-stretch flex flex-col justify-start items-start">
+      <div className="self-stretch flex flex-col justify-start items-start">
+        <div className="justify-start text-teal-950 text-3xl font-semibold font-['Fraunces'] leading-9">Komponen &amp; token tambahan</div>
+      </div>
+      <div className="self-stretch pt-1.5 flex flex-col justify-start items-start">
+        <div className="self-stretch flex flex-col justify-start items-start">
+          <div className="justify-start text-gray-500 text-base font-normal font-['Atkinson_Hyperlegible_Next']">Usulan untuk ditambahkan ke DESIGN.md. Merah, kuning, hijau tetap hanya untuk triase.</div>
+        </div>
+      </div>
+    </div>
+    <div className="self-stretch inline-flex justify-start items-start gap-10">
+      <div className="flex-1 inline-flex flex-col justify-start items-start gap-3.5">
+        <div className="self-stretch flex flex-col justify-start items-start">
+          <div className="justify-start text-gray-500 text-xs font-bold font-['Atkinson_Hyperlegible_Next'] uppercase tracking-wide">Token status non-triase (baru)</div>
+        </div>
+        <div className="self-stretch inline-flex justify-start items-center gap-3">
+          <div className="size-11 relative bg-fuchsia-800 rounded-[10px] border border-zinc-200" />
+          <div className="w-56 inline-flex flex-col justify-start items-start">
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-semibold font-['Atkinson_Hyperlegible_Mono']">status-error #7A2E8A</div>
+            </div>
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-gray-500 text-sm font-normal font-['Atkinson_Hyperlegible_Next']">teks/ikon/garis error (bukan merah)</div>
+            </div>
+          </div>
+        </div>
+        <div className="self-stretch inline-flex justify-start items-center gap-3">
+          <div className="size-11 relative bg-pink-50 rounded-[10px] border border-zinc-200" />
+          <div className="w-52 inline-flex flex-col justify-start items-start">
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-semibold font-['Atkinson_Hyperlegible_Mono']">status-error-bg #F7EEF8</div>
+            </div>
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-gray-500 text-sm font-normal font-['Atkinson_Hyperlegible_Next']">latar banner error</div>
+            </div>
+          </div>
+        </div>
+        <div className="self-stretch inline-flex justify-start items-center gap-3">
+          <div className="size-11 relative bg-emerald-50 rounded-[10px] border border-zinc-200" />
+          <div className="w-48 inline-flex flex-col justify-start items-start">
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-semibold font-['Atkinson_Hyperlegible_Mono']">status-info-bg #E7F3F4</div>
+            </div>
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-gray-500 text-sm font-normal font-['Atkinson_Hyperlegible_Next']">latar info, nav aktif, sukses</div>
+            </div>
+          </div>
+        </div>
+        <div className="self-stretch inline-flex justify-start items-center gap-3">
+          <div className="size-11 relative bg-gray-100 rounded-[10px] border border-zinc-200" />
+          <div className="w-52 inline-flex flex-col justify-start items-start">
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-semibold font-['Atkinson_Hyperlegible_Mono']">status-neutral #EEF2F2</div>
+            </div>
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-gray-500 text-sm font-normal font-['Atkinson_Hyperlegible_Next']">foto ditolak, peringatan, disclaimer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex-1 self-stretch inline-flex flex-col justify-start items-start gap-3.5">
+        <div className="self-stretch flex flex-col justify-start items-start">
+          <div className="justify-start text-gray-500 text-xs font-bold font-['Atkinson_Hyperlegible_Next'] uppercase tracking-wide">Toast hasil sinkron (kaca)</div>
+        </div>
+        <div className="w-96 px-4 py-3.5 bg-white/90 rounded-xl shadow-[0px_12px_32px_0px_rgba(16,41,44,0.16)] outline outline-1 outline-offset-[-1px] outline-zinc-200 inline-flex justify-start items-center gap-3">
+          <div className="size-5 relative overflow-hidden">
+            <div className="w-4 h-2.5 left-[4px] top-[6px] absolute outline outline-2 outline-offset-[-0.88px] outline-cyan-700" />
+          </div>
+          <div className="flex-1 inline-flex flex-col justify-start items-start">
+            <div className="justify-start"><span class="text-teal-950 text-base font-normal font-['Atkinson_Hyperlegible_Next']">Terkirim </span><span class="text-teal-950 text-base font-medium font-['Atkinson_Hyperlegible_Mono']">3</span><span class="text-teal-950 text-base font-normal font-['Atkinson_Hyperlegible_Next']"> data.</span></div>
+          </div>
+          <div className="size-4 relative overflow-hidden">
+            <div className="size-2 left-[4px] top-[4px] absolute outline outline-1 outline-offset-[-0.58px] outline-gray-500" />
+            <div className="size-2 left-[4px] top-[4px] absolute outline outline-1 outline-offset-[-0.58px] outline-gray-500" />
+          </div>
+        </div>
+        <div className="w-96 px-4 py-3.5 bg-white/90 rounded-xl shadow-[0px_12px_32px_0px_rgba(16,41,44,0.16)] outline outline-1 outline-offset-[-1px] outline-zinc-200 inline-flex justify-start items-center gap-3">
+          <div className="size-5 relative overflow-hidden">
+            <div className="w-[0.01px] h-0 left-[10px] top-[16.67px] absolute outline outline-2 outline-offset-[-0.88px] outline-teal-950" />
+            <div className="w-1.5 h-[1.19px] left-[7.08px] top-[12.50px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+            <div className="w-1 h-0.5 left-[4.17px] top-[8.47px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+            <div className="w-[1.67px] h-[1.27px] left-[14.16px] top-[9.45px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+            <div className="w-1 h-0.5 left-[1.67px] top-[5.15px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+            <div className="w-2.5 h-[3.18px] left-[8.93px] top-[4.17px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+            <div className="size-4 left-[1.67px] top-[1.67px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+          </div>
+          <div className="flex-1 inline-flex flex-col justify-start items-start">
+            <div className="w-80 justify-start text-teal-950 text-base font-normal font-['Atkinson_Hyperlegible_Next']">Belum ada koneksi. Data tetap aman di komputer ini.</div>
+          </div>
+          <div className="size-4 relative overflow-hidden">
+            <div className="size-2 left-[4px] top-[4px] absolute outline outline-1 outline-offset-[-0.58px] outline-gray-500" />
+            <div className="size-2 left-[4px] top-[4px] absolute outline outline-1 outline-offset-[-0.58px] outline-gray-500" />
+          </div>
+        </div>
+        <div className="w-96 px-4 py-3.5 bg-white/90 rounded-xl shadow-[0px_12px_32px_0px_rgba(16,41,44,0.16)] outline outline-1 outline-offset-[-1px] outline-zinc-200 inline-flex justify-start items-center gap-3">
+          <div className="size-5 relative overflow-hidden">
+            <div className="size-4 left-[1.67px] top-[1.67px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-fuchsia-800" />
+            <div className="w-0 h-1 left-[10px] top-[10px] absolute outline outline-2 outline-offset-[-0.88px] outline-fuchsia-800" />
+            <div className="w-[0.01px] h-0 left-[10px] top-[6.67px] absolute outline outline-2 outline-offset-[-0.88px] outline-fuchsia-800" />
+          </div>
+          <div className="flex-1 inline-flex flex-col justify-start items-start">
+            <div className="justify-start text-teal-950 text-base font-normal font-['Atkinson_Hyperlegible_Next']">Ditolak oleh server cloud.</div>
+          </div>
+          <div className="size-4 relative overflow-hidden">
+            <div className="size-2 left-[4px] top-[4px] absolute outline outline-1 outline-offset-[-0.58px] outline-gray-500" />
+            <div className="size-2 left-[4px] top-[4px] absolute outline outline-1 outline-offset-[-0.58px] outline-gray-500" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="self-stretch inline-flex justify-start items-start gap-10">
+      <div className="flex-1 inline-flex flex-col justify-start items-start gap-3.5">
+        <div className="self-stretch flex flex-col justify-start items-start">
+          <div className="justify-start text-gray-500 text-xs font-bold font-['Atkinson_Hyperlegible_Next'] uppercase tracking-wide">Ikon per kode quality.issues</div>
+        </div>
+        <div className="size- inline-flex flex-col justify-start items-start">
+          <div className="size-lf-stretch inline-flex justify-start items-center gap-2.5">
+            <div className="size-9 bg-gray-100 rounded-[999px] flex justify-center items-center">
+              <div className="size-5 relative overflow-hidden">
+                <div className="size-4 left-[1.67px] top-[1.67px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+              </div>
+            </div>
+            <div className="size- inline-flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-medium font-['Atkinson_Hyperlegible_Mono']">BERDERAU</div>
+            </div>
+          </div>
+          <div className="size-lf-stretch inline-flex justify-start items-center gap-2.5">
+            <div className="size-9 bg-gray-100 rounded-[999px] flex justify-center items-center">
+              <div className="size-5 relative overflow-hidden">
+                <div className="size-1.5 left-[6.67px] top-[6.67px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="w-0 h-0.5 left-[10px] top-[1.67px] absolute outline outline-2 outline-offset-[-0.88px] outline-teal-950" />
+                <div className="w-0 h-0.5 left-[10px] top-[16.67px] absolute outline outline-2 outline-offset-[-0.88px] outline-teal-950" />
+                <div className="size-[1.18px] left-[4.11px] top-[4.11px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="size-px left-[14.72px] top-[14.72px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="w-0.5 h-0 left-[1.67px] top-[10px] absolute outline outline-2 outline-offset-[-0.88px] outline-teal-950" />
+                <div className="w-0.5 h-0 left-[16.67px] top-[10px] absolute outline outline-2 outline-offset-[-0.88px] outline-teal-950" />
+                <div className="w-[1.18px] h-px left-[4.11px] top-[14.72px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="w-px h-[1.18px] left-[14.72px] top-[4.11px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+              </div>
+            </div>
+            <div className="size- inline-flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-medium font-['Atkinson_Hyperlegible_Mono']">PENCAHAYAAN</div>
+            </div>
+          </div>
+          <div className="size-lf-stretch inline-flex justify-start items-center gap-2.5">
+            <div className="size-9 bg-gray-100 rounded-[999px] flex justify-center items-center">
+              <div className="size-5 relative overflow-hidden">
+                <div className="size-4 left-[1.67px] top-[1.67px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="w-[5px] h-2.5 left-[10px] top-[5px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+              </div>
+            </div>
+            <div className="size- inline-flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-medium font-['Atkinson_Hyperlegible_Mono']">KONTRAS_RENDAH</div>
+            </div>
+          </div>
+          <div className="size-lf-stretch inline-flex justify-start items-center gap-2.5">
+            <div className="size-9 bg-gray-100 rounded-[999px] flex justify-center items-center">
+              <div className="size-5 relative overflow-hidden">
+                <div className="size-4 left-[1.67px] top-[1.67px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="size-[2.85px] left-[5.83px] top-[6.32px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="size-1.5 left-[5px] top-[11.25px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="size-[2.50px] left-[15px] top-[10px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="size-3.5 left-[2.50px] top-[2.99px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="size-2.5 left-[7.50px] top-[2.50px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+              </div>
+            </div>
+            <div className="size- inline-flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-medium font-['Atkinson_Hyperlegible_Mono']">BUKAN_RONTGEN</div>
+            </div>
+          </div>
+          <div className="size-lf-stretch inline-flex justify-start items-center gap-2.5">
+            <div className="size-9 bg-gray-100 rounded-[999px] flex justify-center items-center">
+              <div className="size-5 relative overflow-hidden">
+                <div className="size-4 left-[1.67px] top-[1.67px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="w-[4.86px] h-[5px] left-[7.57px] top-[5.83px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="w-[0.01px] h-0 left-[10px] top-[14.17px] absolute outline outline-2 outline-offset-[-0.88px] outline-teal-950" />
+              </div>
+            </div>
+            <div className="size- inline-flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-medium font-['Atkinson_Hyperlegible_Mono']">TIDAK_DIKENALI</div>
+            </div>
+          </div>
+          <div className="size-lf-stretch inline-flex justify-start items-center gap-2.5">
+            <div className="size-9 bg-gray-100 rounded-[999px] flex justify-center items-center">
+              <div className="size-5 relative overflow-hidden">
+                <div className="size-3.5 left-[2.50px] top-[2.50px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+                <div className="size-1 left-[2.50px] top-[2.50px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-teal-950" />
+              </div>
+            </div>
+            <div className="size- inline-flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-medium font-['Atkinson_Hyperlegible_Mono']">SALAH_POSISI</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex-1 self-stretch inline-flex flex-col justify-start items-start gap-3.5">
+        <div className="self-stretch flex flex-col justify-start items-start">
+          <div className="justify-start text-gray-500 text-xs font-bold font-['Atkinson_Hyperlegible_Next'] uppercase tracking-wide">Badge kategori (tabel, daftar)</div>
+        </div>
+        <div className="self-stretch inline-flex justify-start items-start gap-2.5">
+          <div className="h-7 px-2.5 bg-red-700 rounded-md flex justify-start items-center gap-1.5">
+            <div className="size-3.5 relative overflow-hidden">
+              <div className="w-[0.01px] h-0 left-[7.50px] top-[10px] absolute outline outline-2 outline-offset-[-1.13px] outline-white" />
+              <div className="w-0 h-1 left-[7.50px] top-[5px] absolute outline outline-2 outline-offset-[-1.13px] outline-white" />
+              <div className="size-3 left-[1.25px] top-[1.25px] absolute outline outline-[1.41px] outline-offset-[-0.70px] outline-white" />
+            </div>
+            <div className="justify-start text-white text-xs font-extrabold font-['Atkinson_Hyperlegible_Next'] tracking-wide">MERAH</div>
+          </div>
+          <div className="h-7 px-2.5 bg-yellow-500 rounded-md flex justify-start items-center gap-1.5">
+            <div className="size-3.5 relative overflow-hidden">
+              <div className="size-3 left-[1.24px] top-[1.87px] absolute outline outline-[1.41px] outline-offset-[-0.70px] outline-stone-900" />
+              <div className="w-0 h-1 left-[7.50px] top-[5.63px] absolute outline outline-2 outline-offset-[-1.13px] outline-stone-900" />
+              <div className="w-[0.01px] h-0 left-[7.50px] top-[10.63px] absolute outline outline-2 outline-offset-[-1.13px] outline-stone-900" />
+            </div>
+            <div className="justify-start text-stone-900 text-xs font-extrabold font-['Atkinson_Hyperlegible_Next'] tracking-wide">KUNING</div>
+          </div>
+          <div className="h-7 px-2.5 bg-green-700 rounded-md flex justify-start items-center gap-1.5">
+            <div className="size-3.5 relative overflow-hidden">
+              <div className="size-3 left-[1.25px] top-[1.25px] absolute outline outline-[1.41px] outline-offset-[-0.70px] outline-white" />
+              <div className="w-1 h-[2.50px] left-[5.63px] top-[6.25px] absolute outline outline-[1.41px] outline-offset-[-0.70px] outline-white" />
+            </div>
+            <div className="justify-start text-white text-xs font-extrabold font-['Atkinson_Hyperlegible_Next'] tracking-wide">HIJAU</div>
+          </div>
+          <div className="h-7 px-2.5 bg-yellow-500 rounded-md flex justify-start items-center gap-1.5">
+            <div className="size-3.5 relative overflow-hidden">
+              <div className="size-[2.50px] left-[1.88px] top-[1.88px] absolute outline outline-[1.41px] outline-offset-[-0.70px] outline-stone-900" />
+              <div className="size-[2.50px] left-[10.63px] top-[1.88px] absolute outline outline-[1.41px] outline-offset-[-0.70px] outline-stone-900" />
+              <div className="size-[2.50px] left-[10.63px] top-[10.63px] absolute outline outline-[1.41px] outline-offset-[-0.70px] outline-stone-900" />
+              <div className="size-[2.50px] left-[1.88px] top-[10.63px] absolute outline outline-[1.41px] outline-offset-[-0.70px] outline-stone-900" />
+              <div className="size-1 left-[5.63px] top-[5.63px] absolute outline outline-[1.41px] outline-offset-[-0.70px] outline-stone-900" />
+              <div className="size-[1.19px] left-[8.81px] top-[8.81px] absolute outline outline-[1.41px] outline-offset-[-0.70px] outline-stone-900" />
+            </div>
+            <div className="justify-start text-stone-900 text-xs font-extrabold font-['Atkinson_Hyperlegible_Next'] tracking-wide">PERIKSA CITRA</div>
+          </div>
+        </div>
+        <div className="w-[580px] h-7 pt-2.5 flex flex-col justify-start items-start">
+          <div className="justify-start text-gray-500 text-xs font-bold font-['Atkinson_Hyperlegible_Next'] uppercase tracking-wide">Tombol: utama, sekunder, nonaktif, proses</div>
+        </div>
+        <div className="self-stretch inline-flex justify-start items-start gap-2.5">
+          <div className="h-11 px-5 bg-cyan-700 rounded-[10px] flex justify-center items-center gap-2">
+            <div className="justify-start text-white text-base font-bold font-['Atkinson_Hyperlegible_Next']">Analisis</div>
+          </div>
+          <div className="h-11 px-5 bg-white rounded-[10px] outline outline-1 outline-offset-[-1px] outline-cyan-700 flex justify-center items-center gap-2">
+            <div className="justify-start text-cyan-700 text-base font-bold font-['Atkinson_Hyperlegible_Next']">Kosongkan form</div>
+          </div>
+          <div className="h-11 px-5 bg-zinc-200 rounded-[10px] flex justify-center items-center gap-2">
+            <div className="justify-start text-gray-500 text-base font-bold font-['Atkinson_Hyperlegible_Next']">Analisis</div>
+          </div>
+          <div className="h-11 px-5 opacity-75 bg-cyan-700 rounded-[10px] flex justify-center items-center gap-2">
+            <div className="size-4 relative overflow-hidden">
+              <div className="size-3.5 left-[2.25px] top-[2.25px] absolute outline outline-[1.69px] outline-offset-[-0.84px] outline-white" />
+            </div>
+            <div className="justify-start text-white text-base font-bold font-['Atkinson_Hyperlegible_Next']">Menganalisis...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="self-stretch flex flex-col justify-start items-start gap-2.5">
+      <div className="self-stretch flex flex-col justify-start items-start">
+        <div className="justify-start text-gray-500 text-xs font-bold font-['Atkinson_Hyperlegible_Next'] uppercase tracking-wide">Bar sinkron: menunggu / semua tersinkron / sedang sinkron</div>
+      </div>
+      <div className="self-stretch flex flex-col justify-start items-start gap-3">
+        <div className="h-12 pl-3 pr-[5px] bg-white rounded-[999px] outline outline-1 outline-offset-[-1px] outline-zinc-200 inline-flex justify-start items-center gap-2.5">
+          <div className="size-5 relative overflow-hidden">
+            <div className="w-4 h-3 left-[1.67px] top-[4.17px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-gray-500" />
+          </div>
+          <div className="size- inline-flex flex-col justify-start items-start">
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-bold font-['Atkinson_Hyperlegible_Next'] leading-4">Menunggu sinkron ke cloud: 3</div>
+            </div>
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-gray-500 text-xs font-normal font-['Atkinson_Hyperlegible_Next'] leading-4">Sinkron terakhir: 15 Okt 2026</div>
+            </div>
+          </div>
+          <div className="h-8 px-3.5 bg-white rounded-[10px] outline outline-1 outline-offset-[-1px] outline-cyan-700 flex justify-center items-center gap-2">
+            <div className="size-4 relative overflow-hidden">
+              <div className="w-3 h-1.5 left-[2px] top-[2px] absolute outline outline-1 outline-offset-[-0.58px] outline-cyan-700" />
+              <div className="size-[3.33px] left-[10.67px] top-[2px] absolute outline outline-1 outline-offset-[-0.58px] outline-cyan-700" />
+              <div className="w-3 h-1.5 left-[2px] top-[8px] absolute outline outline-1 outline-offset-[-0.58px] outline-cyan-700" />
+              <div className="size-[3.33px] left-[2px] top-[10.67px] absolute outline outline-1 outline-offset-[-0.58px] outline-cyan-700" />
+            </div>
+            <div className="justify-start text-cyan-700 text-sm font-bold font-['Atkinson_Hyperlegible_Next']">Sinkronkan sekarang</div>
+          </div>
+        </div>
+        <div className="h-12 pl-3 pr-[5px] bg-white rounded-[999px] outline outline-1 outline-offset-[-1px] outline-zinc-200 inline-flex justify-start items-center gap-2.5">
+          <div className="size-5 relative overflow-hidden">
+            <div className="w-4 h-3 left-[1.67px] top-[4.17px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-gray-500" />
+          </div>
+          <div className="size- inline-flex flex-col justify-start items-start">
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-bold font-['Atkinson_Hyperlegible_Next'] leading-4">Semua data tersinkron</div>
+            </div>
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-gray-500 text-xs font-normal font-['Atkinson_Hyperlegible_Next'] leading-4">Sinkron terakhir: 15 Okt 2026</div>
+            </div>
+          </div>
+          <div className="h-8 px-3.5 bg-white rounded-[10px] outline outline-1 outline-offset-[-1px] outline-cyan-700 flex justify-center items-center gap-2">
+            <div className="size-4 relative overflow-hidden">
+              <div className="w-3 h-1.5 left-[2px] top-[2px] absolute outline outline-1 outline-offset-[-0.58px] outline-cyan-700" />
+              <div className="size-[3.33px] left-[10.67px] top-[2px] absolute outline outline-1 outline-offset-[-0.58px] outline-cyan-700" />
+              <div className="w-3 h-1.5 left-[2px] top-[8px] absolute outline outline-1 outline-offset-[-0.58px] outline-cyan-700" />
+              <div className="size-[3.33px] left-[2px] top-[10.67px] absolute outline outline-1 outline-offset-[-0.58px] outline-cyan-700" />
+            </div>
+            <div className="justify-start text-cyan-700 text-sm font-bold font-['Atkinson_Hyperlegible_Next']">Sinkronkan sekarang</div>
+          </div>
+        </div>
+        <div className="h-12 pl-3 pr-[5px] bg-white rounded-[999px] outline outline-1 outline-offset-[-1px] outline-zinc-200 inline-flex justify-start items-center gap-2.5">
+          <div className="size-5 relative overflow-hidden">
+            <div className="w-4 h-3 left-[1.67px] top-[4.17px] absolute outline outline-[1.46px] outline-offset-[-0.73px] outline-gray-500" />
+          </div>
+          <div className="size- inline-flex flex-col justify-start items-start">
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-teal-950 text-sm font-bold font-['Atkinson_Hyperlegible_Next'] leading-4">Menunggu sinkron ke cloud: 3</div>
+            </div>
+            <div className="self-stretch flex flex-col justify-start items-start">
+              <div className="justify-start text-gray-500 text-xs font-normal font-['Atkinson_Hyperlegible_Next'] leading-4">Sinkron terakhir: 15 Okt 2026</div>
+            </div>
+          </div>
+          <div className="h-8 px-3.5 bg-zinc-200 rounded-[10px] flex justify-center items-center gap-2">
+            <div className="size-4 relative overflow-hidden">
+              <div className="size-3 left-[2px] top-[2px] absolute outline outline-1 outline-offset-[-0.58px] outline-gray-500" />
+            </div>
+            <div className="justify-start text-gray-500 text-sm font-bold font-['Atkinson_Hyperlegible_Next']">Menyinkronkan...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
