@@ -9,7 +9,7 @@ const SyncContext = createContext(null);
 export function SyncProvider({ children }) {
   const [menunggu, setMenunggu] = useState(null);
   const [statusSync, setStatusSync] = useState("idle"); // "idle" | "syncing"
-  const [sinkronTerakhir, setSinkronTerakhir] = useState("Hari ini");
+  const [sinkronTerakhir, setSinkronTerakhir] = useState("15 Okt 2026");
   const [toast, setToast] = useState(null); // { id, pesan, tipe: "success" | "offline" | "rejected" }
 
   const cekSinkron = useCallback(() => {

@@ -35,7 +35,23 @@ const ISSUE_DETAILS = {
   },
 };
 
+import { useEffect } from "react";
+
 export default function QualityModal({ isOpen, onClose, onReupload, userPhotoUrl, issues = [] }) {
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === "Escape") {
+        onClose();
+        const uploadBtn = document.getElementById("btn-unggah-foto") || document.getElementById("btn-pilih-file") || document.getElementById("btn-mulai-analisis");
+        if (uploadBtn) uploadBtn.focus();
+      }
+    }
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
@@ -63,6 +79,7 @@ export default function QualityModal({ isOpen, onClose, onReupload, userPhotoUrl
           </div>
           <button
             type="button"
+            id="modal-btn-tutup-x"
             onClick={onClose}
             aria-label="Tutup dialog"
             className="size-9 rounded-lg flex items-center justify-center text-muted hover:text-ink hover:bg-bg transition-colors"
@@ -78,7 +95,7 @@ export default function QualityModal({ isOpen, onClose, onReupload, userPhotoUrl
           {/* Foto Anda */}
           <div className="flex flex-col gap-1.5">
             <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
-              Foto Anda
+              FOTO ANDA
             </span>
             <div className="w-full h-44 bg-black rounded-xl flex items-center justify-center overflow-hidden border border-line/20">
               {userPhotoUrl ? (
@@ -96,26 +113,20 @@ export default function QualityModal({ isOpen, onClose, onReupload, userPhotoUrl
           {/* Contoh yang baik */}
           <div className="flex flex-col gap-1.5">
             <span className="text-muted text-xs font-bold font-atkinson uppercase tracking-wide">
-              Contoh yang baik
+              CONTOH YANG BAIK
             </span>
             <div className="w-full h-44 bg-black rounded-xl flex items-center justify-center overflow-hidden border border-line/20 p-2">
               {/* Illustrative Normal Chest X-ray SVG */}
               <svg viewBox="0 0 160 180" className="h-full w-auto opacity-90" fill="none">
                 <rect width="160" height="180" fill="black" rx="4" />
-                {/* Spine & mediastinum */}
                 <path d="M80 15v150" stroke="white" strokeWidth="10" strokeLinecap="round" opacity="0.4" />
                 <path d="M74 65c0 15 12 15 12 0s-12-15-12 0z" fill="white" opacity="0.6" />
-                {/* Clavicles */}
                 <path d="M35 38c20 8 40 4 45 6M125 38c-20 8-40 4-45 6" stroke="white" strokeWidth="3.5" strokeLinecap="round" opacity="0.8" />
-                {/* Left & Right Lung Fields */}
                 <path d="M35 50c-15 25-18 65-5 85 10 3 35-10 40-15-8-20-8-55-10-70z" fill="white" fillOpacity="0.1" stroke="white" strokeWidth="1.5" strokeOpacity="0.3" />
                 <path d="M125 50c15 25 18 65 5 85-10 3-35-10-40-15 8-20 8-55 10-70z" fill="white" fillOpacity="0.1" stroke="white" strokeWidth="1.5" strokeOpacity="0.3" />
-                {/* Ribs arches */}
                 <path d="M40 65c15 5 30 2 34 5M40 85c15 6 30 3 35 6M40 105c15 7 30 4 35 7" stroke="white" strokeWidth="1.8" strokeLinecap="round" opacity="0.4" />
                 <path d="M120 65c-15 5-30 2-34 5M120 85c-15 6-30 3-35 6M120 105c-15 7-30 4-35 7" stroke="white" strokeWidth="1.8" strokeLinecap="round" opacity="0.4" />
-                {/* Heart silhouette */}
                 <path d="M72 100c-8 0-16 10-14 24 2 12 14 16 22 10" fill="white" opacity="0.5" />
-                {/* Diaphragm dome */}
                 <path d="M22 142c15-10 35-8 50-2M138 142c-15-10-35-8-50-2" stroke="white" strokeWidth="2.5" opacity="0.6" />
               </svg>
             </div>
@@ -125,17 +136,29 @@ export default function QualityModal({ isOpen, onClose, onReupload, userPhotoUrl
         {/* List of Detected Issues */}
         <div className="flex flex-col border-t border-line divide-y divide-line">
           {issues.map((issue, idx) => {
-            const detail = ISSUE_DETAILS[issue.code] || {
-              title: issue.message || "Kualitas citra tidak sesuai.",
+            const code = typeof issue === "string" ? issue : (issue.code || issue.id || "");
+            const detail = ISSUE_DETAILS[code] || {
+              title: (typeof issue === "object" && issue.message) ? issue.message : "Kualitas citra tidak sesuai.",
               desc: "Pastikan foto rontgen jelas, tegak, dan berada dalam pencahayaan yang cukup.",
             };
 
             return (
               <div key={idx} className="py-3 flex items-start gap-3">
-                <div className="size-8 rounded-full bg-status-error-bg text-status-error flex items-center justify-center shrink-0 mt-0.5">
-                  <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                <div className="size-8 rounded-full bg-bg text-ink flex items-center justify-center shrink-0 mt-0.5">
+                  {code === "SALAH_POSISI" ? (
+                    <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  ) : code === "PENCAHAYAAN" ? (
+                    <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="4" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                    </svg>
+                  ) : (
+                    <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18m9-9H3m14.5-6.5l-13 13m13 0l-13-13" />
+                    </svg>
+                  )}
                 </div>
                 <div className="flex flex-col">
                   <span className="text-ink text-sm sm:text-base font-bold font-atkinson">
@@ -154,6 +177,7 @@ export default function QualityModal({ isOpen, onClose, onReupload, userPhotoUrl
         <div className="pt-2 flex items-center justify-end gap-3 border-t border-line">
           <button
             type="button"
+            id="modal-btn-tutup"
             onClick={onClose}
             className="h-11 px-5 rounded-[10px] border border-primary bg-surface text-primary hover:bg-status-info-bg font-bold text-sm sm:text-base font-atkinson transition-colors cursor-pointer"
           >
@@ -161,6 +185,7 @@ export default function QualityModal({ isOpen, onClose, onReupload, userPhotoUrl
           </button>
           <button
             type="button"
+            id="modal-btn-unggah-ulang"
             onClick={() => {
               onClose();
               if (onReupload) onReupload();

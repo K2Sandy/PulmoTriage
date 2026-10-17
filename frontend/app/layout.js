@@ -37,6 +37,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="id"
+      suppressHydrationWarning
       className={`${fraunces.variable} ${atkinsonNext.variable} ${atkinsonMono.variable} font-atkinson`}
     >
       <head>
@@ -49,7 +50,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-screen bg-bg text-ink font-atkinson flex flex-col antialiased">
         <SyncProvider>
           <Header />
-          <div className="w-full max-w-[1366px] mx-auto px-4 sm:px-6 py-6 flex-1 flex flex-col overflow-x-hidden">
+          <div className="w-full flex-1 flex flex-col overflow-x-hidden">
             {children}
           </div>
           <Toast />

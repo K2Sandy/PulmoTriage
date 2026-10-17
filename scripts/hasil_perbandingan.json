@@ -1,56 +1,57 @@
 [
   {
     "status": "ok",
-    "persen_beda": 23.077377684236215,
-    "piksel_beda": 968408,
+    "persen_beda": 10.07053269125183,
+    "piksel_beda": 422595,
     "total_piksel": 4196352,
     "area_terbesar": [
       {
-        "x1": 44,
+        "x1": 162,
         "y1": 300,
-        "x2": 2688,
-        "y2": 1479,
-        "w": 2644,
-        "h": 1179,
-        "count": 839389
+        "x2": 2570,
+        "y2": 1315,
+        "w": 2408,
+        "h": 1015,
+        "count": 297220
+      },
+      {
+        "x1": 744,
+        "y1": 19,
+        "x2": 1312,
+        "y2": 108,
+        "w": 568,
+        "h": 89,
+        "count": 27127
+      },
+      {
+        "x1": 294,
+        "y1": 649,
+        "x2": 1905,
+        "y2": 694,
+        "w": 1611,
+        "h": 45,
+        "count": 22245
+      },
+      {
+        "x1": 1926,
+        "y1": 1340,
+        "x2": 2570,
+        "y2": 1443,
+        "w": 644,
+        "h": 103,
+        "count": 22233
       },
       {
         "x1": 1532,
         "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31352
-      },
-      {
-        "x1": 128,
-        "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30205
-      },
-      {
-        "x1": 1126,
-        "y1": 20,
-        "x2": 1462,
-        "y2": 108,
-        "w": 336,
-        "h": 88,
-        "count": 25278
-      },
-      {
-        "x1": 0,
-        "y1": 159,
-        "x2": 2732,
-        "y2": 274,
-        "w": 2732,
-        "h": 115,
-        "count": 24815
+        "x2": 2438,
+        "y2": 115,
+        "w": 906,
+        "h": 104,
+        "count": 20421
       }
     ],
+    "ignored_areas": [],
     "output_diff": "docs\\screenshots\\diff\\a1-pasien_kosong_diff.png",
     "ref_name": "a1-pasien_kosong.png",
     "hasil_path": "docs\\screenshots\\a1-pasien_kosong.png",
@@ -58,56 +59,57 @@
   },
   {
     "status": "ok",
-    "persen_beda": 31.447695522205954,
-    "piksel_beda": 1319656,
+    "persen_beda": 11.417869616276233,
+    "piksel_beda": 479134,
     "total_piksel": 4196352,
     "area_terbesar": [
       {
-        "x1": 44,
+        "x1": 162,
         "y1": 300,
-        "x2": 2688,
-        "y2": 1479,
-        "w": 2644,
-        "h": 1179,
-        "count": 1190637
+        "x2": 2570,
+        "y2": 1315,
+        "w": 2408,
+        "h": 1015,
+        "count": 353759
+      },
+      {
+        "x1": 744,
+        "y1": 19,
+        "x2": 1312,
+        "y2": 108,
+        "w": 568,
+        "h": 89,
+        "count": 27127
+      },
+      {
+        "x1": 294,
+        "y1": 649,
+        "x2": 1905,
+        "y2": 694,
+        "w": 1611,
+        "h": 45,
+        "count": 22245
+      },
+      {
+        "x1": 1926,
+        "y1": 1340,
+        "x2": 2570,
+        "y2": 1443,
+        "w": 644,
+        "h": 103,
+        "count": 22233
       },
       {
         "x1": 1532,
         "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31352
-      },
-      {
-        "x1": 128,
-        "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30205
-      },
-      {
-        "x1": 1126,
-        "y1": 20,
-        "x2": 1462,
-        "y2": 108,
-        "w": 336,
-        "h": 88,
-        "count": 25278
-      },
-      {
-        "x1": 0,
-        "y1": 159,
-        "x2": 2732,
-        "y2": 274,
-        "w": 2732,
-        "h": 115,
-        "count": 24815
+        "x2": 2438,
+        "y2": 115,
+        "w": 906,
+        "h": 104,
+        "count": 20421
       }
     ],
+    "ignored_areas": [],
     "output_diff": "docs\\screenshots\\diff\\a2-pasien_terisi_diff.png",
     "ref_name": "a2-pasien_terisi.png",
     "hasil_path": "docs\\screenshots\\a2-pasien_terisi.png",
@@ -115,56 +117,57 @@
   },
   {
     "status": "ok",
-    "persen_beda": 31.361191816129818,
-    "piksel_beda": 1316026,
+    "persen_beda": 25.715144964006832,
+    "piksel_beda": 1079098,
     "total_piksel": 4196352,
     "area_terbesar": [
       {
-        "x1": 44,
+        "x1": 162,
         "y1": 300,
-        "x2": 2688,
-        "y2": 1536,
-        "w": 2644,
-        "h": 1236,
-        "count": 1192129
+        "x2": 2570,
+        "y2": 1527,
+        "w": 2408,
+        "h": 1227,
+        "count": 975956
+      },
+      {
+        "x1": 744,
+        "y1": 19,
+        "x2": 1312,
+        "y2": 108,
+        "w": 568,
+        "h": 89,
+        "count": 27127
       },
       {
         "x1": 1532,
         "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31352
-      },
-      {
-        "x1": 128,
-        "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30205
-      },
-      {
-        "x1": 1126,
-        "y1": 20,
-        "x2": 1462,
-        "y2": 108,
-        "w": 336,
-        "h": 88,
-        "count": 25278
+        "x2": 2438,
+        "y2": 115,
+        "w": 906,
+        "h": 104,
+        "count": 20421
       },
       {
         "x1": 0,
-        "y1": 159,
+        "y1": 122,
         "x2": 2732,
-        "y2": 274,
+        "y2": 134,
         "w": 2732,
-        "h": 115,
-        "count": 24815
+        "h": 12,
+        "count": 10928
+      },
+      {
+        "x1": 0,
+        "y1": 250,
+        "x2": 2732,
+        "y2": 262,
+        "w": 2732,
+        "h": 12,
+        "count": 10928
       }
     ],
+    "ignored_areas": [],
     "output_diff": "docs\\screenshots\\diff\\a3-pasien_error-validasi_diff.png",
     "ref_name": "a3-pasien_error-validasi.png",
     "hasil_path": "docs\\screenshots\\a3-pasien_error-validasi.png",
@@ -172,56 +175,57 @@
   },
   {
     "status": "ok",
-    "persen_beda": 9.433121911603221,
-    "piksel_beda": 395847,
+    "persen_beda": 7.881822115971206,
+    "piksel_beda": 330749,
     "total_piksel": 4196352,
     "area_terbesar": [
       {
         "x1": 162,
         "y1": 397,
         "x2": 2570,
-        "y2": 1374,
+        "y2": 1262,
         "w": 2408,
-        "h": 977,
-        "count": 210855
+        "h": 865,
+        "count": 183523
+      },
+      {
+        "x1": 744,
+        "y1": 19,
+        "x2": 1312,
+        "y2": 108,
+        "w": 568,
+        "h": 89,
+        "count": 27127
+      },
+      {
+        "x1": 808,
+        "y1": 550,
+        "x2": 1042,
+        "y2": 758,
+        "w": 234,
+        "h": 208,
+        "count": 23109
       },
       {
         "x1": 1532,
         "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31339
+        "x2": 2438,
+        "y2": 115,
+        "w": 906,
+        "h": 104,
+        "count": 20421
       },
       {
-        "x1": 128,
-        "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30206
-      },
-      {
-        "x1": 164,
-        "y1": 276,
-        "x2": 2522,
-        "y2": 375,
-        "w": 2358,
-        "h": 99,
-        "count": 30070
-      },
-      {
-        "x1": 1126,
-        "y1": 20,
-        "x2": 1462,
-        "y2": 108,
-        "w": 336,
-        "h": 88,
-        "count": 25278
+        "x1": 2300,
+        "y1": 1278,
+        "x2": 2570,
+        "y2": 1398,
+        "w": 270,
+        "h": 120,
+        "count": 19378
       }
     ],
+    "ignored_areas": [],
     "output_diff": "docs\\screenshots\\diff\\b1-unggah_kosong_diff.png",
     "ref_name": "b1-unggah_kosong.png",
     "hasil_path": "docs\\screenshots\\b1-unggah_kosong.png",
@@ -229,56 +233,57 @@
   },
   {
     "status": "ok",
-    "persen_beda": 19.784803562713517,
-    "piksel_beda": 830240,
+    "persen_beda": 17.336009943875062,
+    "piksel_beda": 727480,
     "total_piksel": 4196352,
     "area_terbesar": [
       {
         "x1": 162,
         "y1": 398,
         "x2": 2570,
-        "y2": 1374,
+        "y2": 1262,
         "w": 2408,
-        "h": 976,
-        "count": 645625
+        "h": 864,
+        "count": 573439
+      },
+      {
+        "x1": 744,
+        "y1": 19,
+        "x2": 1312,
+        "y2": 108,
+        "w": 568,
+        "h": 89,
+        "count": 27127
+      },
+      {
+        "x1": 2300,
+        "y1": 1277,
+        "x2": 2570,
+        "y2": 1398,
+        "w": 270,
+        "h": 121,
+        "count": 26193
       },
       {
         "x1": 1532,
         "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31339
-      },
-      {
-        "x1": 128,
-        "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30206
+        "x2": 2438,
+        "y2": 115,
+        "w": 906,
+        "h": 104,
+        "count": 20421
       },
       {
         "x1": 164,
-        "y1": 276,
-        "x2": 2522,
-        "y2": 375,
-        "w": 2358,
-        "h": 99,
-        "count": 30070
-      },
-      {
-        "x1": 1126,
-        "y1": 20,
-        "x2": 1462,
-        "y2": 108,
-        "w": 336,
-        "h": 88,
-        "count": 25278
+        "y1": 310,
+        "x2": 1111,
+        "y2": 366,
+        "w": 947,
+        "h": 56,
+        "count": 16305
       }
     ],
+    "ignored_areas": [],
     "output_diff": "docs\\screenshots\\diff\\b2-unggah_citra-terpilih_diff.png",
     "ref_name": "b2-unggah_citra-terpilih.png",
     "hasil_path": "docs\\screenshots\\b2-unggah_citra-terpilih.png",
@@ -286,56 +291,57 @@
   },
   {
     "status": "ok",
-    "persen_beda": 21.48794953330893,
-    "piksel_beda": 901710,
+    "persen_beda": 17.269833417215715,
+    "piksel_beda": 724703,
     "total_piksel": 4196352,
     "area_terbesar": [
       {
         "x1": 162,
         "y1": 398,
         "x2": 2570,
-        "y2": 1374,
+        "y2": 1262,
         "w": 2408,
-        "h": 976,
-        "count": 704415
+        "h": 864,
+        "count": 553320
+      },
+      {
+        "x1": 2146,
+        "y1": 1277,
+        "x2": 2570,
+        "y2": 1398,
+        "w": 424,
+        "h": 121,
+        "count": 43535
+      },
+      {
+        "x1": 744,
+        "y1": 19,
+        "x2": 1312,
+        "y2": 108,
+        "w": 568,
+        "h": 89,
+        "count": 27127
       },
       {
         "x1": 1532,
         "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31339
-      },
-      {
-        "x1": 128,
-        "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30206
+        "x2": 2438,
+        "y2": 115,
+        "w": 906,
+        "h": 104,
+        "count": 20421
       },
       {
         "x1": 164,
-        "y1": 276,
-        "x2": 2522,
-        "y2": 375,
-        "w": 2358,
-        "h": 99,
-        "count": 30070
-      },
-      {
-        "x1": 2166,
-        "y1": 1406,
-        "x2": 2522,
-        "y2": 1502,
-        "w": 356,
-        "h": 96,
-        "count": 29911
+        "y1": 310,
+        "x2": 1111,
+        "y2": 366,
+        "w": 947,
+        "h": 56,
+        "count": 16305
       }
     ],
+    "ignored_areas": [],
     "output_diff": "docs\\screenshots\\diff\\b3-unggah_menganalisis_diff.png",
     "ref_name": "b3-unggah_menganalisis.png",
     "hasil_path": "docs\\screenshots\\b3-unggah_menganalisis.png",
@@ -343,8 +349,8 @@
   },
   {
     "status": "ok",
-    "persen_beda": 78.38234256802099,
-    "piksel_beda": 3289199,
+    "persen_beda": 78.05091183961689,
+    "piksel_beda": 3275291,
     "total_piksel": 4196352,
     "area_terbesar": [
       {
@@ -354,7 +360,25 @@
         "y2": 1536,
         "w": 2732,
         "h": 1536,
-        "count": 3289199
+        "count": 3275291
+      },
+      {
+        "x1": 818,
+        "y1": 162,
+        "x2": 1186,
+        "y2": 237,
+        "w": 368,
+        "h": 75,
+        "count": 8820
+      },
+      {
+        "x1": 1136,
+        "y1": 162,
+        "x2": 1470,
+        "y2": 237,
+        "w": 334,
+        "h": 75,
+        "count": 7790
       },
       {
         "x1": 1490,
@@ -373,26 +397,9 @@
         "w": 149,
         "h": 33,
         "count": 1730
-      },
-      {
-        "x1": 954,
-        "y1": 152,
-        "x2": 1115,
-        "y2": 182,
-        "w": 161,
-        "h": 30,
-        "count": 1277
-      },
-      {
-        "x1": 1346,
-        "y1": 153,
-        "x2": 1461,
-        "y2": 189,
-        "w": 115,
-        "h": 36,
-        "count": 1226
       }
     ],
+    "ignored_areas": [],
     "output_diff": "docs\\screenshots\\diff\\b4-unggah_popup-ditolak_diff.png",
     "ref_name": "b4-unggah_popup-ditolak.png",
     "hasil_path": "docs\\screenshots\\b4-unggah_popup-ditolak.png",
@@ -400,56 +407,57 @@
   },
   {
     "status": "ok",
-    "persen_beda": 21.24185483010005,
-    "piksel_beda": 891383,
+    "persen_beda": 19.771506298804294,
+    "piksel_beda": 829682,
     "total_piksel": 4196352,
     "area_terbesar": [
       {
-        "x1": 162,
-        "y1": 448,
+        "x1": 34,
+        "y1": 558,
         "x2": 2570,
-        "y2": 1417,
+        "y2": 1536,
+        "w": 2536,
+        "h": 978,
+        "count": 644691
+      },
+      {
+        "x1": 162,
+        "y1": 300,
+        "x2": 2570,
+        "y2": 450,
         "w": 2408,
-        "h": 969,
-        "count": 627478
+        "h": 150,
+        "count": 66849
       },
       {
-        "x1": 0,
-        "y1": 159,
-        "x2": 2732,
-        "y2": 428,
-        "w": 2732,
-        "h": 269,
-        "count": 84862
-      },
-      {
-        "x1": 1899,
-        "y1": 1348,
-        "x2": 2701,
-        "y2": 1534,
-        "w": 802,
-        "h": 186,
-        "count": 51859
+        "x1": 744,
+        "y1": 19,
+        "x2": 1312,
+        "y2": 108,
+        "w": 568,
+        "h": 89,
+        "count": 27127
       },
       {
         "x1": 1532,
         "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31487
+        "x2": 2438,
+        "y2": 115,
+        "w": 906,
+        "h": 104,
+        "count": 20421
       },
       {
-        "x1": 128,
-        "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30206
+        "x1": 164,
+        "y1": 470,
+        "x2": 1111,
+        "y2": 546,
+        "w": 947,
+        "h": 76,
+        "count": 19590
       }
     ],
+    "ignored_areas": [],
     "output_diff": "docs\\screenshots\\diff\\b5-unggah_error-server_diff.png",
     "ref_name": "b5-unggah_error-server.png",
     "hasil_path": "docs\\screenshots\\b5-unggah_error-server.png",
@@ -457,474 +465,27 @@
   },
   {
     "status": "ok",
-    "persen_beda": 10.910548018850658,
-    "piksel_beda": 457845,
+    "persen_beda": 11.98734043283309,
+    "piksel_beda": 503031,
     "total_piksel": 4196352,
     "area_terbesar": [
       {
         "x1": 162,
-        "y1": 272,
+        "y1": 302,
         "x2": 2570,
-        "y2": 1346,
+        "y2": 1442,
         "w": 2408,
-        "h": 1074,
-        "count": 251968
+        "h": 1140,
+        "count": 369704
       },
       {
-        "x1": 1899,
-        "y1": 1278,
-        "x2": 2701,
-        "y2": 1534,
-        "w": 802,
-        "h": 256,
-        "count": 55425
-      },
-      {
-        "x1": 1532,
-        "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31459
-      },
-      {
-        "x1": 163,
-        "y1": 142,
-        "x2": 2522,
-        "y2": 241,
-        "w": 2359,
-        "h": 99,
-        "count": 30855
-      },
-      {
-        "x1": 128,
+        "x1": 744,
         "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30210
-      }
-    ],
-    "output_diff": "docs\\screenshots\\diff\\b6-unggah_error-bukan-gambar_diff.png",
-    "ref_name": "b6-unggah_error-bukan-gambar.png",
-    "hasil_path": "docs\\screenshots\\b6-unggah_error-bukan-gambar.png",
-    "ref_path": "docs\\ref\\b6-unggah_error-bukan-gambar.png"
-  },
-  {
-    "status": "ok",
-    "persen_beda": 34.35862863744509,
-    "piksel_beda": 1441809,
-    "total_piksel": 4196352,
-    "area_terbesar": [
-      {
-        "x1": 0,
-        "y1": 284,
-        "x2": 2732,
-        "y2": 1521,
-        "w": 2732,
-        "h": 1237,
-        "count": 1303423
-      },
-      {
-        "x1": 890,
-        "y1": 480,
-        "x2": 2570,
-        "y2": 668,
-        "w": 1680,
-        "h": 188,
-        "count": 209849
-      },
-      {
-        "x1": 0,
-        "y1": 153,
-        "x2": 2732,
-        "y2": 278,
-        "w": 2732,
-        "h": 125,
-        "count": 39490
-      },
-      {
-        "x1": 1532,
-        "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31352
-      },
-      {
-        "x1": 128,
-        "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30205
-      }
-    ],
-    "output_diff": "docs\\screenshots\\diff\\c1-hasil_merah_diff.png",
-    "ref_name": "c1-hasil_merah.png",
-    "hasil_path": "docs\\screenshots\\c1-hasil_merah.png",
-    "ref_path": "docs\\ref\\c1-hasil_merah.png"
-  },
-  {
-    "status": "ok",
-    "persen_beda": 34.71138741459248,
-    "piksel_beda": 1456612,
-    "total_piksel": 4196352,
-    "area_terbesar": [
-      {
-        "x1": 0,
-        "y1": 284,
-        "x2": 2732,
-        "y2": 1521,
-        "w": 2732,
-        "h": 1237,
-        "count": 1318226
-      },
-      {
-        "x1": 890,
-        "y1": 480,
-        "x2": 2570,
-        "y2": 668,
-        "w": 1680,
-        "h": 188,
-        "count": 213767
-      },
-      {
-        "x1": 0,
-        "y1": 153,
-        "x2": 2732,
-        "y2": 278,
-        "w": 2732,
-        "h": 125,
-        "count": 39490
-      },
-      {
-        "x1": 1532,
-        "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31352
-      },
-      {
-        "x1": 128,
-        "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30205
-      }
-    ],
-    "output_diff": "docs\\screenshots\\diff\\c2-hasil_kuning_diff.png",
-    "ref_name": "c2-hasil_kuning.png",
-    "hasil_path": "docs\\screenshots\\c2-hasil_kuning.png",
-    "ref_path": "docs\\ref\\c2-hasil_kuning.png"
-  },
-  {
-    "status": "ok",
-    "persen_beda": 34.30064970717423,
-    "piksel_beda": 1439376,
-    "total_piksel": 4196352,
-    "area_terbesar": [
-      {
-        "x1": 0,
-        "y1": 284,
-        "x2": 2732,
-        "y2": 1521,
-        "w": 2732,
-        "h": 1237,
-        "count": 1300990
-      },
-      {
-        "x1": 890,
-        "y1": 480,
-        "x2": 2570,
-        "y2": 668,
-        "w": 1680,
-        "h": 188,
-        "count": 209323
-      },
-      {
-        "x1": 0,
-        "y1": 153,
-        "x2": 2732,
-        "y2": 278,
-        "w": 2732,
-        "h": 125,
-        "count": 39490
-      },
-      {
-        "x1": 1532,
-        "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31352
-      },
-      {
-        "x1": 128,
-        "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30205
-      }
-    ],
-    "output_diff": "docs\\screenshots\\diff\\c3-hasil_hijau_diff.png",
-    "ref_name": "c3-hasil_hijau.png",
-    "hasil_path": "docs\\screenshots\\c3-hasil_hijau.png",
-    "ref_path": "docs\\ref\\c3-hasil_hijau.png"
-  },
-  {
-    "status": "ok",
-    "persen_beda": 35.16725956259151,
-    "piksel_beda": 1475742,
-    "total_piksel": 4196352,
-    "area_terbesar": [
-      {
-        "x1": 0,
-        "y1": 284,
-        "x2": 2732,
-        "y2": 1521,
-        "w": 2732,
-        "h": 1237,
-        "count": 1337356
-      },
-      {
-        "x1": 0,
-        "y1": 153,
-        "x2": 2732,
-        "y2": 278,
-        "w": 2732,
-        "h": 125,
-        "count": 39490
-      },
-      {
-        "x1": 1532,
-        "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31352
-      },
-      {
-        "x1": 128,
-        "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30205
-      },
-      {
-        "x1": 1126,
-        "y1": 20,
-        "x2": 1462,
+        "x2": 1312,
         "y2": 108,
-        "w": 336,
-        "h": 88,
-        "count": 25278
-      }
-    ],
-    "output_diff": "docs\\screenshots\\diff\\c4-hasil_citra-janggal_diff.png",
-    "ref_name": "c4-hasil_citra-janggal.png",
-    "hasil_path": "docs\\screenshots\\c4-hasil_citra-janggal.png",
-    "ref_path": "docs\\ref\\c4-hasil_citra-janggal.png"
-  },
-  {
-    "status": "ok",
-    "persen_beda": 36.09161004605905,
-    "piksel_beda": 1514531,
-    "total_piksel": 4196352,
-    "area_terbesar": [
-      {
-        "x1": 0,
-        "y1": 284,
-        "x2": 2732,
-        "y2": 1413,
-        "w": 2732,
-        "h": 1129,
-        "count": 1371310
-      },
-      {
-        "x1": 890,
-        "y1": 480,
-        "x2": 2570,
-        "y2": 668,
-        "w": 1680,
-        "h": 188,
-        "count": 209849
-      },
-      {
-        "x1": 0,
-        "y1": 153,
-        "x2": 2732,
-        "y2": 278,
-        "w": 2732,
-        "h": 125,
-        "count": 39490
-      },
-      {
-        "x1": 1532,
-        "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1157,
-        "h": 108,
-        "count": 31352
-      },
-      {
-        "x1": 128,
-        "y1": 19,
-        "x2": 1104,
-        "y2": 107,
-        "w": 976,
-        "h": 88,
-        "count": 30205
-      }
-    ],
-    "output_diff": "docs\\screenshots\\diff\\c5-hasil_tinjauan-tersimpan_diff.png",
-    "ref_name": "c5-hasil_tinjauan-tersimpan.png",
-    "hasil_path": "docs\\screenshots\\c5-hasil_tinjauan-tersimpan.png",
-    "ref_path": "docs\\ref\\c5-hasil_tinjauan-tersimpan.png"
-  },
-  {
-    "status": "ok",
-    "persen_beda": 25.93704245973646,
-    "piksel_beda": 1629780,
-    "total_piksel": 6283600,
-    "area_terbesar": [
-      {
-        "x1": 0,
-        "y1": 347,
-        "x2": 2732,
-        "y2": 2300,
-        "w": 2732,
-        "h": 1953,
-        "count": 1163277
-      },
-      {
-        "x1": 0,
-        "y1": 122,
-        "x2": 2732,
-        "y2": 336,
-        "w": 2732,
-        "h": 214,
-        "count": 444314
-      },
-      {
-        "x1": 162,
-        "y1": 2191,
-        "x2": 2570,
-        "y2": 2300,
-        "w": 2408,
-        "h": 109,
-        "count": 223759
-      },
-      {
-        "x1": 1932,
-        "y1": 1001,
-        "x2": 2520,
-        "y2": 1030,
-        "w": 588,
-        "h": 29,
-        "count": 12094
-      },
-      {
-        "x1": 180,
-        "y1": 1838,
-        "x2": 2552,
-        "y2": 1870,
-        "w": 2372,
-        "h": 32,
-        "count": 12088
-      }
-    ],
-    "output_diff": "docs\\screenshots\\diff\\d1-dasbor_terisi_diff.png",
-    "ref_name": "d1-dasbor_terisi.png",
-    "hasil_path": "docs\\screenshots\\d1-dasbor_terisi.png",
-    "ref_path": "docs\\ref\\d1-dasbor_terisi.png"
-  },
-  {
-    "status": "ok",
-    "persen_beda": 8.751935014031234,
-    "piksel_beda": 367262,
-    "total_piksel": 4196352,
-    "area_terbesar": [
-      {
-        "x1": 121,
-        "y1": 236,
-        "x2": 2610,
-        "y2": 1485,
-        "w": 2489,
-        "h": 1249,
-        "count": 312317
-      },
-      {
-        "x1": 122,
-        "y1": 184,
-        "x2": 815,
-        "y2": 285,
-        "w": 693,
-        "h": 101,
-        "count": 20884
-      },
-      {
-        "x1": 1852,
-        "y1": 1242,
-        "x2": 2560,
-        "y2": 1270,
-        "w": 708,
-        "h": 28,
-        "count": 13900
-      },
-      {
-        "x1": 1298,
-        "y1": 766,
-        "x2": 1436,
-        "y2": 902,
-        "w": 138,
-        "h": 136,
-        "count": 12871
-      },
-      {
-        "x1": 236,
-        "y1": 928,
-        "x2": 1735,
-        "y2": 967,
-        "w": 1499,
-        "h": 39,
-        "count": 11803
-      }
-    ],
-    "output_diff": "docs\\screenshots\\diff\\d2-dasbor_kosong_diff.png",
-    "ref_name": "d2-dasbor_kosong.png",
-    "hasil_path": "docs\\screenshots\\d2-dasbor_kosong.png",
-    "ref_path": "docs\\ref\\d2-dasbor_kosong.png"
-  },
-  {
-    "status": "ok",
-    "persen_beda": 15.39012933138116,
-    "piksel_beda": 645824,
-    "total_piksel": 4196352,
-    "area_terbesar": [
-      {
-        "x1": 121,
-        "y1": 236,
-        "x2": 2610,
-        "y2": 1294,
-        "w": 2489,
-        "h": 1058,
-        "count": 576264
+        "w": 568,
+        "h": 89,
+        "count": 27127
       },
       {
         "x1": 34,
@@ -933,16 +494,422 @@
         "y2": 1536,
         "w": 248,
         "h": 118,
-        "count": 24398
+        "count": 23182
       },
       {
+        "x1": 631,
+        "y1": 758,
+        "x2": 1174,
+        "y2": 894,
+        "w": 543,
+        "h": 136,
+        "count": 21544
+      },
+      {
+        "x1": 1532,
+        "y1": 11,
+        "x2": 2438,
+        "y2": 115,
+        "w": 906,
+        "h": 104,
+        "count": 20421
+      }
+    ],
+    "ignored_areas": [],
+    "output_diff": "docs\\screenshots\\diff\\b6-unggah_error-bukan-gambar_diff.png",
+    "ref_name": "b6-unggah_error-bukan-gambar.png",
+    "hasil_path": "docs\\screenshots\\b6-unggah_error-bukan-gambar.png",
+    "ref_path": "docs\\ref\\b6-unggah_error-bukan-gambar.png"
+  },
+  {
+    "status": "ok",
+    "persen_beda": 22.550062530502686,
+    "piksel_beda": 946280,
+    "total_piksel": 4196352,
+    "area_terbesar": [
+      {
+        "x1": 0,
+        "y1": 493,
+        "x2": 2732,
+        "y2": 1338,
+        "w": 2732,
+        "h": 845,
+        "count": 665535
+      },
+      {
+        "x1": 162,
+        "y1": 342,
+        "x2": 858,
+        "y2": 1282,
+        "w": 696,
+        "h": 940,
+        "count": 543493
+      },
+      {
+        "x1": 890,
+        "y1": 284,
+        "x2": 2570,
+        "y2": 434,
+        "w": 1680,
+        "h": 150,
+        "count": 70711
+      },
+      {
+        "x1": 744,
+        "y1": 19,
+        "x2": 1312,
+        "y2": 108,
+        "w": 568,
+        "h": 89,
+        "count": 27127
+      },
+      {
+        "x1": 928,
+        "y1": 725,
+        "x2": 1798,
+        "y2": 860,
+        "w": 870,
+        "h": 135,
+        "count": 24657
+      }
+    ],
+    "ignored_areas": [],
+    "output_diff": "docs\\screenshots\\diff\\c1-hasil_merah_diff.png",
+    "ref_name": "c1-hasil_merah.png",
+    "hasil_path": "docs\\screenshots\\c1-hasil_merah.png",
+    "ref_path": "docs\\ref\\c1-hasil_merah.png"
+  },
+  {
+    "status": "ok",
+    "persen_beda": 22.924482979502194,
+    "piksel_beda": 961992,
+    "total_piksel": 4196352,
+    "area_terbesar": [
+      {
+        "x1": 0,
+        "y1": 493,
+        "x2": 2732,
+        "y2": 1378,
+        "w": 2732,
+        "h": 885,
+        "count": 674317
+      },
+      {
+        "x1": 162,
+        "y1": 342,
+        "x2": 858,
+        "y2": 1282,
+        "w": 696,
+        "h": 940,
+        "count": 542164
+      },
+      {
+        "x1": 890,
+        "y1": 284,
+        "x2": 2570,
+        "y2": 434,
+        "w": 1680,
+        "h": 150,
+        "count": 77483
+      },
+      {
+        "x1": 744,
+        "y1": 19,
+        "x2": 1312,
+        "y2": 108,
+        "w": 568,
+        "h": 89,
+        "count": 27127
+      },
+      {
+        "x1": 928,
+        "y1": 725,
+        "x2": 1798,
+        "y2": 860,
+        "w": 870,
+        "h": 135,
+        "count": 25183
+      }
+    ],
+    "ignored_areas": [],
+    "output_diff": "docs\\screenshots\\diff\\c2-hasil_kuning_diff.png",
+    "ref_name": "c2-hasil_kuning.png",
+    "hasil_path": "docs\\screenshots\\c2-hasil_kuning.png",
+    "ref_path": "docs\\ref\\c2-hasil_kuning.png"
+  },
+  {
+    "status": "ok",
+    "persen_beda": 22.64419190763787,
+    "piksel_beda": 950230,
+    "total_piksel": 4196352,
+    "area_terbesar": [
+      {
+        "x1": 0,
+        "y1": 493,
+        "x2": 2732,
+        "y2": 1338,
+        "w": 2732,
+        "h": 845,
+        "count": 665988
+      },
+      {
+        "x1": 162,
+        "y1": 342,
+        "x2": 858,
+        "y2": 1282,
+        "w": 696,
+        "h": 940,
+        "count": 550350
+      },
+      {
+        "x1": 890,
+        "y1": 284,
+        "x2": 2570,
+        "y2": 434,
+        "w": 1680,
+        "h": 150,
+        "count": 74315
+      },
+      {
+        "x1": 744,
+        "y1": 19,
+        "x2": 1312,
+        "y2": 108,
+        "w": 568,
+        "h": 89,
+        "count": 27127
+      },
+      {
+        "x1": 928,
+        "y1": 725,
+        "x2": 1798,
+        "y2": 860,
+        "w": 870,
+        "h": 135,
+        "count": 24381
+      }
+    ],
+    "ignored_areas": [],
+    "output_diff": "docs\\screenshots\\diff\\c3-hasil_hijau_diff.png",
+    "ref_name": "c3-hasil_hijau.png",
+    "hasil_path": "docs\\screenshots\\c3-hasil_hijau.png",
+    "ref_path": "docs\\ref\\c3-hasil_hijau.png"
+  },
+  {
+    "status": "ok",
+    "persen_beda": 26.045574823084433,
+    "piksel_beda": 1092964,
+    "total_piksel": 4196352,
+    "area_terbesar": [
+      {
+        "x1": 0,
+        "y1": 493,
+        "x2": 2732,
+        "y2": 1378,
+        "w": 2732,
+        "h": 885,
+        "count": 801019
+      },
+      {
+        "x1": 162,
+        "y1": 342,
+        "x2": 858,
+        "y2": 1282,
+        "w": 696,
+        "h": 940,
+        "count": 541195
+      },
+      {
+        "x1": 890,
+        "y1": 284,
+        "x2": 2570,
+        "y2": 434,
+        "w": 1680,
+        "h": 150,
+        "count": 87080
+      },
+      {
+        "x1": 744,
+        "y1": 19,
+        "x2": 1312,
+        "y2": 108,
+        "w": 568,
+        "h": 89,
+        "count": 27127
+      },
+      {
+        "x1": 931,
+        "y1": 830,
+        "x2": 1798,
+        "y2": 909,
+        "w": 867,
+        "h": 79,
+        "count": 21032
+      }
+    ],
+    "ignored_areas": [],
+    "output_diff": "docs\\screenshots\\diff\\c4-hasil_citra-janggal_diff.png",
+    "ref_name": "c4-hasil_citra-janggal.png",
+    "hasil_path": "docs\\screenshots\\c4-hasil_citra-janggal.png",
+    "ref_path": "docs\\ref\\c4-hasil_citra-janggal.png"
+  },
+  {
+    "status": "ok",
+    "persen_beda": 24.55075265373353,
+    "piksel_beda": 1030236,
+    "total_piksel": 4196352,
+    "area_terbesar": [
+      {
+        "x1": 162,
+        "y1": 342,
+        "x2": 858,
+        "y2": 1282,
+        "w": 696,
+        "h": 940,
+        "count": 543493
+      },
+      {
+        "x1": 890,
+        "y1": 493,
+        "x2": 2570,
+        "y2": 1264,
+        "w": 1680,
+        "h": 771,
+        "count": 282090
+      },
+      {
+        "x1": 890,
+        "y1": 284,
+        "x2": 2570,
+        "y2": 434,
+        "w": 1680,
+        "h": 150,
+        "count": 70711
+      },
+      {
+        "x1": 744,
+        "y1": 19,
+        "x2": 1312,
+        "y2": 108,
+        "w": 568,
+        "h": 89,
+        "count": 27127
+      },
+      {
+        "x1": 928,
+        "y1": 725,
+        "x2": 1798,
+        "y2": 860,
+        "w": 870,
+        "h": 135,
+        "count": 24657
+      }
+    ],
+    "ignored_areas": [],
+    "output_diff": "docs\\screenshots\\diff\\c5-hasil_tinjauan-tersimpan_diff.png",
+    "ref_name": "c5-hasil_tinjauan-tersimpan.png",
+    "hasil_path": "docs\\screenshots\\c5-hasil_tinjauan-tersimpan.png",
+    "ref_path": "docs\\ref\\c5-hasil_tinjauan-tersimpan.png"
+  },
+  {
+    "status": "ok",
+    "persen_beda": 23.2535170921128,
+    "piksel_beda": 1461158,
+    "total_piksel": 6283600,
+    "area_terbesar": [
+      {
+        "x1": 0,
+        "y1": 290,
+        "x2": 2732,
+        "y2": 2300,
+        "w": 2732,
+        "h": 2010,
+        "count": 1161031
+      },
+      {
+        "x1": 0,
+        "y1": 122,
+        "x2": 2732,
+        "y2": 250,
+        "w": 2732,
+        "h": 128,
+        "count": 270879
+      },
+      {
+        "x1": 162,
+        "y1": 2191,
+        "x2": 2570,
+        "y2": 2294,
+        "w": 2408,
+        "h": 103,
+        "count": 227589
+      },
+      {
+        "x1": 124,
+        "y1": 264,
+        "x2": 815,
+        "y2": 363,
+        "w": 691,
+        "h": 99,
+        "count": 21690
+      },
+      {
+        "x1": 1684,
+        "y1": 19,
+        "x2": 2550,
+        "y2": 108,
+        "w": 866,
+        "h": 89,
+        "count": 12711
+      }
+    ],
+    "ignored_areas": [],
+    "output_diff": "docs\\screenshots\\diff\\d1-dasbor_terisi_diff.png",
+    "ref_name": "d1-dasbor_terisi.png",
+    "hasil_path": "docs\\screenshots\\d1-dasbor_terisi.png",
+    "ref_path": "docs\\ref\\d1-dasbor_terisi.png"
+  },
+  {
+    "status": "ok",
+    "persen_beda": 8.72460174932894,
+    "piksel_beda": 366115,
+    "total_piksel": 4196352,
+    "area_terbesar": [
+      {
         "x1": 122,
-        "y1": 184,
+        "y1": 252,
+        "x2": 2610,
+        "y2": 1436,
+        "w": 2488,
+        "h": 1184,
+        "count": 294605
+      },
+      {
+        "x1": 236,
+        "y1": 764,
+        "x2": 1720,
+        "y2": 906,
+        "w": 1484,
+        "h": 142,
+        "count": 26045
+      },
+      {
+        "x1": 124,
+        "y1": 171,
         "x2": 815,
         "y2": 285,
-        "w": 693,
-        "h": 101,
-        "count": 20884
+        "w": 691,
+        "h": 114,
+        "count": 24003
+      },
+      {
+        "x1": 1684,
+        "y1": 19,
+        "x2": 2550,
+        "y2": 108,
+        "w": 866,
+        "h": 89,
+        "count": 12711
       },
       {
         "x1": 0,
@@ -952,17 +919,67 @@
         "w": 2732,
         "h": 12,
         "count": 10928
-      },
-      {
-        "x1": 208,
-        "y1": 638,
-        "x2": 722,
-        "y2": 684,
-        "w": 514,
-        "h": 46,
-        "count": 10648
       }
     ],
+    "ignored_areas": [],
+    "output_diff": "docs\\screenshots\\diff\\d2-dasbor_kosong_diff.png",
+    "ref_name": "d2-dasbor_kosong.png",
+    "hasil_path": "docs\\screenshots\\d2-dasbor_kosong.png",
+    "ref_path": "docs\\ref\\d2-dasbor_kosong.png"
+  },
+  {
+    "status": "ok",
+    "persen_beda": 13.862064002257199,
+    "piksel_beda": 581701,
+    "total_piksel": 4196352,
+    "area_terbesar": [
+      {
+        "x1": 122,
+        "y1": 252,
+        "x2": 2610,
+        "y2": 1294,
+        "w": 2488,
+        "h": 1042,
+        "count": 498277
+      },
+      {
+        "x1": 212,
+        "y1": 816,
+        "x2": 910,
+        "y2": 860,
+        "w": 698,
+        "h": 44,
+        "count": 24588
+      },
+      {
+        "x1": 124,
+        "y1": 171,
+        "x2": 815,
+        "y2": 285,
+        "w": 691,
+        "h": 114,
+        "count": 24003
+      },
+      {
+        "x1": 34,
+        "y1": 1418,
+        "x2": 282,
+        "y2": 1536,
+        "w": 248,
+        "h": 118,
+        "count": 23085
+      },
+      {
+        "x1": 1684,
+        "y1": 19,
+        "x2": 2550,
+        "y2": 108,
+        "w": 866,
+        "h": 89,
+        "count": 12711
+      }
+    ],
+    "ignored_areas": [],
     "output_diff": "docs\\screenshots\\diff\\d3-dasbor_gagal-memuat_diff.png",
     "ref_name": "d3-dasbor_gagal-memuat.png",
     "hasil_path": "docs\\screenshots\\d3-dasbor_gagal-memuat.png",
@@ -970,56 +987,57 @@
   },
   {
     "status": "ok",
-    "persen_beda": 14.039670647266961,
-    "piksel_beda": 589154,
+    "persen_beda": 14.43291697169351,
+    "piksel_beda": 605656,
     "total_piksel": 4196352,
     "area_terbesar": [
       {
         "x1": 122,
-        "y1": 302,
+        "y1": 448,
         "x2": 2610,
         "y2": 1536,
         "w": 2488,
-        "h": 1234,
-        "count": 450098
-      },
-      {
-        "x1": 1462,
-        "y1": 11,
-        "x2": 2689,
-        "y2": 119,
-        "w": 1227,
-        "h": 108,
-        "count": 44614
+        "h": 1088,
+        "count": 453619
       },
       {
         "x1": 180,
-        "y1": 841,
+        "y1": 1011,
         "x2": 2552,
-        "y2": 925,
+        "y2": 1096,
         "w": 2372,
-        "h": 84,
-        "count": 36508
+        "h": 85,
+        "count": 43984
       },
       {
         "x1": 122,
-        "y1": 184,
-        "x2": 817,
+        "y1": 171,
+        "x2": 1087,
         "y2": 300,
-        "w": 695,
-        "h": 116,
-        "count": 25969
+        "w": 965,
+        "h": 129,
+        "count": 31894
       },
       {
-        "x1": 128,
-        "y1": 38,
-        "x2": 1077,
-        "y2": 93,
-        "w": 949,
-        "h": 55,
-        "count": 23125
+        "x1": 817,
+        "y1": 19,
+        "x2": 1458,
+        "y2": 108,
+        "w": 641,
+        "h": 89,
+        "count": 27279
+      },
+      {
+        "x1": 1532,
+        "y1": 11,
+        "x2": 2438,
+        "y2": 115,
+        "w": 906,
+        "h": 104,
+        "count": 20421
       }
     ],
+    "ignored_areas": [],
     "output_diff": "docs\\screenshots\\diff\\e1-riwayat_pemeriksaan_diff.png",
     "ref_name": "e1-riwayat_pemeriksaan.png",
     "hasil_path": "docs\\screenshots\\e1-riwayat_pemeriksaan.png",
@@ -1077,6 +1095,7 @@
         "count": 17260
       }
     ],
+    "ignored_areas": [],
     "output_diff": "docs\\screenshots\\diff\\e2-riwayat_komponen-token_diff.png",
     "ref_name": "e2-riwayat_komponen-token.png",
     "hasil_path": "docs\\screenshots\\e2-riwayat_komponen-token.png",

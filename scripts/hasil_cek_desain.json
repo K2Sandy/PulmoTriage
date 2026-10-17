@@ -21,7 +21,7 @@
     "disclaimer": {
       "found": true,
       "visible": true,
-      "text": "Pernyataan: Hasil AI adalah alat bantu triase, bukan diagnosis. Keputusan klinis tetap di tangan dok"
+      "text": "Hasil AI adalah alat bantu triase, bukan diagnosis. Keputusan klinis tetap di tangan dokter."
     },
     "category_ribbon": {
       "found": true,
@@ -33,11 +33,11 @@
     },
     "viewport_660": {
       "viewportHeight": 660,
-      "ribbonBottom": 304.25,
+      "ribbonBottom": 215,
       "ribbonVisibleWithoutScroll": true,
-      "btnSetujuBottom": 544.25,
+      "btnSetujuBottom": 455,
       "btnSetujuVisibleWithoutScroll": true,
-      "btnTidakSetujuBottom": 544.25,
+      "btnTidakSetujuBottom": 455,
       "btnTidakSetujuVisibleWithoutScroll": true
     },
     "fonts": [
@@ -52,7 +52,13 @@
           "tag": "div",
           "class": "text-muted text-[11px] leading-tight font-atkinson",
           "fontSize": 11,
-          "text": "Sinkron terakhir: Hari ini"
+          "text": "Sinkron terakhir: 15 Okt 2026"
+        },
+        {
+          "tag": "span",
+          "class": "",
+          "fontSize": 12,
+          "text": "ID"
         },
         {
           "tag": "span",
@@ -161,15 +167,9 @@
           "class": "",
           "fontSize": 12,
           "text": "KUNING"
-        },
-        {
-          "tag": "span",
-          "class": "size-5 rounded-full bg-status-neutral border borde",
-          "fontSize": 10,
-          "text": "!"
         }
       ],
-      "totalSmallTexts": 80,
+      "totalSmallTexts": 81,
       "smallButtons": [
         {
           "tag": "button",
@@ -184,6 +184,13 @@
           "class": "size-10 rounded-[10px] bg-surface border border-li",
           "height": 40,
           "text": ""
+        },
+        {
+          "tag": "button",
+          "id": "btn-language-toggle",
+          "class": "h-10 px-3 rounded-[10px] border border-line-strong",
+          "height": 40,
+          "text": "ID"
         },
         {
           "tag": "button",
@@ -207,7 +214,7 @@
           "text": "Menunggu sinkron\n0"
         }
       ],
-      "totalSmallButtons": 5
+      "totalSmallButtons": 6
     }
   },
   "screenshots": [
