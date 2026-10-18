@@ -428,9 +428,9 @@ PulmoTriage/
 
 <table>
   <tr>
-    <td align="center" width="33%"><img src="docs/assets/tim-1.png" width="96" alt=""><br><b>Muhammad Albharaka Putrosandy</b><br><sub>AI Research & Lead Developer</sub></td>
-    <td align="center" width="33%"><img src="docs/assets/tim-2.png" width="96" alt=""><br><b>Ibnul Jawzy</b><br><sub>Software & Infrastructure Engineer</sub></td>
-    <td align="center" width="33%"><img src="docs/assets/tim-3.png" width="96" alt=""><br><b>Muhammad Rizki</b><br><sub>UI/UX & Clinical Workflow</sub></td>
+    <td align="center" width="33%"><img src="docs/assets/tim1.png" width="96" alt=""><br><b>Muhammad Albharaka Putrosandy</b><br><sub>AI Research & Lead Developer</sub></td>
+    <td align="center" width="33%"><img src="docs/assets/tim2.png" width="96" alt=""><br><b>Ibnul Jawzy</b><br><sub>Software & Infrastructure Engineer</sub></td>
+    <td align="center" width="33%"><img src="docs/assets/tim3.png" width="96" alt=""><br><b>Muhammad Rizki</b><br><sub>UI/UX & Clinical Workflow</sub></td>
   </tr>
 </table>
 
